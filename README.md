@@ -119,7 +119,7 @@ In general, [Event storming](https://www.eventstorming.com/) is a **collaboratin
 If you want to know more for this technique, you can check the **Theoretical Review** at the end.
 
 <p align="center" style="margin-bottom: 0px !important;">
-  <img width="900" src="https://storage.googleapis.com/bitloops-github-assets/Todo%20event%20stroming.png" alt="Todo Event Storming" align="center">
+  <img width="900" src="https://storage.googleapis.com/bitloops-github-assets/Todo%20event%20stroming%20new.png" alt="Todo Event Storming" align="center">
 </p>
 
 As you can see after the collaborative discovery, we have identified the following **bounded contexts**:
@@ -171,7 +171,7 @@ After all the necessary have been installed on your local machine, you should fo
 ```
 * Navigate  to the folder: 
 ```bash
-cd ddd-hexagonal-cqrs-es-eda
+cd ddd-hexagonal-cqrs-es-eda/backend
 ```
 * Run: 
     ```bash
