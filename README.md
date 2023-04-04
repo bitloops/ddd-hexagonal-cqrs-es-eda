@@ -1,6 +1,8 @@
 # ddd-hexagonal-cqrs-es-eda
 Complete working example of using Domain Driven Design (DDD), Hexagonal Architecture, CQRS, Event Sourcing (ES), Event Driven Architecture (EDA), Behaviour Driven Development (BDD) using TypeScript and NestJS.
 
+![ddd-hexagonal-cqrs-es-eda](https://storage.googleapis.com/bitloops-github-assets/ddd-hexagonal-cqrs-es-eda.gif)
+
 # I. Introduction
 
 Building complex software is really hard, and we learnt the hard way how important it is to design your software correctly from the beginning! 
