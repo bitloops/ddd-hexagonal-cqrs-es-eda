@@ -135,8 +135,8 @@ services:
       - bl-grafana_data:/usr/share/Docker/grafana
       - ./grafana/provisioning:/usr/share/docker/grafana/provisioning
     environment:
-      - GF_SECURITY_opentelemetry_USER=${GRAFANA_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_SECURITY_opentelemetry_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
     restart: unless-stopped
     ports:
