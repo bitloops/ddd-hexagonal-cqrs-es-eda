@@ -356,14 +356,14 @@ Below is a summary of all the software architecture and design patterns used in 
 
 
 ## Software Architecture
-The project is designed with a [layered architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/layered-architecture) approach, and more specifically: [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture) (Ports and Adapters architecture). 
+The project is designed with a [layered architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/layered-architecture) approach, and more specifically: [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture) (Ports and Adapters architecture). 
 
 
 Layered Architecture is a software architecture that is widely used in modern software development. It is a logical and structured approach to designing software that separates different functional modules of an application into four separate horizontal layers, each with a specific set of responsibilities. This separation of concerns makes the code more modular, maintainable, and scalable, and enables easier testing and debugging.
 
 This particular architectural pattern has influenced the development of various other architectural patterns, including:
-- [Hexagonal Architecture (also known as Ports and Adapters)](./hexagonal-architecture.md)
-- [Onion Architecture](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/) 
+- [Hexagonal Architecture (also known as Ports and Adapters)](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture)
+- [Onion Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/onion-architecture) 
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
 
@@ -585,7 +585,7 @@ Combining DDD and hexagonal architecture is not easy (we believe the above domai
 
 ---
 ## Behavior Driven Development (BDD) 
-[BDD](https://bitloops.com/docs/bitloops-language/learning/behavior-driven-development), also known as Behavioral Testing, is all about connecting the technical teams with the business teams manage, map and test the external behaviour of the system. 
+[BDD](https://bitloops.com/docs/bitloops-language/learning/software-design/behavior-driven-development), also known as Behavioral Testing, is all about connecting the technical teams with the business teams manage, map and test the external behaviour of the system. 
 
 The focus is on the expected behavior of the system, and it helps non-technical team members to get a clear picture of the software development process and describes in-depth the expected outcomes. With this focus, there is a higher chance of delivering value to the business as it allows teams to identify and address issues early in the development process. 
 </br>
@@ -605,9 +605,10 @@ Behavior Driven Development (BDD). Source: <a href="https://brainhub.eu/library/
 
 Like DDD, BDD emphasizes collaboration between developers and business stakeholders, reducing the risk of errors and issues in production. In fact, BDD and DDD are often combined during development processes to test the behaviour of the application layer (use cases), as well as unit tests that focus on specific domain elements but change a lot faster.
 
-In addition, BDD is commonly used with Test-Driven Development (TDD), which is essentially a software development process, similar to BDD, that encourages developers to build test cases that represent the expected outcomes before the development of the actual code.
+In addition, BDD is commonly used with [Test-Driven Development (TDD)](https://bitloops.com/docs/bitloops-language/learning/software-design/test-driven-development), which is essentially a software development process, similar to BDD, that encourages developers to build test cases that represent the expected outcomes before the development of the actual code.
 
-If you're interested in learning more about BDD, you can find a detailed description [here](https://bitloops.com/docs/bitloops-language/learning/behavior-driven-development).  
+  <img width="600" src="https://storage.googleapis.com/bitloops-github-assets/behavior-driven-development-cycle-what-is-.png"
+If you're interested in learning more about BDD, you can find a detailed description [here](https://bitloops.com/docs/bitloops-language/learning/software-design/behavior-driven-development).  
 
 </br>
 </br>
@@ -733,7 +734,7 @@ To summarize, we have reviewed the following:
 
 - Domain-driven design is a software design pattern that helps you build well-defined, easy to understand domain models, more specifically the Application Core (Domain and Application Layers of the Hexagonal Architecture). By applying these principles, the domain is more representative of the business itself and the business logic is easier to change. Moreover, it works particularly well with Ports and Adaptors to maintain the separation we desire between Application Core and the Infrastructure Layer.
 
-- Behavior-driven development is a software development approach that allows you to better understand the expected behaviors of the application, the expected outcomes, and ultimately generates a common understanding between all stakeholders. BDD is particularly important to increase cohesion between modules and components.
+- Behavior-driven development is a software development approach that allows you to better understand the expected behaviors of the application, the expected outcomes, and ultimately generates a common understanding between all stakeholders. [BDD](https://bitloops.com/docs/bitloops-language/learning/software-design/behavior-driven-development) is particularly important to increase cohesion between modules and components.
 
 - Event-driven architecture is all about setting up your different services and modules in such a way that they produce or consume events. This increases the resilience and flexibility as the components are decoupled from one another, improving scalability and performance. 
 
