@@ -9,7 +9,7 @@ There is plenty of information out there on how to build resilient and maintaina
 
 Our team has put a lot of effort into creating a clean, and modular code-base that comes as close as possible to production ready code, aiming to provide valuable insights into advanced software architecture concepts. 
  
-### Overview
+## Overview
 The objective of this project is to provide you a reference implementation on how to design and create maintainable and flexible software applications.
 
 The code is written using Typescript and NodeJS, using the NEST framework, however, the concepts and patterns used are not bound to any specific technologies.
@@ -27,7 +27,7 @@ In addition, you will learn a great deal about software design and architecture 
 
 There are many ways to implement these, so we're eager to get your feedback and open to answer any questions you may have. Join our [Discord](https://discord.com/invite/vj8EdZx8gK) channel if you'd like to exchange some ideas on software design & development or if you have any questions. 
 
-### Todo application business requirements
+## Todo application business requirements
 
 The todo application, is basically a simple todo application, with some tweaks.
 
@@ -94,7 +94,9 @@ Then the ReactJS front-end application will be visible at: `http://localhost:300
 Frontend React JS application
 </p>
 
-# IV. Todo App Event Storming
+# IV. Design Process and Decisions 
+
+## Design Process - Event Storming
 
 We have chosen the [Event storming](https://www.eventstorming.com/) technique to document the functionality and business logic of the todo application.
 
@@ -121,7 +123,7 @@ The processes of the system as were discovered are the following:
 * **Todo process** (Todo Bounded Context)
 * **Onboarding process** (Marketing Bounded Context)
 
-## Todo App Event Storming Observations
+## Design Decisions
 
 Some parts of the system need to have information which is located in other parts of the system. 
 
@@ -134,6 +136,8 @@ The problem in this case is that the email information belongs to the IAM bounde
 In this project the decision was to keep a local repository in the Marketing bounded context, of the users and their emails, updated by listening to integration events from the IAM bounded contexts (**user registered** and **user email changed**). 
 
 # V. Running in development mode
+
+## A. Project Setup
 
 ### Prerequisites
 In order to run the application the following should have been installed on your local machine:
@@ -155,6 +159,8 @@ After all the necessary have been installed on your local machine, you should fo
 * Create a `.development.env` file inside the root project and copy and paste the contents of the `.template-env`, which is located in the root of the project inside it.
 * Run `yarn start:dev` or `npm start:dev` to start the server.
 
+## B. Application Validation
+
 ### Test the application is running
 
 In order to test the application is running we could use a client  
@@ -172,8 +178,6 @@ You may find tutorials on how to use **Postman** for REST and gRPC requests belo
 * gRPC ([link](https://learning.postman.com/docs/sending-requests/grpc/first-grpc-request/))
 
 To just test the app is app and running you can just invoke `http://localhost:8082` URI with Post request as shown in the picture below:
-</br>
-</br>
 
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="900" src="https://storage.googleapis.com/bitloops-github-assets/app-testing-confirmation.png" alt="App Running Confirmation" align="center">
@@ -196,13 +200,13 @@ The server should respond (in the terminal) with:
 ```{"statusCode":404,"message":"Cannot GET /auth/register","error":"Not Found"}```
 
 
-### Running the application tests
+## Running the application tests
 
 In order to run the tests of the application run the following on the terminal:
 
 `yarn test` or `npm test`.
 
-## B. Understanding the project structure
+## C. Understanding the project structure
 
 The main project structure is located at the `/src` folder. 
 The starting point for the whole application is the `src/main.ts` file.
