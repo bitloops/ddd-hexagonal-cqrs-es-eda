@@ -1,0 +1,14 @@
+# copy and rename this to .development.env to add your configurations
+JWT_SECRET=p2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B # !!! replace this with your own secret
+JWT_LIFETIME_SECONDS=3600
+HTTP_IP=localhost
+GRPC_IP=localhost
+IAM_DATABASE_HOST=localhost
+TODO_DATABASE_HOST=localhost
+PG_HOST=localhost
+PG_IAM_HOST=localhost
+MONGO_HOST=localhost
+MARKETING_DATABASE_HOST=localhost
+NATS_HOST=localhost
+GRAFANA_ADMIN_USER=admin
+GRAFANA_ADMIN_PASSWORD=admin

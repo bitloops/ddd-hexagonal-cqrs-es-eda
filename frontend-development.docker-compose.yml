@@ -1,0 +1,165 @@
+version: '3.8'
+
+services:
+
+  todo-backend:
+    build:
+      context: .
+    ports:
+      - '8081:8081'
+      - '8082:8082'
+    networks:
+      - bitloops
+
+  bl-mongo:
+    image: mongo:5
+    container_name: mongo1
+    command: ['--replSet', 'my-replica-set', '--bind_ip_all', '--port', '30001']
+    volumes:
+      - bl-mongo_data:/data/db
+    ports:
+      - 30001:30001
+    healthcheck:
+      test: test $$(echo "rs.initiate({_id:'my-replica-set',members:[{_id:0,host:\"mongo1:30001\"}]}).ok || rs.status().ok" | mongo --port 30001 --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    networks:
+      - bitloops
+
+  bl-nats:
+    image: nats:latest
+    container_name: nats
+    ports:
+      - '4222:4222'
+      - '8222:8222'
+      - '6222:6222'
+      - '4223:4223'
+      - '6223:6223'
+      - '8223:8223'
+    volumes:
+      - bl-nats_data:/usr/share/docker/nats-server
+    networks:
+      - bitloops
+    command: ['-js', '-m', '8223']
+
+  bl-postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: iam
+      POSTGRES_USER: user
+    ports:
+      - '5432:5432'
+    volumes:
+      - bl-postgres_data:/usr/share/docker/postgresql
+    networks:
+      - bitloops
+
+  bl-prometheus-nats-exporter:
+    image: natsio/prometheus-nats-exporter:latest
+    ports:
+      - '7777:7777'
+    command:
+      ['-DV', '-gatewayz', '-connz', '-varz', '-jsz=all', 'http://nats:8223']
+    networks:
+      - bitloops
+
+  bl-jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - '6831:6831'
+      - '6832:6832'
+      - '5778:5778'
+      - '16686:16686'
+      - '4317:4317'
+      - '4318:4318'
+      - '14250:14250'
+      - '14268:14268'
+      - '14269:14269'
+      - '9411:9411'
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - LOG_LEVEL=debug
+    networks:
+      - bitloops
+
+  bl-pushgateway:
+    image: prom/pushgateway
+    container_name: pushgateway
+    restart: unless-stopped
+    expose:
+      - 9091
+    ports:
+      - '9091:9091'
+    networks:
+      - bitloops
+    labels:
+      org.label-schema.group: 'monitoring'
+
+  bl-prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus/
+      - bl-prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    ports:
+      - '9090:9090'
+    networks:
+      - bitloops
+    labels:
+      org.label-schema.group: 'monitoring'
+
+  bl-grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    env_file:
+      - config
+    volumes:
+      - bl-grafana_data:/usr/share/Docker/grafana
+      - ./grafana/provisioning:/usr/share/docker/grafana/provisioning
+    environment:
+      - GF_SECURITY_opentelemetry_USER=${GRAFANA_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    ports:
+      - '3003:3000'
+    networks:
+      - bitloops
+    labels:
+      org.label-schema.group: 'monitoring'
+  
+  bl-envoy:
+    build:
+      context: ./envoy
+    ports:
+      - '8080:8080'
+    networks:
+      - bitloops
+
+  bl-telemetry-consumer:
+    container_name: bl-telemetry-consumer
+    build: 
+      context: ./telemetry-consumer
+    restart: unless-stopped
+    networks:
+      - bitloops
+
+volumes:
+  bl-mongo_data:
+  bl-nats_data:
+  bl-postgres_data:
+  bl-prometheus_data:
+  bl-grafana_data:
+
+networks:
+  bitloops:

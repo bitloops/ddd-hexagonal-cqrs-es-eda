@@ -1,0 +1,191 @@
+syntax = "proto3";
+
+package todo;
+
+service TodoService {
+	rpc Add(AddTodoRequest) returns (AddTodoResponse);
+  rpc Complete (CompleteTodoRequest) returns (CompleteTodoResponse);
+  rpc Uncomplete (UncompleteTodoRequest) returns (UncompleteTodoResponse);
+  rpc ModifyTitle (ModifyTitleTodoRequest) returns (ModifyTitleTodoResponse);
+  rpc Delete (DeleteTodoRequest) returns (DeleteTodoResponse);
+	rpc GetAll(GetAllTodosRequest) returns (GetAllTodosResponse);
+  rpc InitializeSubscriptionConnection(InitializeConnectionRequest) returns (InitializeConnectionResponse);
+  rpc KeepSubscriptionAlive(KeepSubscriptionAliveRequest) returns (KeepSubscriptionAliveResponse);
+  rpc On(OnTodoRequest) returns (stream OnEvent);
+}
+
+message InitializeConnectionRequest {}
+message InitializeConnectionResponse {
+  string subscriberId = 1;
+}
+
+message KeepSubscriptionAliveRequest {
+  string subscriberId = 1;
+}
+message KeepSubscriptionAliveResponse {
+  optional string renewedAuthToken = 1;
+}
+
+enum TODO_EVENTS {
+  ADDED = 0;
+  COMPLETED = 1;
+  UNCOMPLETED = 2;
+  MODIFIED_TITLE = 3;
+  DELETED = 4;
+}
+
+message OnTodoRequest {
+  string subscriberId = 1;
+  repeated TODO_EVENTS events = 2;
+}
+
+message OnEvent {
+  oneof event {
+    Todo onAdded = 1;
+    Todo onCompleted = 2;
+    Todo onUncompleted = 3;
+    Todo onModifiedTitle = 4;
+    Todo onDeleted = 5;
+  }
+}
+
+message ErrorResponse {
+  string code = 1;
+  string message = 2;
+}
+
+message AddTodoRequest {
+	string title = 1;
+}
+
+message AddTodoResponse {
+  oneof result {
+    AddTodoOKResponse ok = 1;
+    AddTodoErrorResponse error = 2;
+  }
+}
+
+message AddTodoErrorResponse {
+  oneof error {
+    ErrorResponse unauthorizedError = 1;
+    ErrorResponse systemUnavailableError = 2;
+    ErrorResponse invalidTitleLengthError = 3;
+  }
+}
+
+message AddTodoOKResponse {
+  string id = 1;
+}
+
+message CompleteTodoRequest {
+  string id = 1;
+}
+
+message CompleteTodoResponse {
+  oneof result {
+    CompleteTodoOKResponse ok = 1;
+    CompleteTodoErrorResponse error = 2;
+  }
+}
+
+message CompleteTodoErrorResponse {
+  oneof error {
+    ErrorResponse unauthorizedError = 1;
+    ErrorResponse systemUnavailableError = 2;
+    ErrorResponse todoAlreadyExistsError = 3;
+  }
+}
+
+message DeleteTodoOKResponse {}
+
+message DeleteTodoRequest {
+  string id = 1;
+}
+
+message DeleteTodoResponse {
+  oneof result {
+    DeleteTodoOKResponse ok = 1;
+    DeleteTodoErrorResponse error = 2;
+  }
+}
+
+message DeleteTodoErrorResponse {
+  oneof error {
+    ErrorResponse unauthorizedError = 1;
+    ErrorResponse systemUnavailableError = 2;
+    ErrorResponse todoAlreadyExistsError = 3;
+  }
+}
+
+message CompleteTodoOKResponse {}
+
+message GetAllTodosRequest {}
+
+message GetAllTodosResponse {
+  oneof result {
+    GetAllTodosOKResponse ok = 1;
+    GetAllTodosErrorResponse error = 2;
+  }
+}
+
+message GetAllTodosErrorResponse {
+  oneof error {
+    ErrorResponse unauthorizedError = 1;
+    ErrorResponse systemUnavailableError = 2;
+  }
+}
+
+message GetAllTodosOKResponse {
+  repeated Todo todos = 1;
+}
+
+message ModifyTitleTodoRequest {
+  string id = 1;
+  string title = 2;
+}
+
+message ModifyTitleTodoResponse {
+  oneof result {
+    ModifyTitleTodoOKResponse ok = 1;
+    ModifyTitleTodoErrorResponse error = 2;
+  }
+}
+
+message ModifyTitleTodoErrorResponse {
+  oneof error {
+    ErrorResponse unauthorizedError = 1;
+    ErrorResponse systemUnavailableError = 2;
+    ErrorResponse todoDoesNotExistError = 3;
+    ErrorResponse invalidTitleLengthError = 4;
+  }
+}
+
+message ModifyTitleTodoOKResponse {}
+
+message UncompleteTodoRequest {
+  string id = 1;
+}
+
+message UncompleteTodoResponse {
+  oneof result {
+    UncompleteTodoOKResponse ok = 1;
+    UncompleteTodoErrorResponse error = 2;
+  }
+}
+
+message UncompleteTodoErrorResponse {
+  oneof error {
+    ErrorResponse unauthorizedError = 1;
+    ErrorResponse systemUnavailableError = 2;
+    ErrorResponse todoAlreadyExistsError = 3;
+  }
+}
+
+message UncompleteTodoOKResponse {}
+
+message Todo {
+  string id = 1;
+  string title = 2;
+  bool completed = 3;
+  string userId = 4;
+}

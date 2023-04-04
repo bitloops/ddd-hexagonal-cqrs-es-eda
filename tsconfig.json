@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "strictPropertyInitialization": false,
+    "target": "es2019",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@modules/*": ["src/modules/*"],
+      "@config/*": ["src/configs/*"],
+      "@bitloops/*": ["src/bitloops/*"],
+      "@lib": ["src/lib/*"],
+      "@tests/*": ["tests/*"]
+    }
+  }
+}

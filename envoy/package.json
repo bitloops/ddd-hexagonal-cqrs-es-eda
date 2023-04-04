@@ -1,0 +1,13 @@
+{
+  "name": "envoy",
+  "version": "1.0.0",
+  "description": "https://www.envoyproxy.io/docs/envoy/latest/start/docker",
+  "main": "index.js",
+  "scripts": {
+    "build": "docker build -t envoy:v1 .",
+    "start": "docker run -d --name envoy -p 8080:8080 envoy:v1",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
