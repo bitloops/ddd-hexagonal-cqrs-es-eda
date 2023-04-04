@@ -225,7 +225,7 @@ The main folders are the following:
 
 ### API Folder
 
-The api folder contains the **presentation layer** of the application (driving adapters of the infrastructure layer of the [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/hexagonal-architecture)), containing the **authentication controllers** (REST) as well as the **todo controllers** (gRPC).
+The api folder contains the **presentation layer** of the application (driving adapters of the infrastructure layer of the [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture)), containing the **authentication controllers** (REST) as well as the **todo controllers** (gRPC).
 
 It also contains the [Data Transfer Objects (DTOs)](https://en.wikipedia.org/wiki/Data_transfer_object) for those controllers.
 
@@ -235,7 +235,7 @@ The application layer (command and query handlers) after executing, they respond
 
 ### Bounded-Contexts Folder
 
-The bounded-contexts folder contains the **data access layer** (driven adapters of the infrastructure layer) - concrete implementations of the ports ([Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/hexagonal-architecture)) of the application, organised by the specific **bounded contexts** ([DDD](https://bitloops.com/docs/bitloops-language/learning/domain-driven-design)) of the application. These concrete implementations are specific **repository implementations** as well as specific **external service implementations**. 
+The bounded-contexts folder contains the **data access layer** (driven adapters of the infrastructure layer) - concrete implementations of the ports ([Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture)) of the application, organised by the specific **bounded contexts** ([DDD](https://bitloops.com/docs/bitloops-language/learning/software-design/domain-driven-design)) of the application. These concrete implementations are specific **repository implementations** as well as specific **external service implementations**. 
 
 
 ### Config Folder
@@ -244,11 +244,11 @@ Contains the configuration files for the application.
 ### Lib Folder
 Contains the core of the application (inside the `bounded-contexts` sub-folder), containing the **application layer** and the **domain layer** of the application.
 
-The sub-folders (e.g. `bounded-contexts/lib/todo`) represent the exact bounded contexts ([DDD](https://bitloops.com/docs/bitloops-language/learning/domain-driven-design)) of the application. In our case these bounded contexts represent a conceptual linguistic boundary. 
+The sub-folders (e.g. `bounded-contexts/lib/todo`) represent the exact bounded contexts ([DDD](https://bitloops.com/docs/bitloops-language/learning/software-design/domain-driven-design)) of the application. In our case these bounded contexts represent a conceptual linguistic boundary. 
 
 Inside each subfolder of each bounded context there is another folder which represent the specific module (e.g. `bounded-contexts/lib/todo/todo`). 
 
-In our case each module represents a logical boundary inside the linguistic boundary of the bounded context. This means that one bounded context (linguistic boundary), could have more than one module (logical boundary) inside (see  [DDD](https://bitloops.com/docs/bitloops-language/learning/domain-driven-design)).
+In our case each module represents a logical boundary inside the linguistic boundary of the bounded context. This means that one bounded context (linguistic boundary), could have more than one module (logical boundary) inside (see  [DDD](https://bitloops.com/docs/bitloops-language/learning/software-design/domain-driven-design)).
 
 ### Module Structure
 Each module structure contains the following folders:
@@ -274,14 +274,14 @@ In this project we have implemented a flavour of the [CQRS pattern](https://mart
 So in general inside this folder reside:
 * Command Handlers
 * Query Handlers
-* Event Handlers (see [Event Driven Architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/event-driven-architecture))
+* Event Handlers (see [Event Driven Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/event-driven-architecture))
 * Application Layer Errors
 
 **Event handlers** also belong to the application layer. In general there are two types of event handlers:
 * **Input Event Handlers**: They listen to events (domain or integration events) and transform them to commands.
 * **Output Event Handlers** : They listen to domain events and transform them to **integration events**. (More on integration events later)
 
-The event handlers are really important, since they help in building loosly coupled systems ([Event Driven Architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/event-driven-architecture)).
+The event handlers are really important, since they help in building loosly coupled systems ([Event Driven Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/event-driven-architecture)).
 
 #### Commands folder
 Commands also belong to the **application layer** of the specific module. Commands (see [CQRS pattern](https://martinfowler.com/bliki/CQRS.html))  represent the data structure which triggers the command handlers.
@@ -290,11 +290,11 @@ Commands also belong to the **application layer** of the specific module. Comman
 Queries also belong to the **application layer** of the specific module. Commands (see [CQRS pattern](https://martinfowler.com/bliki/CQRS.html))  represent the data structure which triggers the query handlers.
 
 #### Domain folder
-The Domain folder represents the **domain layer** of the module, containing all the elements of the tactical patterns from [Domain Driven Design (DDD)](https://bitloops.com/docs/bitloops-language/learning/domain-driven-design). Like: **Value Objects**, **Entities**, **Root Entities (Aggregates)**, **Domain Events**, **Domain Errors** etc. 
+The Domain folder represents the **domain layer** of the module, containing all the elements of the tactical patterns from [Domain Driven Design (DDD)](https://bitloops.com/docs/bitloops-language/learning/software-design/domain-driven-design). Like: **Value Objects**, **Entities**, **Root Entities (Aggregates)**, **Domain Events**, **Domain Errors** etc. 
 This folder also contains **Read Models** (see CQRS) as well as **Rules** which represent a way to express the rules inside the domain elements (Value Objects & Entities). 
 
 #### Contracts folder
-Represent the way a specific module communicates with the other modules, in **loosly coupled** way ([Event Driven Architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/event-driven-architecture)).
+Represent the way a specific module communicates with the other modules, in **loosly coupled** way ([Event Driven Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/event-driven-architecture)).
 
 This is being achieved via **integration events** ([link](https://codeopinion.com/should-you-publish-domain-events-or-integration-events/)).
 
@@ -305,9 +305,9 @@ Since those integration events could break the operation of some other modules i
 A common way to emit integration events is via **transforming the domain events of the domain layer into integration events**, via event handlers.
 
 #### Ports folder
-This folder contains the **interface (see [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/hexagonal-architecture)) between the application layer and the infrastructure layer** of the application, and more specifically the **data access layer** (adapters for the specific repository concretions as well as external services concretions). 
+This folder contains the **interface (see [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture)) between the application layer and the infrastructure layer** of the application, and more specifically the **data access layer** (adapters for the specific repository concretions as well as external services concretions). 
 
-Those ports are being used as dependencies inside the **application layer** (Command Handlers, Query Handlers and Event Handlers), to achieve the [Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle) - **D** from [SOLID](https://en.wikipedia.org/wiki/SOLID). Which is the principle which [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/hexagonal-architecture) uses to achieve plugging different adapters to the same port.
+Those ports are being used as dependencies inside the **application layer** (Command Handlers, Query Handlers and Event Handlers), to achieve the [Dependency inversion principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle) - **D** from [SOLID](https://en.wikipedia.org/wiki/SOLID). Which is the principle which [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture) uses to achieve plugging different adapters to the same port.
 
 
 #### Tests folder
@@ -351,7 +351,7 @@ Below is a summary of all the software architecture and design patterns used in 
 
 
 ## Software Architecture
-The project is designed with a [layered architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/layered-architecture) approach, and more specifically: [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/hexagonal-architecture) (Ports and Adapters architecture). 
+The project is designed with a [layered architecture](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/layered-architecture) approach, and more specifically: [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture) (Ports and Adapters architecture). 
 
 
 Layered Architecture is a software architecture that is widely used in modern software development. It is a logical and structured approach to designing software that separates different functional modules of an application into four separate horizontal layers, each with a specific set of responsibilities. This separation of concerns makes the code more modular, maintainable, and scalable, and enables easier testing and debugging.
@@ -458,7 +458,7 @@ Moreover, the flow of dependencies is actually very similar, but this time it go
 
 Essentially, this means that the Domain Layer does not have any dependency on any of the other layers, allowing it to be simplified and defined exactly as needed.
 
-The combination of the **Application and Domain Layers** is commonly referred to as the **Application Core Layer (or Core Layer)** in relevant bibliography. Below is a brief explanation to each of the main components of the Hexagonal Architecture, but do refer to this [link](https://bitloops.com/docs/bitloops-language/learning/domain-driven-design) if you want a detailed overview.
+The combination of the **Application and Domain Layers** is commonly referred to as the **Application Core Layer (or Core Layer)** in relevant bibliography. Below is a brief explanation to each of the main components of the Hexagonal Architecture, but do refer to this [link](https://bitloops.com/docs/bitloops-language/learning/software-design/domain-driven-design) if you want a detailed overview.
 
 ### Ports And Adapters
 The application core (Domain and Application Layer) which is at the center of the application, needs to be connected to specific concrete technologies of the infrastructure layer (Presentation and Data Access layer).
@@ -563,7 +563,7 @@ The tactical patterns deal with the actual implementation once a domain model ha
 - **Queries:** A Query only retrieves data from a system without making any changes. Understanding these two concepts is important to understand CQRS explained further below. 
 - **Repository:** All the code that handles operations over aggregates (entities and value objects) is placed in a repository. It provides an intermediary between the domain model and the data mapping. 
 
-The above is a summary of DDD and its benefits, however, there are many detailed posts, articles and videos about Domain Driven Design. This [reference document](https://bitloops.com/docs/bitloops-language/learning/domain-driven-design) has a comprehensive overview.
+The above is a summary of DDD and its benefits, however, there are many detailed posts, articles and videos about Domain Driven Design. This [reference document](https://bitloops.com/docs/bitloops-language/learning/software-design/domain-driven-design) has a comprehensive overview.
 
 
 ### DDD & Hexagonal Architecture are Complementary
@@ -644,7 +644,7 @@ The core components of Event-driven Architecture (EDA) are:.
 
 - **Event channels:** medium through which events are delivered from event producers to event consumers. These are message queues that store and deliver events and can be pub/sub channels, point-to-point channels, and hybrid channels.
 
-If you would like to learn more about EDA, we have a more complete overview [here](https://bitloops.com/docs/bitloops-language/learning/Software%20Architecture/event-driven-architecture).
+If you would like to learn more about EDA, we have a more complete overview [here](https://bitloops.com/docs/bitloops-language/learning/software-architecture/event-driven-architecture).
 
 
 </br>
