@@ -40,11 +40,24 @@ export class MockUserWriteRepo {
       ): Promise<
         Either<UserEntity | null, Application.Repo.Errors.Unexpected>
       > => {
-        const user = new UserEntityBuilder()
-          .withEmail(UPDATE_USER_SUCCESS_CASE.email)
-          .withId(UPDATE_USER_SUCCESS_CASE.userId)
-          .build();
-        return Promise.resolve(ok(user));
+        if (userId.equals(new Domain.UUIDv4(UPDATE_USER_SUCCESS_CASE.userId))) {
+          const user = new UserEntityBuilder()
+            .withEmail(UPDATE_USER_SUCCESS_CASE.email)
+            .withId(UPDATE_USER_SUCCESS_CASE.userId)
+            .withCompletedTodos(UPDATE_USER_SUCCESS_CASE.completedTodos)
+            .build();
+          return Promise.resolve(ok(user));
+        } else if (
+          userId.equals(new Domain.UUIDv4(UPDATE_USER_REPO_ERROR_CASE.userId))
+        ) {
+          const user = new UserEntityBuilder()
+            .withEmail(UPDATE_USER_REPO_ERROR_CASE.email)
+            .withId(UPDATE_USER_REPO_ERROR_CASE.userId)
+            .withCompletedTodos(UPDATE_USER_REPO_ERROR_CASE.completedTodos)
+            .build();
+          return Promise.resolve(ok(user));
+        }
+        return Promise.resolve(ok(null));
       },
     );
   }
