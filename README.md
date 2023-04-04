@@ -1,4 +1,7 @@
 # ddd-hexagonal-cqrs-es-eda
+
+[![Node.js CI](https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda/actions/workflows/main.yml)
+
 Complete working example of using Domain Driven Design (DDD), Hexagonal Architecture, CQRS, Event Sourcing (ES), Event Driven Architecture (EDA), Behaviour Driven Development (BDD) using TypeScript and NestJS.
 
 
