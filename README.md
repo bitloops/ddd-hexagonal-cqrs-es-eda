@@ -422,9 +422,9 @@ Represent the way a specific module communicates with the other modules, in **lo
 
 This is being achieved via **integration events** ([link](https://codeopinion.com/should-you-publish-domain-events-or-integration-events/)).
 
-Utilising integration events is the way for a module to communicate to other parts of the system (modules) that something has happened. 
+Utilising integration events is the way for a module to communicate to other parts of the system (modules) that something has happened.
 
-Since those integration events could break the operation of some other modules if their contract change (the data inside the integration event), it is **necessary to also include a version**. Each time a change is made to an integration event, a new version is triggered without breaking parts (mostly modules) of the system which listens to the old contracts. 
+Since those integration events could break the operation of some other modules if their contract change (the data inside the integration event), it is **necessary to also include a version**. Each time a change is made to an integration event, a new version is triggered without breaking parts (mostly modules) of the system which listens to the old contracts.
 
 A common way to emit integration events is via **transforming the domain events of the domain layer into integration events**, via event handlers.
 
