@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   todo-frontend:
     build:
       context: ../frontend
@@ -100,7 +99,7 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./prometheus:/etc/prometheus/
+      - ../prometheus:/etc/prometheus/
       - bl-prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -120,14 +119,12 @@ services:
   bl-grafana:
     image: grafana/grafana:latest
     container_name: grafana
-    env_file:
-      - config
     volumes:
       - bl-grafana_data:/usr/share/Docker/grafana
-      - ./grafana/provisioning:/usr/share/docker/grafana/provisioning
+      - ../grafana/provisioning:/usr/share/docker/grafana/provisioning
     environment:
-      - GF_SECURITY_opentelemetry_USER=${GRAFANA_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_SECURITY_opentelemetry_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
     restart: unless-stopped
     ports:
@@ -136,10 +133,10 @@ services:
       - bitloops
     labels:
       org.label-schema.group: 'monitoring'
-  
+
   bl-envoy:
     build:
-      context: ./envoy
+      context: ../envoy
     ports:
       - '8080:8080'
     networks:
@@ -147,8 +144,8 @@ services:
 
   bl-telemetry-consumer:
     container_name: bl-telemetry-consumer
-    build: 
-      context: ./telemetry-consumer
+    build:
+      context: ../telemetry-consumer
     restart: unless-stopped
     networks:
       - bitloops
