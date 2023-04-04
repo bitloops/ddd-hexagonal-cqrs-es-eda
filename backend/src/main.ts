@@ -36,7 +36,7 @@ async function bootstrap() {
     { abortOnError: false },
   );
   api.enableCors({
-    origin: 'http://localhost:3000',
+    origin: '*',
   });
   const appConfig = config();
   api.useGlobalInterceptors(
