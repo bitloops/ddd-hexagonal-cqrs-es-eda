@@ -80,9 +80,21 @@ In order to run the application the following should have been installed on your
 
 ## Running the app
 In order to run the application you need to follow the steps below:
-* Run `git clone https://github.com/bitloops/bitloops-language.git`
-* Navigate  to the folder `cd bitloops-language/examples/todo/ts-target`
-* Run `docker compose -p bitloops-todo-app up -d` from the terminal inside the project **in order to download and run the necessary containers**.
+* Run: 
+```bash
+ git clone https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda.git
+```
+* Navigate  to the folder: 
+```bash
+cd ddd-hexagonal-cqrs-es-eda
+```
+
+* Run: 
+
+```bash
+docker compose -p bitloops-todo-app up -d
+``` 
+from the terminal inside the project **in order to download and run the necessary containers**.
 
 Then the ReactJS front-end application will be visible at: `http://localhost:3000`.
 
@@ -151,13 +163,41 @@ In order to run the application the following should have been installed on your
 
 After all the necessary have been installed on your local machine, you should follow the **steps** mentioned below to run the application:
 
-* Run `git clone https://github.com/bitloops/bitloops-language.git`
-* Navigate  to the folder `cd bitloops-language/examples/todo/ts-target`
-* Run `yarn install` (if you are using yarn) or `npm install`, from the terminal inside the project **to install the necessary packages**.
+* Run: 
+```bash
+ git clone https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda.git
+```
+* Navigate  to the folder: 
+```bash
+cd ddd-hexagonal-cqrs-es-eda
+```
+* Run: 
+    ```bash
+    yarn install
+    ``` 
+    if you are using **yarn**  
+    or: 
+    ```bash
+    npm install
+    ```
+    if you are using **npm**, from the terminal inside the project **to install the necessary packages**.
+
 * **Start docker on your machine**.
-* Run `docker compose -p bitloops-todo-app up -d` from the terminal inside the project **in order to download and run the necessary containers**.
+* Run 
+  ```bash
+  docker compose -p bitloops-todo-app up -d
+  ``` 
+  from the terminal inside the project **in order to download and run the necessary containers**.
 * Create a `.development.env` file inside the root project and copy and paste the contents of the `.template-env`, which is located in the root of the project inside it.
-* Run `yarn start:dev` or `npm start:dev` to start the server.
+* Run: 
+    ```bash
+    yarn start:dev
+    ``` 
+    or 
+    ```bash
+    npm start:dev
+    ``` 
+    to start the server.
 
 ## B. Application Validation
 
