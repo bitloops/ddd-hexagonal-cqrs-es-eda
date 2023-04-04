@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: main
+    branches: [ main ]
   pull_request:
-    branches: main
+    branches: [ main ]
 
 jobs:
   build:
@@ -25,10 +25,12 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
+        cache: 'yarn'
+    - name: Install Yarn
+      run: npm install -g yarn
+    - run: yarn install --immutable
       working-directory: backend
-    - run: npm run build --if-present
+    - run: yarn build
       working-directory: backend
-    - run: npm test
+    - run: yarn test
       working-directory: backend
