@@ -1,5 +1,5 @@
 import { TodoCompletionsIncrementedDomainEvent } from '@src/lib/bounded-contexts/marketing/marketing/domain/events/todo-completions-incremented.event';
-import { MockUserEmailReadRepo } from './user-email-read-repo.mock';
+import { MockUserWriteRepo } from './user-write-repo.mock';
 import { TodoCompletionsIncrementedHandler } from '../../../application/event-handlers/domain/todo-completions-incremented.handler';
 import { MockNotificationTemplateReadRepo } from './notification-template-read-repo.mock';
 import { UserEntityBuilder } from '../../builders/user-entity.builder';
@@ -26,7 +26,7 @@ describe('Todo completions incremented feature test', () => {
     // given
     const mockNotificationTemplateReadRepo =
       new MockNotificationTemplateReadRepo();
-    const mockUserEmailReadRepo = new MockUserEmailReadRepo();
+    const mockUserWriteRepo = new MockUserWriteRepo();
     const mockStreamCommandBus = new MockStreamCommandBus();
     const user = new UserEntityBuilder()
       .withId(userId)
@@ -42,7 +42,7 @@ describe('Todo completions incremented feature test', () => {
     const todoCompletionsIncrementedEventHandler =
       new TodoCompletionsIncrementedHandler(
         mockStreamCommandBus.getMockStreamCommandBus(),
-        mockUserEmailReadRepo.getMockUserEmailReadRepo(),
+        mockUserWriteRepo.getMockUserWriteRepo(),
         mockNotificationTemplateReadRepo.getMockNotificationTemplateReadRepo(),
       );
     const result = await todoCompletionsIncrementedEventHandler.handle(
@@ -54,7 +54,7 @@ describe('Todo completions incremented feature test', () => {
       mockNotificationTemplateReadRepo.mockGetByTypeMethod,
     ).toHaveBeenCalledWith(NotificationTemplateReadModel.firstTodo);
 
-    expect(mockUserEmailReadRepo.mockGetUserEmailMethod).toHaveBeenCalledWith(
+    expect(mockUserWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
       new Domain.UUIDv4(userId),
     );
 
@@ -72,7 +72,7 @@ describe('Todo completions incremented feature test', () => {
     // given
     const mockNotificationTemplateReadRepo =
       new MockNotificationTemplateReadRepo();
-    const mockUserEmailReadRepo = new MockUserEmailReadRepo();
+    const mockUserWriteRepo = new MockUserWriteRepo();
     const mockStreamCommandBus = new MockStreamCommandBus();
     const user = new UserEntityBuilder()
       .withId(userId)
@@ -88,7 +88,7 @@ describe('Todo completions incremented feature test', () => {
     const todoCompletionsIncrementedEventHandler =
       new TodoCompletionsIncrementedHandler(
         mockStreamCommandBus.getMockStreamCommandBus(),
-        mockUserEmailReadRepo.getMockUserEmailReadRepo(),
+        mockUserWriteRepo.getMockUserWriteRepo(),
         mockNotificationTemplateReadRepo.getMockNotificationTemplateReadRepo(),
       );
     const result = await todoCompletionsIncrementedEventHandler.handle(
@@ -101,6 +101,7 @@ describe('Todo completions incremented feature test', () => {
     ).toHaveBeenCalledWith(NotificationTemplateReadModel.firstTodo);
     expect(result.value).toBeInstanceOf(Application.Repo.Errors.Unexpected);
   });
+
   it('Todo completions incremented successfully, email not sent, not first todo', async () => {
     const { userId, completedTodos } = UNSUCCESS_NOT_FIRST_TODO_CASE;
     mockAsyncLocalStorageGet(userId);
@@ -108,7 +109,7 @@ describe('Todo completions incremented feature test', () => {
     // given
     const mockNotificationTemplateReadRepo =
       new MockNotificationTemplateReadRepo();
-    const mockUserEmailReadRepo = new MockUserEmailReadRepo();
+    const mockUserWriteRepo = new MockUserWriteRepo();
     const mockStreamCommandBus = new MockStreamCommandBus();
     const user = new UserEntityBuilder()
       .withId(userId)
@@ -124,7 +125,7 @@ describe('Todo completions incremented feature test', () => {
     const todoCompletionsIncrementedEventHandler =
       new TodoCompletionsIncrementedHandler(
         mockStreamCommandBus.getMockStreamCommandBus(),
-        mockUserEmailReadRepo.getMockUserEmailReadRepo(),
+        mockUserWriteRepo.getMockUserWriteRepo(),
         mockNotificationTemplateReadRepo.getMockNotificationTemplateReadRepo(),
       );
     const result = await todoCompletionsIncrementedEventHandler.handle(
@@ -142,7 +143,7 @@ describe('Todo completions incremented feature test', () => {
     // given
     const mockNotificationTemplateReadRepo =
       new MockNotificationTemplateReadRepo();
-    const mockUserEmailReadRepo = new MockUserEmailReadRepo();
+    const mockUserWriteRepo = new MockUserWriteRepo();
     const mockStreamCommandBus = new MockStreamCommandBus();
     const user = new UserEntityBuilder()
       .withId(userId)
@@ -158,7 +159,7 @@ describe('Todo completions incremented feature test', () => {
     const todoCompletionsIncrementedEventHandler =
       new TodoCompletionsIncrementedHandler(
         mockStreamCommandBus.getMockStreamCommandBus(),
-        mockUserEmailReadRepo.getMockUserEmailReadRepo(),
+        mockUserWriteRepo.getMockUserWriteRepo(),
         mockNotificationTemplateReadRepo.getMockNotificationTemplateReadRepo(),
       );
     const result = await todoCompletionsIncrementedEventHandler.handle(
@@ -171,11 +172,12 @@ describe('Todo completions incremented feature test', () => {
       mockNotificationTemplateReadRepo.mockGetByTypeMethod,
     ).toHaveBeenCalledWith(NotificationTemplateReadModel.firstTodo);
 
-    expect(mockUserEmailReadRepo.mockGetUserEmailMethod).toHaveBeenCalledWith(
+    expect(mockUserWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
       new Domain.UUIDv4(userId),
     );
     expect(result.value).toBeInstanceOf(Application.Repo.Errors.Unexpected);
   });
+
   it('Todo completions incremented successfully, email not sent, user email not found', async () => {
     const { userId, completedTodos } = UNSUCCESS_EMAIL_NOT_FOUND_CASE;
     mockAsyncLocalStorageGet(userId);
@@ -183,7 +185,7 @@ describe('Todo completions incremented feature test', () => {
     // given
     const mockNotificationTemplateReadRepo =
       new MockNotificationTemplateReadRepo();
-    const mockUserEmailReadRepo = new MockUserEmailReadRepo();
+    const mockUserWriteRepo = new MockUserWriteRepo();
     const mockStreamCommandBus = new MockStreamCommandBus();
     const user = new UserEntityBuilder()
       .withId(userId)
@@ -199,7 +201,7 @@ describe('Todo completions incremented feature test', () => {
     const todoCompletionsIncrementedEventHandler =
       new TodoCompletionsIncrementedHandler(
         mockStreamCommandBus.getMockStreamCommandBus(),
-        mockUserEmailReadRepo.getMockUserEmailReadRepo(),
+        mockUserWriteRepo.getMockUserWriteRepo(),
         mockNotificationTemplateReadRepo.getMockNotificationTemplateReadRepo(),
       );
     const result = await todoCompletionsIncrementedEventHandler.handle(
@@ -212,11 +214,9 @@ describe('Todo completions incremented feature test', () => {
       mockNotificationTemplateReadRepo.mockGetByTypeMethod,
     ).toHaveBeenCalledWith(NotificationTemplateReadModel.firstTodo);
 
-    expect(mockUserEmailReadRepo.mockGetUserEmailMethod).toHaveBeenCalledWith(
+    expect(mockUserWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
       new Domain.UUIDv4(userId),
     );
-    expect(result.value).toBeInstanceOf(
-      ApplicationErrors.UserEmailNotFoundError,
-    );
+    expect(result.value).toBeInstanceOf(ApplicationErrors.UserNotFoundError);
   });
 });

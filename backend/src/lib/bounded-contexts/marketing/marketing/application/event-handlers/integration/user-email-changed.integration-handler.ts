@@ -2,11 +2,16 @@ import { Infra, Application, Either, ok } from '@bitloops/bl-boilerplate-core';
 import { UserEmailChangedIntegrationEvent } from '@src/lib/bounded-contexts/iam/authentication/contracts/integration-events/user-email-changed.integration-event';
 import { ChangeUserEmailCommand } from '../../../commands/change-user-email.command';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { StreamingCommandBusToken } from '../../../constants';
+import { Inject } from '@nestjs/common';
 
 export class UserEmailChangedIntegrationEventHandler
   implements Application.IHandleIntegrationEvent
 {
-  constructor(private commandBus: Infra.CommandBus.IStreamCommandBus) {}
+  constructor(
+    @Inject(StreamingCommandBusToken)
+    private commandBus: Infra.CommandBus.IStreamCommandBus,
+  ) {}
 
   get event() {
     return UserEmailChangedIntegrationEvent;

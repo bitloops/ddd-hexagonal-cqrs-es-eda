@@ -2,19 +2,19 @@ import {
   UPDATE_USER_REPO_ERROR_CASE,
   UPDATE_USER_SUCCESS_CASE,
 } from './change-user-email.mock';
-import { UserEmailReadModelBuilder } from '../../builders/user-read-model.builder';
 import { Application } from '@bitloops/bl-boilerplate-core';
 import { ChangeUserEmailCommand } from '@src/lib/bounded-contexts/marketing/marketing/commands/change-user-email.command';
 import { ChangeUserEmailCommandHandler } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers/change-user-email.command-handler';
-import { MockUpdateUserReadRepo } from './change-user-email-read-repo.mock';
+import { MockUpdateUserWriteRepo } from './change-user-email-write-repo.mock';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
+import { UserEntityBuilder } from '../../builders/user-entity.builder';
 
 describe('Change user email feature test', () => {
   it('Changed user email successfully,', async () => {
     const { email, userId } = UPDATE_USER_SUCCESS_CASE;
     mockAsyncLocalStorageGet(userId);
     // given
-    const mockUpdateUserReadRepo = new MockUpdateUserReadRepo();
+    const mockUpdateUserWriteRepo = new MockUpdateUserWriteRepo();
     const updateUserEmailCommand = new ChangeUserEmailCommand({
       email,
       userId,
@@ -22,29 +22,30 @@ describe('Change user email feature test', () => {
 
     // when
     const updateUserEmailHandler = new ChangeUserEmailCommandHandler(
-      mockUpdateUserReadRepo.getMockMarketingReadRepo(),
+      mockUpdateUserWriteRepo.getMockUserWriteRepo(),
     );
     const result = await updateUserEmailHandler.execute(updateUserEmailCommand);
 
     //then
-    const userIdEmail = new UserEmailReadModelBuilder()
-      .withUserId(userId)
+    const userIdEmail = new UserEntityBuilder()
+      .withId(userId)
       .withEmail(email)
       .build();
 
-    expect(mockUpdateUserReadRepo.mockUpdateMethod).toHaveBeenCalledWith({
+    expect(mockUpdateUserWriteRepo.mockUpdateMethod).toHaveBeenCalledWith({
       userId,
       email,
     });
     const userAggregate =
-      mockUpdateUserReadRepo.mockUpdateMethod.mock.calls[0][0];
+      mockUpdateUserWriteRepo.mockUpdateMethod.mock.calls[0][0];
     expect(userAggregate).toEqual(userIdEmail);
     expect(typeof result.value).toBe('undefined');
   });
+
   it('Changed user email failed, repo error', async () => {
     const { email, userId } = UPDATE_USER_REPO_ERROR_CASE;
     // given
-    const mockUpdateUserReadRepo = new MockUpdateUserReadRepo();
+    const mockUpdateUserWriteRepo = new MockUpdateUserWriteRepo();
     mockAsyncLocalStorageGet(userId);
     const updateUserEmailCommand = new ChangeUserEmailCommand({
       email,
@@ -53,17 +54,17 @@ describe('Change user email feature test', () => {
 
     // when
     const updateUserEmailHandler = new ChangeUserEmailCommandHandler(
-      mockUpdateUserReadRepo.getMockMarketingReadRepo(),
+      mockUpdateUserWriteRepo.getMockUserWriteRepo(),
     );
     const result = await updateUserEmailHandler.execute(updateUserEmailCommand);
 
     //then
-    const userIdEmail = new UserEmailReadModelBuilder()
-      .withUserId(userId)
+    const userIdEmail = new UserEntityBuilder()
+      .withId(userId)
       .withEmail(email)
       .build();
 
-    expect(mockUpdateUserReadRepo.mockUpdateMethod).toHaveBeenCalledWith(
+    expect(mockUpdateUserWriteRepo.mockUpdateMethod).toHaveBeenCalledWith(
       userIdEmail,
     );
     expect(result.value).toBeInstanceOf(Application.Repo.Errors.Unexpected);

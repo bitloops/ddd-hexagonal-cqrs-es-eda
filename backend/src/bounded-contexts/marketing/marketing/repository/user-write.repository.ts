@@ -35,10 +35,31 @@ export class UserWriteRepository implements UserWriteRepoPort {
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
-  update(
-    aggregate: UserEntity,
+  async update(
+    user: UserEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
-    throw new Error('Method not implemented.');
+    const ctx = asyncLocalStorage.getStore()?.get('context');
+    const { jwt } = ctx;
+    let jwtPayload: null | any = null;
+    try {
+      jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
+    } catch (err) {
+      throw new Error('Invalid JWT!');
+    }
+    const userPrimitives = user.toPrimitives();
+    if (userPrimitives.id !== jwtPayload.sub) {
+      throw new Error('Unauthorized userId');
+    }
+    const { id, ...userInfo } = userPrimitives;
+    await this.collection.updateOne(
+      {
+        _id: id as any,
+      },
+      {
+        $set: userInfo,
+      },
+    );
+    return ok();
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
@@ -68,7 +89,7 @@ export class UserWriteRepository implements UserWriteRepoPort {
       return ok(null);
     }
 
-    if (result.userId !== jwtPayload.sub) {
+    if (result.id !== jwtPayload.sub) {
       throw new Error('Invalid userId');
     }
 
@@ -85,22 +106,13 @@ export class UserWriteRepository implements UserWriteRepoPort {
   async save(
     user: UserEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
-    const ctx = asyncLocalStorage.getStore()?.get('context');
-    const { jwt } = ctx;
-    let jwtPayload: null | any = null;
-    try {
-      jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
-    } catch (err) {
-      throw new Error('Invalid JWT!');
-    }
     const createdUser = user.toPrimitives();
-    if (createdUser.id !== jwtPayload.sub) {
-      throw new Error('Invalid userId');
-    }
+
     await this.collection.insertOne({
       _id: createdUser.id as any,
       ...createdUser,
     });
+
     return ok();
   }
 }

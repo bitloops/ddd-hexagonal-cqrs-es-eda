@@ -7,12 +7,14 @@ import {
 } from '@bitloops/bl-boilerplate-core';
 import { Inject } from '@nestjs/common';
 import { CreateUserCommand } from '../../commands/create-user.command';
-import { UserReadModel } from '../../domain/read-models/user-email.read-model';
-import {
-  UserEmailReadRepoPort,
-  UserEmailReadRepoPortToken,
-} from '../../ports/user-email-read.repo-port';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { UserEntity } from '../../domain/user.entity';
+import { EmailVO } from '../../domain/email.vo';
+import { CompletedTodosVO } from '../../domain/completed-todos.vo';
+import {
+  UserWriteRepoPort,
+  UserWriteRepoPortToken,
+} from '../../ports/user-write.repo-port';
 
 type CreateUserCommandHandlerResponse = Either<
   void,
@@ -23,8 +25,8 @@ export class CreateUserCommandHandler
   implements Application.ICommandHandler<CreateUserCommand, void>
 {
   constructor(
-    @Inject(UserEmailReadRepoPortToken)
-    private userEmailRepo: UserEmailReadRepoPort,
+    @Inject(UserWriteRepoPortToken)
+    private userRepo: UserWriteRepoPort,
   ) {}
 
   get command() {
@@ -47,12 +49,25 @@ export class CreateUserCommandHandler
   ): Promise<CreateUserCommandHandlerResponse> {
     console.log('CreateUserCommandHandler');
     const requestUserId = new Domain.UUIDv4(command.userId);
-    const userIdEmail = new UserReadModel(
-      requestUserId.toString(),
-      command.email,
-    );
 
-    const createOrError = await this.userEmailRepo.create(userIdEmail);
+    const completedTodosVO = CompletedTodosVO.create({ counter: 0 });
+    if (completedTodosVO.isFail()) {
+      return fail(completedTodosVO.value);
+    }
+    const emailVO = EmailVO.create({ email: command.email });
+    if (emailVO.isFail()) {
+      return fail(emailVO.value);
+    }
+    const user = UserEntity.create({
+      completedTodos: completedTodosVO.value,
+      email: emailVO.value,
+      id: requestUserId,
+    });
+    if (user.isFail()) {
+      return fail(user.value);
+    }
+
+    const createOrError = await this.userRepo.save(user.value);
     if (createOrError.isFail()) {
       return fail(createOrError.value);
     }
