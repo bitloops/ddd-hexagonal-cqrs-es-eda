@@ -67,6 +67,7 @@ Here are listed some of the specific technologies used for the implementation of
 * **Container Technology**: [Docker](https://www.docker.com/)
 * **Tracing-Observability**: [Jaeger](https://www.jaegertracing.io/), [Grafana](https://grafana.com/)
 * **Metrics**: [Prometheus](https://prometheus.io/)
+* **API Gateway - Proxy**: [Envoy](https://www.envoyproxy.io/)
 
 
 # III. Quick start - running the ToDo App
