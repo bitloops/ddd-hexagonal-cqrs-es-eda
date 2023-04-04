@@ -5,8 +5,6 @@ Complete working example of using Domain Driven Design (DDD), Hexagonal Architec
 
 # Table of Contents
 
-- [ddd-hexagonal-cqrs-es-eda](#ddd-hexagonal-cqrs-es-eda)
-- [Table of Contents](#table-of-contents)
 - [I. Introduction](#i-introduction)
   - [Overview](#overview)
   - [Todo application business requirements](#todo-application-business-requirements)
@@ -21,64 +19,10 @@ Complete working example of using Domain Driven Design (DDD), Hexagonal Architec
   - [Design Decisions](#design-decisions)
 - [V. Running in development mode](#v-running-in-development-mode)
   - [A. Project Setup](#a-project-setup)
-    - [Prerequisites](#prerequisites-1)
-    - [Running the app](#running-the-app-1)
   - [B. Application Validation](#b-application-validation)
-    - [Test the application is running](#test-the-application-is-running)
-      - [Postman](#postman)
-      - [cURL (only for initial testing)](#curl-only-for-initial-testing)
-    - [Running the application tests](#running-the-application-tests)
   - [C. Understanding the project structure](#c-understanding-the-project-structure)
-    - [API Folder](#api-folder)
-    - [Bounded-Contexts Folder](#bounded-contexts-folder)
-    - [Config Folder](#config-folder)
-    - [Lib Folder](#lib-folder)
-    - [Module Structure](#module-structure)
-      - [Application Folder](#application-folder)
-      - [Commands folder](#commands-folder)
-      - [Queries folder](#queries-folder)
-      - [Domain folder](#domain-folder)
-      - [Contracts folder](#contracts-folder)
-      - [Ports folder](#ports-folder)
-      - [Tests folder](#tests-folder)
-    - [proto folder](#proto-folder)
 - [VI. Conclusion](#vi-conclusion)
   - [❓ Questions](#-questions)
-- [📚 Theoretical Review](#-theoretical-review)
-  - [Software Architecture](#software-architecture)
-    - [Layered Architecture](#layered-architecture)
-      - [Separation of concerns benefits example](#separation-of-concerns-benefits-example)
-      - [Limitations of the classical layered architecture](#limitations-of-the-classical-layered-architecture)
-      - [Modern Layered Architectures](#modern-layered-architectures)
-      - [The Anti-pattern (beware)](#the-anti-pattern-beware)
-    - [Hexagonal Architecture (or Clean / Onion Architecture)](#hexagonal-architecture-or-clean--onion-architecture)
-    - [Ports And Adapters](#ports-and-adapters)
-    - [Driven Adapters vs Driving Adapters](#driven-adapters-vs-driving-adapters)
-    - [Inversion of Control](#inversion-of-control)
-  - [Domain Driven Design (DDD)](#domain-driven-design-ddd)
-    - [Key advantages of using DDD](#key-advantages-of-using-ddd)
-    - [Strategic and Tactical DDD](#strategic-and-tactical-ddd)
-      - [Strategic: Building a Domain Model](#strategic-building-a-domain-model)
-      - [Tactically: Implementing DDD](#tactically-implementing-ddd)
-    - [DDD \& Hexagonal Architecture are Complementary](#ddd--hexagonal-architecture-are-complementary)
-  - [Behavior Driven Development (BDD)](#behavior-driven-development-bdd)
-  - [Event-Driven Architecture](#event-driven-architecture)
-  - [Command and Query Responsibility Segregation (CQRS)](#command-and-query-responsibility-segregation-cqrs)
-  - [Event Sourcing (ES)](#event-sourcing-es)
-  - [Eventual Consistency](#eventual-consistency)
-  - [🚀 Bringing this all together!](#-bringing-this-all-together)
-  - [Event Storming in a nutshell](#event-storming-in-a-nutshell)
-    - [Big Picture Event Storming](#big-picture-event-storming)
-    - [Process Level Event Storming](#process-level-event-storming)
-    - [Design Level Event Storming](#design-level-event-storming)
-    - [Event Storming Syntax](#event-storming-syntax)
-    - [More on Event Storming](#more-on-event-storming)
-  - [🙌 Contributing](#-contributing)
-- [👨‍💻 Additional learning resources](#-additional-learning-resources)
-  - [Articles](#articles)
-  - [Blogs](#blogs)
-  - [Videos](#videos)
-  - [Books](#books)
 
 # I. Introduction
 
@@ -473,6 +417,37 @@ If you have any questions, clarifications or would like some help on your own pr
 
 Below is a summary of all the software architecture and design patterns used in the example above from a theoretical perspective. These are all based on available resources, and many references are provided for deeper research. 
 
+## Table of Contents
+
+- [Software Architecture](#software-architecture)
+  - [Layered Architecture](#layered-architecture)
+      - [Separation of concerns benefits example](#separation-of-concerns-benefits-example)
+      - [Limitations of the classical layered architecture](#limitations-of-the-classical-layered-architecture)
+      - [Modern Layered Architectures](#modern-layered-architectures)
+      - [The Anti-pattern (beware)](#the-anti-pattern-beware)
+  - [Hexagonal Architecture (or Clean / Onion Architecture)](#hexagonal-architecture-or-clean--onion-architecture)
+  - [Ports And Adapters](#ports-and-adapters)
+  - [Driven Adapters vs Driving Adapters](#driven-adapters-vs-driving-adapters)
+  - [Inversion of Control](#inversion-of-control)
+- [Domain Driven Design (DDD)](#domain-driven-design-ddd)
+  - [Key advantages of using DDD](#key-advantages-of-using-ddd)
+  - [Strategic and Tactical DDD](#strategic-and-tactical-ddd)
+  - [DDD & Hexagonal Architecture are Complementary](#ddd--hexagonal-architecture-are-complementary)
+- [Behavior Driven Development (BDD)](#behavior-driven-development-bdd)
+- [Event-Driven Architecture](#event-driven-architecture)
+- [Command and Query Responsibility Segregation (CQRS)](#command-and-query-responsibility-segregation-cqrs)
+- [Event Sourcing (ES)](#event-sourcing-es)
+- [Eventual Consistency](#eventual-consistency)
+- [Event Storming](#event-storming)
+- [🚀 Bringing this all together!](#-bringing-this-all-together)
+- [🙌 Contributing](#-contributing)
+- [👨‍💻 Additional learning resources](#-additional-learning-resources)
+  - [Articles](#articles)
+  - [Blogs](#blogs)
+  - [Videos](#videos)
+  - [Books](#books)
+
+
 
 ## Software Architecture
 The project is designed with a [layered architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/layered-architecture) approach, and more specifically: [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture) (Ports and Adapters architecture). 
@@ -847,53 +822,8 @@ By using these techniques, eventually consistent systems are able to provide hig
 </br>
 
 ---
-## 🚀 Bringing this all together!
-To summarize, we have reviewed the following:
-- Hexagonal architecture is a software architecture the places the Domain Layer at the center with no dependencies on any other layer. The Application Layer around the Domain Layer orchestrates the services, and combined the form the Application Core. On the outer layer we have the Infrastructure Layer that comprises the User Interface, Database, etc. The key consideration is that we must use Ports and Adapters to connect the Application Core with the Infrastructure Layer - this ensures clear separation of concerns, improving the modularity, testability and maintainability of a software system.
 
-- Domain-driven design is a software design pattern that helps you build well-defined, easy to understand domain models, more specifically the Application Core (Domain and Application Layers of the Hexagonal Architecture). By applying these principles, the domain is more representative of the business itself and the business logic is easier to change. Moreover, it works particularly well with Ports and Adaptors to maintain the separation we desire between Application Core and the Infrastructure Layer.
-
-- Behavior-driven development is a software development approach that allows you to better understand the expected behaviors of the application, the expected outcomes, and ultimately generates a common understanding between all stakeholders. [BDD](https://bitloops.com/docs/bitloops-language/learning/software-design/behavior-driven-development) is particularly important to increase cohesion between modules and components.
-
-- Event-driven architecture is all about setting up your different services and modules in such a way that they produce or consume events. This increases the resilience and flexibility as the components are decoupled from one another, improving scalability and performance. 
-
-- CQRS is all about separating your methods into commands and queries, and never mixing the two. This ensures separation of concerns from a business logic perspective, keeping the code clean, easy to understand and easy to change.
-
-- Event Sourcing is a software design pattern that ensures all changes to objects (database) happens through an event, and that event is stored sequentially in order to have a complete log of all state changes to the application, and be able to rebuild, test or correct states using that log. 
-
-Hopefully its clear that implementing these software architecture and design patterns will undoubtedly produce high-quality software, that is flexible, resilient and easy to maintain. It will be very easy to onboard new developers to the project, create a new feature, or change a particular technology or infrastructure. 
-
-It's probably also overwhelming as its not easy to implement all this as it requires experience and quite a bit of additional overhead. However, the domain framework above has been created to provide you will all the necessary boilerplate, scaffolding, pipeline and even infrastructure code necessary to build an application that follows these design principles. 
-
-Below is a great diagram inspired by [Herberto Graça!](https://herbertograca.com/) that combines Hexagonal, Clean, Onion, DDD, CQRS and many more concepts 
-
-</br>
-</br>
-
-<p align="center" style="margin-bottom: 0px !important;">
-  <img width="800" src="https://storage.googleapis.com/bitloops-github-assets/Domain-driven%20Design%20and%20Hexagonal%20Architecture%20and%20CQRS%20and%20Event%20Sourcing.png" alt="Explicit Architecture" align="center">
-</p>
-
-<p align="center">
-DDD + Hexagonal Architecture + CQRS + EDA: <a href="https://github.com/Sairyss/domain-driven-hexagon/blob/master/README.md#pros"> GitHub</a>
-</p>
-
-The overarching idea is the following:
-- A User makes a request and a Command/Query is sent to the controller using a DTO
-- The Controller maps this through an Adapter and then a Port to an Application Service
-- The Application Service (within the Application Core) handles the Command/Query
-- The Application Service communicates with the Domain Layer (domain services, aggregate, entities) to execute the required business logic
-- The Application Core communicates through Ports and Adapters to the Infrastructure Layer
-- The Infrastructure Layer maps the relevant data, retrieves/persists data from/to a database
-- Through Inversion Control, it passes the data back to the Application Core
-- Once the Application Core has complete its job, the data/confirmation is returned to the Controllers (again through Ports and Adapters)
-- The Controllers return data back to the User
-
-With this approach, the domain layer cannot be corrupted with other code, there is clear separation of concerns and each component follows a single-responsibility principle. 
-
-This is a general overview and each project needs to be tailored accordingly, with more or less layers/components. Moreover, it is always possible to refactor and improve on these layers at a later stage if required. What is important is to create the foundation for that future refactoring work. 
-
-## Event Storming in a nutshell
+## Event Storming
 
 [Event storming](https://www.eventstorming.com/) is a collaborating modelling technique used to model complex domains, aligned perfectly with [Domain Driven Design (DDD)](https://bitloops.com/docs/bitloops-language/learning/software-design/domain-driven-design) as well as [Event Driven Architecture (EDA)](https://bitloops.com/docs/bitloops-language/learning/software-architecture/event-driven-architecture). 
 
@@ -952,9 +882,67 @@ The general syntax of event storming is the following:
 
 For more on event storming you could check [this repository](https://github.com/ddd-crew/eventstorming-glossary-cheat-sheet) from DDD crew as well as read the original [book](https://leanpub.com/introducing_eventstorming) from Alberto Brandolini.
 
+</br>
+</br>
+
+---
+## 🚀 Bringing this all together!
+To summarize, we have reviewed the following:
+- Hexagonal architecture is a software architecture the places the Domain Layer at the center with no dependencies on any other layer. The Application Layer around the Domain Layer orchestrates the services, and combined the form the Application Core. On the outer layer we have the Infrastructure Layer that comprises the User Interface, Database, etc. The key consideration is that we must use Ports and Adapters to connect the Application Core with the Infrastructure Layer - this ensures clear separation of concerns, improving the modularity, testability and maintainability of a software system.
+
+- Domain-driven design is a software design pattern that helps you build well-defined, easy to understand domain models, more specifically the Application Core (Domain and Application Layers of the Hexagonal Architecture). By applying these principles, the domain is more representative of the business itself and the business logic is easier to change. Moreover, it works particularly well with Ports and Adaptors to maintain the separation we desire between Application Core and the Infrastructure Layer.
+
+- Behavior-driven development is a software development approach that allows you to better understand the expected behaviors of the application, the expected outcomes, and ultimately generates a common understanding between all stakeholders. [BDD](https://bitloops.com/docs/bitloops-language/learning/software-design/behavior-driven-development) is particularly important to increase cohesion between modules and components.
+
+- Event-driven architecture is all about setting up your different services and modules in such a way that they produce or consume events. This increases the resilience and flexibility as the components are decoupled from one another, improving scalability and performance. 
+
+- CQRS is all about separating your methods into commands and queries, and never mixing the two. This ensures separation of concerns from a business logic perspective, keeping the code clean, easy to understand and easy to change.
+
+- Event Sourcing is a software design pattern that ensures all changes to objects (database) happens through an event, and that event is stored sequentially in order to have a complete log of all state changes to the application, and be able to rebuild, test or correct states using that log. 
+
+Hopefully its clear that implementing these software architecture and design patterns will undoubtedly produce high-quality software, that is flexible, resilient and easy to maintain. It will be very easy to onboard new developers to the project, create a new feature, or change a particular technology or infrastructure. 
+
+It's probably also overwhelming as its not easy to implement all this as it requires experience and quite a bit of additional overhead. However, the domain framework above has been created to provide you will all the necessary boilerplate, scaffolding, pipeline and even infrastructure code necessary to build an application that follows these design principles. 
+
+Below is a great diagram inspired by [Herberto Graça!](https://herbertograca.com/) that combines Hexagonal, Clean, Onion, DDD, CQRS and many more concepts 
+
+</br>
+</br>
+
+<p align="center" style="margin-bottom: 0px !important;">
+  <img width="800" src="https://storage.googleapis.com/bitloops-github-assets/Domain-driven%20Design%20and%20Hexagonal%20Architecture%20and%20CQRS%20and%20Event%20Sourcing.png" alt="Explicit Architecture" align="center">
+</p>
+
+<p align="center">
+DDD + Hexagonal Architecture + CQRS + EDA: <a href="https://github.com/Sairyss/domain-driven-hexagon/blob/master/README.md#pros"> GitHub</a>
+</p>
+
+The overarching idea is the following:
+- A User makes a request and a Command/Query is sent to the controller using a DTO
+- The Controller maps this through an Adapter and then a Port to an Application Service
+- The Application Service (within the Application Core) handles the Command/Query
+- The Application Service communicates with the Domain Layer (domain services, aggregate, entities) to execute the required business logic
+- The Application Core communicates through Ports and Adapters to the Infrastructure Layer
+- The Infrastructure Layer maps the relevant data, retrieves/persists data from/to a database
+- Through Inversion Control, it passes the data back to the Application Core
+- Once the Application Core has complete its job, the data/confirmation is returned to the Controllers (again through Ports and Adapters)
+- The Controllers return data back to the User
+
+With this approach, the domain layer cannot be corrupted with other code, there is clear separation of concerns and each component follows a single-responsibility principle. 
+
+This is a general overview and each project needs to be tailored accordingly, with more or less layers/components. Moreover, it is always possible to refactor and improve on these layers at a later stage if required. What is important is to create the foundation for that future refactoring work. 
+
+
+
 ## 🙌 Contributing
 
 If you'd like to get involved feel free to learn more about the [Bitloops Language](https://github.com/bitloops/bitloops-language) and contribute to this Repo or our main project.  
+
+You can also contribute with a star to spread the word!
+
+<p align="center" style="margin-bottom: 0px !important;">
+  <img width="600" src="https://storage.googleapis.com/bitloops-github-assets/star-us.gif"
+</p>
 
 </br>
 </br>
