@@ -13,7 +13,6 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "proto": "protoc --ts_out=./src/proto/generated --ts_opt=target=node --js_out=import_style=commonjs,binary:./src/proto/generated -I ./src/proto ./src/proto/*.proto",
-    "docker-compose": "docker compose up -p bitloops-todo-app -d",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",

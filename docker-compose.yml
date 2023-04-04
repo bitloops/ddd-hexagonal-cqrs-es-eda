@@ -4,7 +4,7 @@ services:
 
   todo-frontend:
     build:
-      context: ../frontend
+      context: frontend/
     ports:
       - '3000:3000'
     networks:
@@ -12,7 +12,7 @@ services:
 
   todo-backend:
     build:
-      context: .
+      context: backend/
     ports:
       - '8081:8081'
       - '8082:8082'
@@ -130,7 +130,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     env_file:
-      - config
+      - grafana/config
     volumes:
       - bl-grafana_data:/usr/share/Docker/grafana
       - ./grafana/provisioning:/usr/share/docker/grafana/provisioning
