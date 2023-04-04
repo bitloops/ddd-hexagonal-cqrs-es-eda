@@ -27,7 +27,7 @@ Complete working example of using Domain Driven Design (DDD), Hexagonal Architec
     - [Test the application is running](#test-the-application-is-running)
       - [Postman](#postman)
       - [cURL (only for initial testing)](#curl-only-for-initial-testing)
-  - [Running the application tests](#running-the-application-tests)
+    - [Running the application tests](#running-the-application-tests)
   - [C. Understanding the project structure](#c-understanding-the-project-structure)
     - [API Folder](#api-folder)
     - [Bounded-Contexts Folder](#bounded-contexts-folder)
@@ -319,7 +319,7 @@ The server should respond (in the terminal) with:
 ```{"statusCode":404,"message":"Cannot GET /auth/register","error":"Not Found"}```
 
 
-## Running the application tests
+### Running the application tests
 
 In order to run the tests of the application run the following on the terminal:
 
