@@ -28,6 +28,7 @@ jobs:
         cache: 'yarn'
     - name: Install Yarn
       run: npm install -g yarn
+      working-directory: backend
     - run: yarn install --immutable
       working-directory: backend
     - run: yarn build
