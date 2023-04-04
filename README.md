@@ -67,9 +67,6 @@ When a todo is completed, if this is the first completed todo, an email should b
 
 
 ## Technical Features 
-<p align="left" style="margin-bottom: 0px !important;">
-  <img width="400" src="https://storage.googleapis.com/bitloops-github-assets/jaeger_small.png" alt="Jaeger" align="center">
-</p>
 
 * **Observability**
 * **Realtime client events**
