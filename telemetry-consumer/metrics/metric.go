@@ -2,14 +2,14 @@ package metrics
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/push"
 )
 
-const (
-	prometheusPushGateway = "http://pushgateway:9091"
-)
+var prometheusPushGateway = os.Getenv("PUSH_GATEWAY_URL") //"http://pushgateway:9091"
 
 var commandCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
 	Name: "command_requests_total",
@@ -57,8 +57,17 @@ var controllerCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
 }, []string{"controller_name"})
 
 func init() {
-	// desc := prometheus.NewDesc("command_requests_total", "The Requests of a command", []string{"command_name"}, nil)
+	godotenv.Load()
+	prometheusPushGateway = os.Getenv("PUSH_GATEWAY_URL") //"http://pushgateway:9091"
 	prometheus.MustRegister(commandCounter)
+	prometheus.MustRegister(controllerCounter)
+	prometheus.MustRegister(integrationEventHandlerCounter)
+	prometheus.MustRegister(domainEventHandlerCounter)
+	prometheus.MustRegister(queryHandlerCounter)
+	prometheus.MustRegister(commandHandlerCounter)
+	prometheus.MustRegister(integrationEventCounter)
+	prometheus.MustRegister(domainEventCounter)
+	prometheus.MustRegister(queryCounter)
 
 }
 

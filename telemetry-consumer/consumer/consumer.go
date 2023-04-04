@@ -2,12 +2,14 @@ package consumer
 
 import (
 	"log"
+	"os"
 
 	"github.com/nats-io/nats.go"
 )
 
+var natsURL = os.Getenv("NATS_URL") //"nats:4222"
+
 const (
-	natsURL = "nats:4222"
 	subject = "trace_events"
 )
 
