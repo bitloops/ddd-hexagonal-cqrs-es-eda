@@ -5,7 +5,7 @@ import {
 import { Application } from '@bitloops/bl-boilerplate-core';
 import { ChangeUserEmailCommand } from '@src/lib/bounded-contexts/marketing/marketing/commands/change-user-email.command';
 import { ChangeUserEmailCommandHandler } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers/change-user-email.command-handler';
-import { MockUpdateUserWriteRepo } from './change-user-email-write-repo.mock';
+import { MockUserWriteRepo } from './change-user-email-write-repo.mock';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
 import { UserEntityBuilder } from '../../builders/user-entity.builder';
 
@@ -14,7 +14,7 @@ describe('Change user email feature test', () => {
     const { email, userId } = UPDATE_USER_SUCCESS_CASE;
     mockAsyncLocalStorageGet(userId);
     // given
-    const mockUpdateUserWriteRepo = new MockUpdateUserWriteRepo();
+    const mockUpdateUserWriteRepo = new MockUserWriteRepo();
     const updateUserEmailCommand = new ChangeUserEmailCommand({
       email,
       userId,
@@ -45,7 +45,7 @@ describe('Change user email feature test', () => {
   it('Changed user email failed, repo error', async () => {
     const { email, userId } = UPDATE_USER_REPO_ERROR_CASE;
     // given
-    const mockUpdateUserWriteRepo = new MockUpdateUserWriteRepo();
+    const mockUpdateUserWriteRepo = new MockUserWriteRepo();
     mockAsyncLocalStorageGet(userId);
     const updateUserEmailCommand = new ChangeUserEmailCommand({
       email,

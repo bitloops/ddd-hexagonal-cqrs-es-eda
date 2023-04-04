@@ -48,9 +48,7 @@ export class ChangeUserEmailCommandHandler
   ): Promise<UpdateUserEmailCommandHandlerResponse> {
     console.log('ChangeUserEmailCommandHandler');
     const requestUserId = new Domain.UUIDv4(command.userId);
-    console.log('requestUserId', requestUserId);
     const userFound = await this.userRepo.getById(requestUserId);
-    console.log('userFound', userFound);
     if (userFound.isFail()) {
       return fail(userFound.value);
     }

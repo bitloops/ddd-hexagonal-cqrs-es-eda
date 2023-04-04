@@ -11,15 +11,18 @@ import {
 } from './change-user-email.mock';
 import { UserWriteRepoPort } from '../../../ports/user-write.repo-port';
 import { UserEntity } from '../../../domain/user.entity';
+import { UserEntityBuilder } from '../../builders/user-entity.builder';
 
-export class MockUpdateUserWriteRepo {
+export class MockUserWriteRepo {
   public readonly mockUpdateMethod: jest.Mock;
+  public readonly mockGetByIdMethod: jest.Mock;
   private mockUserWriteRepo: UserWriteRepoPort;
 
   constructor() {
     this.mockUpdateMethod = this.getMockUpdateMethod();
+    this.mockGetByIdMethod = this.getMockByIdMethod();
     this.mockUserWriteRepo = {
-      getById: jest.fn(),
+      getById: this.mockGetByIdMethod,
       save: jest.fn(),
       delete: jest.fn(),
       update: this.mockUpdateMethod,
@@ -28,6 +31,22 @@ export class MockUpdateUserWriteRepo {
 
   getMockUserWriteRepo(): UserWriteRepoPort {
     return this.mockUserWriteRepo;
+  }
+
+  private getMockByIdMethod(): jest.Mock {
+    return jest.fn(
+      (
+        userId: Domain.UUIDv4,
+      ): Promise<
+        Either<UserEntity | null, Application.Repo.Errors.Unexpected>
+      > => {
+        const user = new UserEntityBuilder()
+          .withEmail(UPDATE_USER_SUCCESS_CASE.email)
+          .withId(UPDATE_USER_SUCCESS_CASE.userId)
+          .build();
+        return Promise.resolve(ok(user));
+      },
+    );
   }
 
   private getMockUpdateMethod(): jest.Mock {
