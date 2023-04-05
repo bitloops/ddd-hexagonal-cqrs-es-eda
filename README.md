@@ -7,6 +7,8 @@ Complete working example of using Domain Driven Design (DDD), Hexagonal Architec
 
 ![ddd-hexagonal-cqrs-es-eda](https://storage.googleapis.com/bitloops-github-assets/ddd-hexagonal-cqrs-es-eda-2.gif)
 
+<a href="https://www.producthunt.com/posts/todo-app-enterprise-edition-codebase?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-todo&#0045;app&#0045;enterprise&#0045;edition&#0045;codebase" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=387476&theme=light" alt="Todo&#0032;App&#0032;Enterprise&#0032;Edition&#0032;Codebase - Complete&#0032;TypeScript&#0032;example&#0032;using&#0032;DDD&#0032;Hexagonal&#0032;CQRS&#0032;EDA | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+
 # Table of Contents
 
 - [I. Introduction](#i-introduction)
