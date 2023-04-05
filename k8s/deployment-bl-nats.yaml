@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bl-nats
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bl-nats
+  template:
+    metadata:
+      labels:
+        app: bl-nats
+    spec:
+      containers:
+      - name: nats
+        image: nats:latest
+        args: ["-js", "-m", "8223"]
+        ports:
+        - containerPort: 4222
+        - containerPort: 8222
+        - containerPort: 6222
+        - containerPort: 4223
+        - containerPort: 6223
+        - containerPort: 8223
+        volumeMounts:
+        - name: bl-nats-data
+          mountPath: /usr/share/docker/nats-server
+      volumes:
+      - name: bl-nats-data
+        persistentVolumeClaim:
+          claimName: pvc-bl-nats-data

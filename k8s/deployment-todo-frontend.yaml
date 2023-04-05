@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-frontend
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-frontend
+  template:
+    metadata:
+      labels:
+        app: todo-frontend
+    spec:
+      containers:
+      - name: todo-frontend
+        context: ../frontend
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: frontend-context
+          mountPath: /frontend
+      volumes:
+      - name: frontend-context
+        hostPath:
+          path: ../frontend

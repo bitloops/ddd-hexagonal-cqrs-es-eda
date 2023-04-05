@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bl-prometheus-nats-exporter
+  namespace: bitloops
+spec:
+  selector:
+    app: bl-prometheus-nats-exporter
+  ports:
+    - protocol: TCP
+      port: 7777
+      targetPort: 7777
+  type: LoadBalancer

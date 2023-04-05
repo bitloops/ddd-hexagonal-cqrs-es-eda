@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bl-pushgateway
+  namespace: bitloops
+spec:
+  selector:
+    app: bl-pushgateway
+  ports:
+    - protocol: TCP
+      port: 9091
+      targetPort: 9091
+  type: LoadBalancer

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bl-mongo
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bl-mongo
+  template:
+    metadata:
+      labels:
+        app: bl-mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:5
+        args: ["--replSet", "my-replica-set", "--bind_ip_all", "--port", "30001"]
+        ports:
+        - containerPort: 30001
+        volumeMounts:
+        - name: bl-mongo-data
+          mountPath: /data/db
+      volumes:
+      - name: bl-mongo-data
+        persistentVolumeClaim:
+          claimName: pvc-bl-mongo-data

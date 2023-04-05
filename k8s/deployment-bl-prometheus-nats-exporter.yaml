@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bl-prometheus-nats-exporter
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bl-prometheus-nats-exporter
+  template:
+    metadata:
+      labels:
+        app: bl-prometheus-nats-exporter
+    spec:
+      containers:
+      - name: prometheus-nats-exporter
+        image: natsio/prometheus-nats-exporter:latest
+        args: ["-DV", "-gatewayz", "-connz", "-varz", "-jsz=all", "http://nats:8223"]
+        ports:
+        - containerPort: 7777
