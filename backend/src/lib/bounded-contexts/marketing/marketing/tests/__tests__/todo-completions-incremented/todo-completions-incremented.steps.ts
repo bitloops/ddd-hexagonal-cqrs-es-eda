@@ -6,7 +6,7 @@ import { UserEntityBuilder } from '../../builders/user-entity.builder';
 import { Application, Domain } from '@bitloops/bl-boilerplate-core';
 import {
   SUCCESS_CASE,
-  UNSUCCESS_EMAIL_NOT_FOUND_CASE,
+  UNSUCCESS_USER_NOT_FOUND_CASE,
   UNSUCCESS_NOT_FIRST_TODO_CASE,
   UNSUCCESS_REPO_ERROR_CASE,
   UNSUCCESS_USER_REPO_ERROR_CASE,
@@ -65,6 +65,7 @@ describe('Todo completions incremented feature test', () => {
     expect(publishedCommand.origin).toEqual('marketing@bitloops.com');
     expect(result.value).toBe(undefined);
   });
+
   it('Todo completions incremented successfully, email not sent, repo error', async () => {
     const { userId, completedTodos } = UNSUCCESS_REPO_ERROR_CASE;
     mockAsyncLocalStorageGet(userId);
@@ -136,6 +137,7 @@ describe('Todo completions incremented feature test', () => {
 
     expect(result.value).toBe(undefined);
   });
+
   it('Todo completions incremented successfully, email not sent, user repo error', async () => {
     const { userId, completedTodos } = UNSUCCESS_USER_REPO_ERROR_CASE;
     mockAsyncLocalStorageGet(userId);
@@ -170,7 +172,7 @@ describe('Todo completions incremented feature test', () => {
 
     expect(
       mockNotificationTemplateReadRepo.mockGetByTypeMethod,
-    ).toHaveBeenCalledWith(NotificationTemplateReadModel.firstTodo);
+    ).not.toHaveBeenCalled();
 
     expect(mockUserWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
       new Domain.UUIDv4(userId),
@@ -179,7 +181,7 @@ describe('Todo completions incremented feature test', () => {
   });
 
   it('Todo completions incremented successfully, email not sent, user email not found', async () => {
-    const { userId, completedTodos } = UNSUCCESS_EMAIL_NOT_FOUND_CASE;
+    const { userId, completedTodos } = UNSUCCESS_USER_NOT_FOUND_CASE;
     mockAsyncLocalStorageGet(userId);
 
     // given
@@ -212,7 +214,7 @@ describe('Todo completions incremented feature test', () => {
 
     expect(
       mockNotificationTemplateReadRepo.mockGetByTypeMethod,
-    ).toHaveBeenCalledWith(NotificationTemplateReadModel.firstTodo);
+    ).not.toHaveBeenCalled();
 
     expect(mockUserWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
       new Domain.UUIDv4(userId),

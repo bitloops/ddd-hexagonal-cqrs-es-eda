@@ -10,6 +10,8 @@ import { UserWriteRepoPort } from '../../../ports/user-write.repo-port';
 import { UserEntityBuilder } from '../../builders/user-entity.builder';
 import {
   SUCCESS_CASE,
+  UNSUCCESS_NOT_FIRST_TODO_CASE,
+  UNSUCCESS_REPO_ERROR_CASE,
   UNSUCCESS_USER_REPO_ERROR_CASE,
 } from './todo-completions-incremented.mock';
 
@@ -43,6 +45,26 @@ export class MockUserWriteRepo {
             .withEmail(SUCCESS_CASE.userEmail)
             .withId(SUCCESS_CASE.userId)
             .withCompletedTodos(SUCCESS_CASE.completedTodos)
+            .build();
+          return Promise.resolve(ok(userResponse));
+        }
+        if (
+          userid.equals(new Domain.UUIDv4(UNSUCCESS_REPO_ERROR_CASE.userId))
+        ) {
+          const userResponse = new UserEntityBuilder()
+            .withEmail(UNSUCCESS_REPO_ERROR_CASE.userEmail)
+            .withId(UNSUCCESS_REPO_ERROR_CASE.userId)
+            .withCompletedTodos(UNSUCCESS_REPO_ERROR_CASE.completedTodos)
+            .build();
+          return Promise.resolve(ok(userResponse));
+        }
+        if (
+          userid.equals(new Domain.UUIDv4(UNSUCCESS_NOT_FIRST_TODO_CASE.userId))
+        ) {
+          const userResponse = new UserEntityBuilder()
+            .withEmail(UNSUCCESS_NOT_FIRST_TODO_CASE.userEmail)
+            .withId(UNSUCCESS_NOT_FIRST_TODO_CASE.userId)
+            .withCompletedTodos(UNSUCCESS_NOT_FIRST_TODO_CASE.completedTodos)
             .build();
           return Promise.resolve(ok(userResponse));
         }
