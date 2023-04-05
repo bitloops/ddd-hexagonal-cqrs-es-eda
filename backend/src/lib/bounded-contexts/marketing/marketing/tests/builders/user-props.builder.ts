@@ -1,9 +1,11 @@
 import { Domain } from '@bitloops/bl-boilerplate-core';
 import { UserProps } from '@src/lib/bounded-contexts/marketing/marketing/domain/user.entity';
 import { CompletedTodosVO } from '@src/lib/bounded-contexts/marketing/marketing/domain/completed-todos.vo';
+import { EmailVO } from '../../domain/email.vo';
 
 export class UserPropsBuilder {
   private completedTodos: number;
+  private email: string;
   private id?: string;
 
   withCompletedTodos(completedTodos: number): UserPropsBuilder {
@@ -16,14 +18,20 @@ export class UserPropsBuilder {
     return this;
   }
 
+  withEmail(email: string): UserPropsBuilder {
+    this.email = email;
+    return this;
+  }
+
   build(): UserProps {
-    const todoProps: UserProps = {
+    const userProps: UserProps = {
       completedTodos: CompletedTodosVO.create({ counter: this.completedTodos })
         .value as CompletedTodosVO,
+      email: EmailVO.create({ email: this.email }).value as EmailVO,
     };
     if (this.id) {
-      todoProps.id = new Domain.UUIDv4(this.id);
+      userProps.id = new Domain.UUIDv4(this.id);
     }
-    return todoProps;
+    return userProps;
   }
 }

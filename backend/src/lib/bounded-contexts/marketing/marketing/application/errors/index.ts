@@ -1,6 +1,6 @@
-import { UserEmailNotFoundError as EmailNotFound } from './email-not-found.error';
+import { UserNotFoundError as UserNotFound } from './user-not-found.error';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace ApplicationErrors {
-  export class UserEmailNotFoundError extends EmailNotFound {}
+  export class UserNotFoundError extends UserNotFound {}
 }

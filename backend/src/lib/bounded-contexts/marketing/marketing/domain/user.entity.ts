@@ -2,15 +2,18 @@ import { Either, Domain, ok, fail } from '@bitloops/bl-boilerplate-core';
 import { CompletedTodosVO } from './completed-todos.vo';
 import { TodoCompletionsIncrementedDomainEvent } from './events/todo-completions-incremented.event';
 import { DomainErrors } from '@src/lib/bounded-contexts/marketing/marketing/domain/errors';
+import { EmailVO } from './email.vo';
 
 export interface UserProps {
   id?: Domain.UUIDv4;
   completedTodos: CompletedTodosVO;
+  email: EmailVO;
 }
 
 type TUserEntityPrimitives = {
   id: string;
   completedTodos: number;
+  email: string;
 };
 
 export class UserEntity extends Domain.Aggregate<UserProps> {
@@ -27,8 +30,23 @@ export class UserEntity extends Domain.Aggregate<UserProps> {
     return this.props.completedTodos;
   }
 
+  get email(): EmailVO {
+    return this.props.email;
+  }
+
   get id() {
     return this._id;
+  }
+
+  changeEmail(
+    email: string,
+  ): Either<void, DomainErrors.InvalidEmailDomainError> {
+    const newEmail = EmailVO.create({ email });
+    if (newEmail.isFail()) {
+      return fail(newEmail.value);
+    }
+    this.props.email = newEmail.value;
+    return ok();
   }
 
   incrementCompletedTodos(): Either<
@@ -63,6 +81,9 @@ export class UserEntity extends Domain.Aggregate<UserProps> {
       completedTodos: CompletedTodosVO.create({
         counter: data.completedTodos,
       }).value as CompletedTodosVO,
+      email: EmailVO.create({
+        email: data.email,
+      }).value as EmailVO,
     };
     return new UserEntity(userEntityProps);
   }
@@ -71,6 +92,7 @@ export class UserEntity extends Domain.Aggregate<UserProps> {
     return {
       id: this.id.toString(),
       completedTodos: this.props.completedTodos.counter,
+      email: this.props.email.email,
     };
   }
 }
