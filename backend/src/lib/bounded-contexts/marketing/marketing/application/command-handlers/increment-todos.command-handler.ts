@@ -43,6 +43,7 @@ export class IncrementTodosCommandHandler
 
   @Traceable({
     operation: '[Marketing] IncrementTodosCommandHandler',
+    serviceName: 'Marketing',
     metrics: {
       name: '[Marketing] IncrementTodosCommandHandler',
       category: 'commandHandler',

@@ -4,14 +4,23 @@ import (
 	"bitloops/telemetry/consumer/metrics"
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"sync"
 	"time"
 
-	"go.opentelemetry.io/otel"
+	"github.com/joho/godotenv"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"go.opentelemetry.io/otel/trace"
 )
 
 var traceIdSpanIdMapping = map[string]string{}
+var tracerProviders sync.Map
+var jaegerAgent string
 
 type Event struct {
 	Trace  TraceEvent          `json:"trace"`
@@ -38,8 +47,15 @@ func getParentContext(event TraceEvent, parentSpanId string) (spanContext trace.
 	return spanContext, nil
 }
 
+func init() {
+	godotenv.Load()
+	jaegerAgent = os.Getenv("JAEGER_URL")
+}
+
 func SendTrace(event TraceEvent) error {
-	tracer := otel.GetTracerProvider().Tracer(event.ServiceName)
+	tp := getOrCreateTracerProvider(event.ServiceName)
+	tracer := tp.Tracer(event.ServiceName)
+	// tracer := otel.GetTracerProvider().Tracer(event.ServiceName)
 
 	ctx := context.Background()
 	// fmt.Print("before unix")
@@ -83,7 +99,7 @@ func SendTrace(event TraceEvent) error {
 		)
 
 		traceIdSpanIdMapping[event.TraceID] = span.SpanContext().SpanID().String()
-		// fmt.Printf("\nCreatedtraceIdSpanIdMapping: %+v", traceIdSpanIdMapping)
+		fmt.Printf("\nCreatedtraceIdSpanIdMapping: %+v", traceIdSpanIdMapping)
 
 		// Add attributes to the span
 		for key, value := range event.Attributes {
@@ -92,4 +108,23 @@ func SendTrace(event TraceEvent) error {
 		defer span.End(trace.WithTimestamp(endTime))
 	}
 	return nil
+}
+
+func getOrCreateTracerProvider(serviceName string) *sdktrace.TracerProvider {
+	tp, ok := tracerProviders.Load(serviceName)
+	if !ok {
+		jaegerExporter, err := jaeger.New(
+			jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(jaegerAgent)),
+		)
+		if err != nil {
+			log.Fatalf("Failed to create Jaeger exporter: %v", err)
+		}
+
+		tp = sdktrace.NewTracerProvider(
+			sdktrace.WithSyncer(jaegerExporter),
+			sdktrace.WithResource(resource.NewWithAttributes(semconv.SchemaURL, semconv.ServiceNameKey.String(serviceName))),
+		)
+		tracerProviders.Store(serviceName, tp)
+	}
+	return tp.(*sdktrace.TracerProvider)
 }

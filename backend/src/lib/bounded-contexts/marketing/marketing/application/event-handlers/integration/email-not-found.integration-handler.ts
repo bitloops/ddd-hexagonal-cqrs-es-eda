@@ -18,6 +18,7 @@ export class EmailNotFoundIntegrationErrorEventHandler
 
   @Traceable({
     operation: '[Marketing] EmailNotFoundIntegrationEventHandler',
+    serviceName: 'Marketing',
     metrics: {
       name: '[Marketing] EmailNotFoundIntegrationEventHandler',
       category: 'integrationEventHandler',

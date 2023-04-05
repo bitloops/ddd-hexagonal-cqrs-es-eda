@@ -27,6 +27,7 @@ export class UserRegisteredIntegrationEventHandler
 
   @Traceable({
     operation: '[Marketing] UserRegisteredIntegrationEventHandler',
+    serviceName: 'Marketing',
     metrics: {
       name: '[Marketing] UserRegisteredIntegrationEventHandler',
       category: 'integrationEventHandler',

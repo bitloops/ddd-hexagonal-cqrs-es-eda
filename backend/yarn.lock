@@ -1108,10 +1108,10 @@
     "@nestjs/common" "^9.0.0"
     pg "^8.10.0"
 
-"@bitloops/bl-boilerplate-infra-telemetry@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@bitloops/bl-boilerplate-infra-telemetry/-/bl-boilerplate-infra-telemetry-0.1.2.tgz#9379a3961cb1d19b6c635aa548ffa5741845a4f5"
-  integrity sha512-eb9Kl9iTGcPiTRiTSo5HF5SucB8Y72ycHEZcAo7UHZqfQVOUo5HU+XShQ2kzqxdT5uP2hKvQDCsltpNn6bWRAQ==
+"@bitloops/bl-boilerplate-infra-telemetry@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@bitloops/bl-boilerplate-infra-telemetry/-/bl-boilerplate-infra-telemetry-0.1.3.tgz#361165cb315b1ea10cd3c2cecb0ec2a8928a3667"
+  integrity sha512-R0WkRIxoEpUcjngeFKIkDxtPBuGLQs1FZMGHkf22SY+PRX2wjTLyIxz8sqCZUtyevVo+SJoJVOqt3/mzSB348Q==
   dependencies:
     fastify "^4.15.0"
 

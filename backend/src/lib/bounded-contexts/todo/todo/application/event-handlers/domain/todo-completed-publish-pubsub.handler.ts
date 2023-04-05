@@ -22,6 +22,7 @@ export class TodoCompletedDomainToPubSubIntegrationEventHandler
 
   @Traceable({
     operation: '[Todo] TodoCompletedPubSubDomainEventHandler',
+    serviceName: 'Todo',
     metrics: {
       name: '[Todo] TodoCompletedPubSubDomainEventHandler',
       category: 'domainEventHandler',

@@ -23,6 +23,7 @@ export class UserUpdatedEmailPublishIntegrationEventHandler
 
   @Traceable({
     operation: '[IAM] UpdatedEmailDomainEventHandler',
+    serviceName: 'authentication',
     metrics: {
       name: '[IAM] UpdatedEmailDomainEventHandler',
       category: 'domainEventHandler',

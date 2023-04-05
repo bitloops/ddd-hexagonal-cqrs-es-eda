@@ -38,6 +38,7 @@ export class ChangeUserEmailCommandHandler
 
   @Traceable({
     operation: '[Marketing] ChangeUserEmailCommandHandler',
+    serviceName: 'marketing',
     metrics: {
       name: '[Marketing] ChangeUserEmailCommandHandler',
       category: 'commandHandler',

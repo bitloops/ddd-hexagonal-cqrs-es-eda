@@ -32,6 +32,7 @@ export class GetTodosHandler
 
   @Traceable({
     operation: '[Todo] GetTodosQueryHandler',
+    serviceName: 'Todo',
     metrics: {
       name: '[Todo] GetTodosQueryHandler',
       category: 'queryHandler',

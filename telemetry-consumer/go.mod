@@ -3,6 +3,7 @@ module bitloops/telemetry/consumer
 go 1.18
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/nats-io/nats.go v1.24.0
 	github.com/prometheus/client_golang v1.14.0
 	go.opentelemetry.io/otel v1.14.0

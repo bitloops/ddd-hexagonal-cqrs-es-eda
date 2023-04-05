@@ -37,6 +37,7 @@ export class LogInHandler
 
   @Traceable({
     operation: '[IAM] LogInCommandHandler',
+    serviceName: 'IAM',
     metrics: {
       name: '[IAM] LogInCommandHandler',
       category: 'commandHandler',
