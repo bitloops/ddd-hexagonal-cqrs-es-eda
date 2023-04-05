@@ -11,36 +11,7 @@ import { UserEntityBuilder } from '../../builders/user-entity.builder';
 
 describe('Create user feature test', () => {
   it('Created user successfully,', async () => {
-    const { email, userId } = CREATE_USER_SUCCESS_CASE;
-    mockAsyncLocalStorageGet(userId);
-    // given
-    const mockCreateUserWriteRepo = new MockCreateUserWriteRepo();
-    const createUserCommand = new CreateUserCommand({ email, userId });
-
-    // when
-    const createUserHandler = new CreateUserCommandHandler(
-      mockCreateUserWriteRepo.getMockUserWriteRepo(),
-    );
-    const result = await createUserHandler.execute(createUserCommand);
-
-    //then
-    const userIdEmail = new UserEntityBuilder()
-      .withId(userId)
-      .withEmail(email)
-      .build();
-
-    expect(mockCreateUserWriteRepo.mockSaveMethod).toHaveBeenCalledWith({
-      userId,
-      email,
-    });
-    const userAggregate =
-      mockCreateUserWriteRepo.mockSaveMethod.mock.calls[0][0];
-    expect(userAggregate).toEqual(userIdEmail);
-    expect(typeof result.value).toBe('undefined');
-  });
-
-  it('Created user failed, repo error', async () => {
-    const { email, userId } = CREATE_USER_REPO_ERROR_CASE;
+    const { email, userId, completedTodos } = CREATE_USER_SUCCESS_CASE;
     mockAsyncLocalStorageGet(userId);
     // given
     const mockCreateUserWriteRepo = new MockCreateUserWriteRepo();
@@ -56,6 +27,32 @@ describe('Create user feature test', () => {
     const user = new UserEntityBuilder()
       .withId(userId)
       .withEmail(email)
+      .withCompletedTodos(completedTodos)
+      .build();
+
+    expect(mockCreateUserWriteRepo.mockSaveMethod).toHaveBeenCalledWith(user);
+
+    expect(typeof result.value).toBe('undefined');
+  });
+
+  it('Created user failed, repo error', async () => {
+    const { email, userId, completedTodos } = CREATE_USER_REPO_ERROR_CASE;
+    mockAsyncLocalStorageGet(userId);
+    // given
+    const mockCreateUserWriteRepo = new MockCreateUserWriteRepo();
+    const createUserCommand = new CreateUserCommand({ email, userId });
+
+    // when
+    const createUserHandler = new CreateUserCommandHandler(
+      mockCreateUserWriteRepo.getMockUserWriteRepo(),
+    );
+    const result = await createUserHandler.execute(createUserCommand);
+
+    //then
+    const user = new UserEntityBuilder()
+      .withId(userId)
+      .withEmail(email)
+      .withCompletedTodos(completedTodos)
       .build();
 
     expect(mockCreateUserWriteRepo.mockSaveMethod).toHaveBeenCalledWith(user);
