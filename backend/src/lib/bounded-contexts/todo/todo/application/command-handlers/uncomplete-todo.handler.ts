@@ -41,6 +41,7 @@ export class UncompleteTodoHandler
 
   @Traceable({
     operation: '[Todo] UncompleteTodoCommandHandler',
+    serviceName: 'Todo',
     metrics: {
       name: '[Todo] UncompleteTodoCommandHandler',
       category: 'commandHandler',

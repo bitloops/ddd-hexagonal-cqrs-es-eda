@@ -10,14 +10,14 @@ services:
   #   networks:
   #     - bitloops
 
-  # todo-backend:
-  #   build:
-  #     context: backend/
-  #   ports:
-  #     - '8081:8081'
-  #     - '8082:8082'
-  #   networks:
-  #     - bitloops
+  todo-backend:
+    build:
+      context: backend/
+    ports:
+      - '8081:8081'
+      - '8082:8082'
+    networks:
+      - bitloops
 
   # bl-mongo:
   #   image: mongo:5

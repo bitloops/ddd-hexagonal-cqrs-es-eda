@@ -20,7 +20,7 @@ import (
 
 var traceIdSpanIdMapping = map[string]string{}
 var tracerProviders sync.Map
-var jaegerAgent = os.Getenv("JAEGER_URL") // "http://jaeger:14268/api/traces"
+var jaegerAgent string
 
 type Event struct {
 	Trace  TraceEvent          `json:"trace"`
@@ -49,8 +49,7 @@ func getParentContext(event TraceEvent, parentSpanId string) (spanContext trace.
 
 func init() {
 	godotenv.Load()
-	jaegerAgent = os.Getenv("JAEGER_URL") // "http://jaeger:14268/api/traces"
-	fmt.Println("jaegerAgent", jaegerAgent)
+	jaegerAgent = os.Getenv("JAEGER_URL")
 }
 
 func SendTrace(event TraceEvent) error {

@@ -7,7 +7,7 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
-var natsURL = os.Getenv("NATS_URL") //"nats:4222"
+var natsURL = os.Getenv("NATS_URL")
 
 const (
 	subject = "trace_events"

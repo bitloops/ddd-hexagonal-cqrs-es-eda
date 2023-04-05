@@ -9,7 +9,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/push"
 )
 
-var prometheusPushGateway = os.Getenv("PUSH_GATEWAY_URL") //"http://pushgateway:9091"
+var prometheusPushGateway = os.Getenv("PUSH_GATEWAY_URL")
 
 var commandCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
 	Name: "command_requests_total",

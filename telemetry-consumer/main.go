@@ -7,9 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/nats-io/nats.go"
 )
 
@@ -19,13 +17,6 @@ const (
 )
 
 func main() {
-	godotenv.Load()
-	var prometheusURL = os.Getenv("PROMETHEUS_URL") //"http://prometheus:9090"
-
-	fmt.Print("prometheusURL", prometheusURL)
-
-	// Initialize OpenTelemetry
-	// initProviders()
 
 	// Connect to NATS JetStream
 	js, nc := consumer.ConnectToJetStream()
@@ -34,25 +25,6 @@ func main() {
 	defer sub.Unsubscribe()
 	select {}
 }
-
-// func initProviders() {
-// 	jaegerExporter, err := jaeger.New(
-// 		jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(jaegerAgent)),
-// 	)
-
-// 	if err != nil {
-// 		log.Fatalf("Failed to create Jaeger exporter: %v", err)
-// 	}
-
-// 	// Configure the SDK with the Jaeger exporter.
-// 	tp := sdktrace.NewTracerProvider(
-// 		sdktrace.WithSyncer(jaegerExporter),
-// 		sdktrace.WithResource(resource.NewWithAttributes(semconv.SchemaURL, semconv.ServiceNameKey.String("bitloops_app"))),
-// 	)
-
-// 	otel.SetTracerProvider(tp)
-// 	otel.SetTextMapPropagator(propagation.TraceContext{})
-// }
 
 func SubscribeToTracingEvents(js nats.JetStreamContext) *nats.Subscription {
 	sub, err := js.Subscribe(subject, func(msg *nats.Msg) {
@@ -101,7 +73,7 @@ func processEvent(data []byte, headers nats.Header) {
 	fmt.Printf("\nReceived event metric: %+v", event.Metric)
 	metrics.SendMeter(event.Metric)
 
-	fmt.Printf("\nReceived event: %+v\n", event)
+	fmt.Printf("\nReceived event trace: %+v\n", event.Trace)
 	err = tracing.SendTrace(event.Trace)
 	if err != nil {
 		log.Printf("Error sending trace: %v", err)

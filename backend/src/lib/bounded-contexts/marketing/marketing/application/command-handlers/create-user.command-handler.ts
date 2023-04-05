@@ -37,6 +37,7 @@ export class CreateUserCommandHandler
 
   @Traceable({
     operation: '[Marketing] CreateUserCommandHandler',
+    serviceName: 'marketing',
     metrics: {
       name: '[Marketing] CreateUserCommandHandler',
       category: 'commandHandler',

@@ -221,6 +221,7 @@ export class TodoGrpcController {
   @GrpcMethod('TodoService', 'Add')
   @Traceable({
     operation: 'AddTodoController',
+    serviceName: 'API',
   })
   async addTodo(
     data: todo.AddTodoRequest,
@@ -251,6 +252,7 @@ export class TodoGrpcController {
   @GrpcMethod('TodoService', 'GetAll')
   @Traceable({
     operation: 'GetAllTodosController',
+    serviceName: 'API',
   })
   async getAll(
     data: todo.GetAllTodosRequest,
@@ -291,6 +293,7 @@ export class TodoGrpcController {
   @GrpcMethod('TodoService', 'Complete')
   @Traceable({
     operation: 'CompleteTodoController',
+    serviceName: 'API',
   })
   async completeTodo(
     data: todo.CompleteTodoRequest,
@@ -319,6 +322,7 @@ export class TodoGrpcController {
   @GrpcMethod('TodoService', 'Uncomplete')
   @Traceable({
     operation: 'UncompleteTodoController',
+    serviceName: 'API',
   })
   async uncompleteTodo(
     data: todo.CompleteTodoRequest,
@@ -346,6 +350,7 @@ export class TodoGrpcController {
   @GrpcMethod('TodoService', 'Delete')
   @Traceable({
     operation: 'DeleteTodoController',
+    serviceName: 'API',
   })
   async deleteTodo(
     data: todo.DeleteTodoRequest,
@@ -373,6 +378,7 @@ export class TodoGrpcController {
   @GrpcMethod('TodoService', 'ModifyTitle')
   @Traceable({
     operation: 'ModifyTitleController',
+    serviceName: 'API',
   })
   async modifyTitle(
     data: todo.ModifyTitleTodoRequest,
