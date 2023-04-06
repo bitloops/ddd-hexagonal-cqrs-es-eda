@@ -13,7 +13,7 @@ export class UserLoggedInDomainEvent
 
   constructor(public readonly payload: UserLoggedInDomainEventProps) {
     this.metadata = {
-      boundedContextId: 'IyAM',
+      boundedContextId: 'IAM',
       messageId: new Domain.UUIDv4().toString(),
       createdTimestamp: Date.now(),
       correlationId: asyncLocalStorage.getStore()?.get('correlationId'),
