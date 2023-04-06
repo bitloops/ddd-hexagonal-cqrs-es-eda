@@ -1,4 +1,4 @@
-import { Domain, asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
+import { Domain } from '@bitloops/bl-boilerplate-core';
 
 type TodoModifiedTitleDomainEventProps = {
   userId: string;
@@ -6,21 +6,12 @@ type TodoModifiedTitleDomainEventProps = {
   completed: boolean;
 } & { aggregateId: string };
 
-export class TodoModifiedTitleDomainEvent
-  implements Domain.IDomainEvent<TodoModifiedTitleDomainEventProps>
-{
+export class TodoModifiedTitleDomainEvent extends Domain.DomainEvent<TodoModifiedTitleDomainEventProps> {
   public aggregateId: any;
   public metadata: Domain.TDomainEventMetadata;
 
-  constructor(public readonly payload: TodoModifiedTitleDomainEventProps) {
-    const uuid = new Domain.UUIDv4();
-    this.metadata = {
-      boundedContextId: 'Todo',
-      createdTimestamp: Date.now(),
-      messageId: uuid.toString(),
-      context: asyncLocalStorage.getStore()?.get('context'),
-      correlationId: asyncLocalStorage.getStore()?.get('correlationId'),
-    };
+  constructor(payload: TodoModifiedTitleDomainEventProps) {
+    super('Todo', payload);
     this.aggregateId = payload.aggregateId;
   }
 }
