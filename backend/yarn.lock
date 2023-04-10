@@ -1061,10 +1061,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bitloops/bl-boilerplate-core@^0.3.5":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@bitloops/bl-boilerplate-core/-/bl-boilerplate-core-0.3.5.tgz#74f96e7475cbbaa8cf1dbe5a7ce11b3206b121d1"
-  integrity sha512-3Rt1gtr4BqVOdiGm/xEnkgGlv/2ObylpPgfjj3r0x4tdBaJ72Wv5wAG1+mLNygc9pZCCZOzguW+WL9WFQNA5vw==
+"@bitloops/bl-boilerplate-core@^0.3.6":
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/@bitloops/bl-boilerplate-core/-/bl-boilerplate-core-0.3.6.tgz#b9036edeba48566aa307e26d0248002ee892725c"
+  integrity sha512-qGWwY8alc5npl9mdKlQal8D1XWT3hCk8ui1iNyQlmiQcvdbQGDPyN2FK+XdsqSmQs5UQtYC4lWFFKShnSHDHqw==
   dependencies:
     class-transformer "^0.5.1"
     nats "^2.10.2"
@@ -1092,10 +1092,10 @@
     passport-local "^1.0.0"
     rxjs "^7.8.0"
 
-"@bitloops/bl-boilerplate-infra-nest-jetstream@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@bitloops/bl-boilerplate-infra-nest-jetstream/-/bl-boilerplate-infra-nest-jetstream-0.0.2.tgz#0766ca828c9269e03afbcb244165f365e6ac157c"
-  integrity sha512-6qGuRfk7NYDMu+tw+meoZyFb/su8LnVxHZ3KtxzZ8O73w+/4wq8r+QllturQjQazKKk9w2ulBZ9qekdQD4QDBA==
+"@bitloops/bl-boilerplate-infra-nest-jetstream@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@bitloops/bl-boilerplate-infra-nest-jetstream/-/bl-boilerplate-infra-nest-jetstream-0.0.3.tgz#4e60df2a403605c8d0280b0b0c2f1bfd9e84afa6"
+  integrity sha512-PD+WLb4sw+M3ZIXL+FXAX5dDKt5xZD0C/M1GSQkeELEBeWlxL+fTpgQGVQRdHVrB8WqVe66a5q3FJXF8UFuwAg==
   dependencies:
     async-mutex "^0.4.0"
     nats "^2.13.1"

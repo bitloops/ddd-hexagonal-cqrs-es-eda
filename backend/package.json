@@ -26,10 +26,10 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@bitloops/bl-boilerplate-core": "^0.3.5",
+    "@bitloops/bl-boilerplate-core": "^0.3.6",
     "@bitloops/bl-boilerplate-infra-mongo": "^0.1.2",
     "@bitloops/bl-boilerplate-infra-nest-auth-passport": "^0.1.4",
-    "@bitloops/bl-boilerplate-infra-nest-jetstream": "^0.0.2",
+    "@bitloops/bl-boilerplate-infra-nest-jetstream": "^0.0.3",
     "@bitloops/bl-boilerplate-infra-postgres": "^0.1.1",
     "@bitloops/bl-boilerplate-infra-telemetry": "^0.1.3",
     "@grpc/grpc-js": "^1.8.13",
