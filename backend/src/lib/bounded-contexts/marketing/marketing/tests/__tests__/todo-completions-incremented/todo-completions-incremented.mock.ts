@@ -16,7 +16,7 @@ export const UNSUCCESS_REPO_ERROR_CASE = {
 };
 
 export const UNSUCCESS_NOT_FIRST_TODO_CASE = {
-  userId: '1234',
+  userId: '12',
   completedTodos: 5,
   userEmail: 'user@bitloops.com',
 };
@@ -27,7 +27,7 @@ export const UNSUCCESS_USER_REPO_ERROR_CASE = {
   userEmail: 'user@bitloops.com',
 };
 
-export const UNSUCCESS_EMAIL_NOT_FOUND_CASE = {
+export const UNSUCCESS_USER_NOT_FOUND_CASE = {
   userId: '123456',
   completedTodos: 1,
   userEmail: 'user@bitloops.com',

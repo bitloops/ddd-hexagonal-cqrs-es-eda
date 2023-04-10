@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      containers:
+      - name: todo-backend
+        context: ../backend
+    ports:
+    - containerPort: 8081
+    - containerPort: 8082
+    volumeMounts:
+    - name: backend-context
+      mountPath: /backend
+  volumes:
+  - name: backend-context
+    hostPath:
+      path: ../backend

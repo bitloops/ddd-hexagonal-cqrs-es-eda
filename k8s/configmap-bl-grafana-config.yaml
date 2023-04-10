@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bl-grafana-config
+  namespace: bitloops
+# data:
+  # Add the contents of the Grafana config file here as key-value pairs

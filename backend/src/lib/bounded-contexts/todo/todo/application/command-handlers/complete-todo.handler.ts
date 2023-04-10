@@ -42,6 +42,7 @@ export class CompleteTodoHandler
 
   @Traceable({
     operation: '[Todo] CompleteTodoCommandHandler',
+    serviceName: 'Todo',
     metrics: {
       name: '[Todo] CompleteTodoCommandHandler',
       category: 'commandHandler',

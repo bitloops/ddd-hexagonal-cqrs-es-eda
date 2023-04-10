@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bl-grafana
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bl-grafana
+  template:
+    metadata:
+      labels:
+        app: bl-grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest
+        env:
+        - name: GF_SECURITY_opentelemetry_USER
+          value: admin
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-bl-grafana-secret
+              key: GF_SECURITY_ADMIN_PASSWORD
+        - name: GF_USERS_ALLOW_SIGN_UP
+          value: "false"
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: bl-grafana-data
+          mountPath: /usr/share/Docker/grafana
+        - name: bl-grafana-provisioning
+          mountPath: /usr/share/docker/grafana/provisioning
+      volumes:
+      - name: bl-grafana-data
+        persistentVolumeClaim:
+          claimName: pvc-bl-grafana-data
+      - name: bl-grafana-provisioning
+        configMap:
+          name: cm-grafana-provisioning
+
+ 

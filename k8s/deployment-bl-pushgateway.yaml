@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bl-pushgateway
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bl-pushgateway
+  template:
+    metadata:
+      labels:
+        app: bl-pushgateway
+    spec:
+      containers:
+      - name: pushgateway
+        image: prom/pushgateway
+        ports:
+        - containerPort: 9091

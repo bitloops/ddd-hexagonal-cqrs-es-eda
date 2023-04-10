@@ -27,6 +27,7 @@ export class TodoCompletedIntegrationEventHandler
 
   @Traceable({
     operation: '[Marketing] TodoCompletedIntegrationEventHandler',
+    serviceName: 'Marketing',
     metrics: {
       name: '[Marketing] TodoCompletedIntegrationEventHandler',
       category: 'integrationEventHandler',

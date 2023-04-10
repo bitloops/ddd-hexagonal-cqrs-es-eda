@@ -10,10 +10,6 @@ import { TodoCompletionsIncrementedDomainEvent } from '../../../domain/events/to
 import { SendEmailCommand } from '../../../commands/send-email.command';
 import { Inject } from '@nestjs/common';
 import {
-  UserEmailReadRepoPort,
-  UserEmailReadRepoPortToken,
-} from '../../../ports/user-email-read.repo-port';
-import {
   NotificationTemplateReadRepoPort,
   NotificationTemplateReadRepoPortToken,
 } from '../../../ports/notification-template-read.repo-port.';
@@ -23,6 +19,10 @@ import { ApplicationErrors } from '../../errors';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 import { UserEntity } from '../../../domain/user.entity';
 import { CompletedTodosVO } from '../../../domain/completed-todos.vo';
+import {
+  UserWriteRepoPort,
+  UserWriteRepoPortToken,
+} from '../../../ports/user-write.repo-port';
 
 export class TodoCompletionsIncrementedHandler
   implements Application.IHandleDomainEvent
@@ -30,8 +30,8 @@ export class TodoCompletionsIncrementedHandler
   constructor(
     @Inject(StreamingCommandBusToken)
     private commandBus: Infra.CommandBus.IStreamCommandBus,
-    @Inject(UserEmailReadRepoPortToken)
-    private readonly emailRepoPort: UserEmailReadRepoPort,
+    @Inject(UserWriteRepoPortToken)
+    private readonly userRepo: UserWriteRepoPort,
     @Inject(NotificationTemplateReadRepoPortToken)
     private notificationTemplateRepo: NotificationTemplateReadRepoPort,
   ) {}
@@ -46,6 +46,8 @@ export class TodoCompletionsIncrementedHandler
 
   @Traceable({
     operation: '[Marketing] TodoCompletionIncrementedDomainEventHandler',
+    serviceName: 'Marketing',
+
     metrics: {
       name: '[Marketing] TodoCompletionIncrementedDomainEventHandler',
       category: 'domainEventHandler',
@@ -56,25 +58,25 @@ export class TodoCompletionsIncrementedHandler
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
     const { payload } = event;
 
+    const userId = new Domain.UUIDv4(payload.aggregateId);
+    const userFound = await this.userRepo.getById(userId);
+    if (userFound.isFail()) {
+      //TODO: nakable error for Unexpected Error
+      return fail(userFound.value);
+    }
+
+    if (!userFound.value) {
+      // TODO Error bus
+      return fail(new ApplicationErrors.UserNotFoundError(payload.aggregateId));
+    }
+
     const marketingNotificationService = new MarketingNotificationService(
       this.notificationTemplateRepo,
     );
-    const completedTodos = CompletedTodosVO.create({
-      counter: payload.completedTodos,
-    });
-    if (completedTodos.isFail()) {
-      return fail(completedTodos.value);
-    }
-    const user = UserEntity.create({
-      id: new Domain.UUIDv4(payload.aggregateId),
-      completedTodos: completedTodos.value,
-    });
-    if (user.isFail()) {
-      return fail(user.value);
-    }
+
     const emailToBeSentInfoResponse =
       await marketingNotificationService.getNotificationTemplateToBeSent(
-        user.value,
+        userFound.value,
       );
     if (emailToBeSentInfoResponse.isFail()) {
       return fail(emailToBeSentInfoResponse.value);
@@ -87,23 +89,9 @@ export class TodoCompletionsIncrementedHandler
       return ok();
     }
 
-    const userId = user.value.id;
-    const userEmail = await this.emailRepoPort.getUserEmail(userId);
-    if (userEmail.isFail()) {
-      //TODO: nakable error for Unexpected Error
-      return fail(userEmail.value);
-    }
-
-    if (!userEmail.value) {
-      // TODO Error bus
-      return fail(
-        new ApplicationErrors.UserEmailNotFoundError(user.value.id.toString()),
-      );
-    }
-
     const command = new SendEmailCommand({
       origin: emailToBeSentInfoResponse.value.emailOrigin,
-      destination: userEmail.value.email,
+      destination: userFound.value.email.email,
       content: emailToBeSentInfoResponse.value.notificationTemplate.template,
     });
     await this.commandBus.publish(command);

@@ -37,6 +37,7 @@ export class DeleteTodoHandler
 
   @Traceable({
     operation: '[Todo] DeleteTodoCommandHandler',
+    serviceName: 'Todo',
     metrics: {
       name: '[Todo] DeleteTodoCommandHandler',
       category: 'commandHandler',

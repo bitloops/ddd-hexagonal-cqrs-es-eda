@@ -156,6 +156,8 @@ services:
 
   bl-telemetry-consumer:
     container_name: bl-telemetry-consumer
+    env_file:
+      - ./telemetry-consumer/bl-telemetry.docker.env
     build: 
       context: ./telemetry-consumer
     restart: unless-stopped

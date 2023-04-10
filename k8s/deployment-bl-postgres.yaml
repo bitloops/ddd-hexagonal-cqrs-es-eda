@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bl-postgres
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bl-postgres
+  template:
+    metadata:
+      labels:
+        app: bl-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:latest
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-bl-postgres-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          value: iam
+        - name: POSTGRES_USER
+          value: user
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: bl-postgres-data
+          mountPath: /usr/share/docker/postgresql
+      volumes:
+      - name: bl-postgres-data
+        persistentVolumeClaim:
+          claimName: pvc-bl-postgres-data

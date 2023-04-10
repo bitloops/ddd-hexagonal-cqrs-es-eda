@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bl-grafana
+  namespace: bitloops
+spec:
+  selector:
+    app: bl-grafana
+  ports:
+    - protocol: TCP
+      port: 3003
+      targetPort: 3000
+  type: LoadBalancer

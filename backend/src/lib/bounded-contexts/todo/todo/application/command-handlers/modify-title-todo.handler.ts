@@ -43,6 +43,7 @@ export class ModifyTodoTitleHandler
 
   @Traceable({
     operation: '[Todo] ModifyTitleCommandHandler',
+    serviceName: 'Todo',
     metrics: {
       name: '[Todo] ModifyTitleCommandHandler',
       category: 'commandHandler',

@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bl-telemetry-consumer
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bl-telemetry-consumer
+  template:
+    metadata:
+      labels:
+        app: bl-telemetry-consumer
+    spec:
+      containers:
+      - name: telemetry-consumer
+        context: ../telemetry-consumer

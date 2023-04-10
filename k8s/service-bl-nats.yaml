@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bl-nats
+  namespace: bitloops
+spec:
+  selector:
+    app: bl-nats
+  ports:
+    - protocol: TCP
+      port: 4222
+      targetPort: 4222
+    - protocol: TCP
+      port: 8222
+      targetPort: 8222
+    - protocol: TCP
+      port: 6222
+      targetPort: 6222
+    - protocol: TCP
+      port: 4223
+      targetPort: 4223
+    - protocol: TCP
+      port: 6223
+      targetPort: 6223
+    - protocol: TCP
+      port: 8223
+      targetPort: 8223
+  type: LoadBalancer

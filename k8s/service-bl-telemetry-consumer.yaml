@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bl-telemetry-consumer
+  namespace: bitloops
+spec:
+  selector:
+    app: bl-telemetry-consumer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
