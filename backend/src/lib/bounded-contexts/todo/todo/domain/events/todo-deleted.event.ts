@@ -1,27 +1,16 @@
 import { Domain } from '@bitloops/bl-boilerplate-core';
-import { asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
 
-type TodoDeletedDomainEventProps = {
+type TodoDeletedDomainEventProps = Domain.TDomainEventProps<{
   userId: string;
   title: string;
   completed: boolean;
-} & { aggregateId: string };
+}>;
 
-export class TodoDeletedDomainEvent
-  implements Domain.IDomainEvent<TodoDeletedDomainEventProps>
-{
+export class TodoDeletedDomainEvent extends Domain.DomainEvent<TodoDeletedDomainEventProps> {
   public aggregateId: any;
-  public metadata: Domain.TDomainEventMetadata;
 
-  constructor(public readonly payload: TodoDeletedDomainEventProps) {
-    const uuid = new Domain.UUIDv4();
-    this.metadata = {
-      boundedContextId: 'Todo',
-      createdTimestamp: Date.now(),
-      messageId: uuid.toString(),
-      context: asyncLocalStorage.getStore()?.get('context'),
-      correlationId: asyncLocalStorage.getStore()?.get('correlationId'),
-    };
+  constructor(payload: TodoDeletedDomainEventProps) {
+    super('Todo', payload);
     this.aggregateId = payload.aggregateId;
   }
 }

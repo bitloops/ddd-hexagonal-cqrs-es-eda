@@ -44,7 +44,6 @@ export class LogInHandler
     },
   })
   async execute(command: LogInCommand): Promise<LogInUseCaseResponse> {
-    console.log('Login command');
     const userId = new Domain.UUIDv4(command.userId);
 
     const user = await this.userRepo.getById(userId);

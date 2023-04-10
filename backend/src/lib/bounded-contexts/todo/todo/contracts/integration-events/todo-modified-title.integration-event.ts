@@ -1,10 +1,5 @@
-import {
-  Domain,
-  Infra,
-  asyncLocalStorage,
-} from '@bitloops/bl-boilerplate-core';
+import { Infra } from '@bitloops/bl-boilerplate-core';
 import { TodoModifiedTitleDomainEvent } from '../../domain/events/todo-modified-title.event';
-import { TodoEntity } from '../../domain/TodoEntity';
 
 export type IntegrationSchemaV1 = {
   todoId: string;
@@ -17,9 +12,8 @@ type ToIntegrationDataMapper = (
   data: TodoModifiedTitleDomainEvent,
 ) => IntegrationSchemas;
 
-export class TodoModifiedTitleIntegrationEvent
-  implements Infra.EventBus.IntegrationEvent<IntegrationSchemas>
-{
+export class TodoModifiedTitleIntegrationEvent extends Infra.EventBus
+  .IntegrationEvent<IntegrationSchemas> {
   static versions = ['v1'];
   public static readonly boundedContextId = 'Todo';
   static versionMappers: Record<string, ToIntegrationDataMapper> = {
@@ -27,15 +21,8 @@ export class TodoModifiedTitleIntegrationEvent
   };
   public metadata: Infra.EventBus.TIntegrationEventMetadata;
 
-  constructor(public payload: IntegrationSchemas, version: string) {
-    this.metadata = {
-      createdTimestamp: Date.now(),
-      boundedContextId: TodoModifiedTitleIntegrationEvent.boundedContextId,
-      context: asyncLocalStorage.getStore()?.get('context'),
-      messageId: new Domain.UUIDv4().toString(),
-      correlationId: asyncLocalStorage.getStore()?.get('correlationId'),
-      version,
-    };
+  constructor(payload: IntegrationSchemas, version: string) {
+    super('Todo', payload, version);
   }
 
   static create(

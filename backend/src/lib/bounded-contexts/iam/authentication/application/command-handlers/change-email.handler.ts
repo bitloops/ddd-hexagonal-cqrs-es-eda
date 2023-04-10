@@ -45,7 +45,6 @@ export class ChangeEmailHandler
     },
   })
   async execute(command: ChangeEmailCommand): Promise<ChangeEmailResponse> {
-    console.log('ChangeEmail command');
     const userId = new Domain.UUIDv4(command.userId);
     const email = EmailVO.create({ email: command.email });
     if (email.isFail()) {

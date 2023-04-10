@@ -31,7 +31,7 @@ export class TodoAddedPubSubIntegrationEventHandler
     const { payload } = event;
 
     const { userId } = payload;
-    console.log('TodoIntegrationEvent', event);
+    // console.log('TodoIntegrationEvent', event);
     // console.log('subscritpions', this.subscriptions);
     // console.log('subscribers', this.subscribers);
     // const call = this.subscribers[userId]?.call;

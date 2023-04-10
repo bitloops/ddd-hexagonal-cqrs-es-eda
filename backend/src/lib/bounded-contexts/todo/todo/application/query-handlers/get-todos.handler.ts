@@ -38,9 +38,7 @@ export class GetTodosHandler
       category: 'queryHandler',
     },
   })
-  async execute(command: GetTodosQuery): Promise<GetTodosQueryHandlerResponse> {
-    console.log('GetTodosQuery handler...');
-
+  async execute(query: GetTodosQuery): Promise<GetTodosQueryHandlerResponse> {
     const results = await this.todoRepo.getAll();
     if (results.isFail()) return fail(results.value);
     if (results.value) return ok(results.value);

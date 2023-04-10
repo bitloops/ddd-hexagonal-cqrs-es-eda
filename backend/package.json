@@ -26,7 +26,7 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@bitloops/bl-boilerplate-core": "^0.3.4",
+    "@bitloops/bl-boilerplate-core": "^0.3.5",
     "@bitloops/bl-boilerplate-infra-mongo": "^0.1.2",
     "@bitloops/bl-boilerplate-infra-nest-auth-passport": "^0.1.4",
     "@bitloops/bl-boilerplate-infra-nest-jetstream": "^0.0.2",
