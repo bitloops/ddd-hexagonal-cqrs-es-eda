@@ -48,7 +48,6 @@ export class CreateUserCommandHandler
   async execute(
     command: CreateUserCommand,
   ): Promise<CreateUserCommandHandlerResponse> {
-    console.log('CreateUserCommandHandler');
     const requestUserId = new Domain.UUIDv4(command.userId);
 
     const completedTodosVO = CompletedTodosVO.create({ counter: 0 });

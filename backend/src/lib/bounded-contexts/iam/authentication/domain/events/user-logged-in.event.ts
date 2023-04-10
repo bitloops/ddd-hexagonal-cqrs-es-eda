@@ -1,24 +1,15 @@
-import { asyncLocalStorage, Domain } from '@bitloops/bl-boilerplate-core';
+import { Domain } from '@bitloops/bl-boilerplate-core';
 
-export type UserLoggedInDomainEventProps = {
+export type UserLoggedInDomainEventProps = Domain.TDomainEventProps<{
   email: string;
-} & {
-  aggregateId: string;
-};
-export class UserLoggedInDomainEvent
-  implements Domain.IDomainEvent<UserLoggedInDomainEventProps>
-{
+}>;
+
+export class UserLoggedInDomainEvent extends Domain.DomainEvent<UserLoggedInDomainEventProps> {
   public metadata: Domain.TDomainEventMetadata;
   public aggregateId: string;
 
-  constructor(public readonly payload: UserLoggedInDomainEventProps) {
-    this.metadata = {
-      boundedContextId: 'IAM',
-      messageId: new Domain.UUIDv4().toString(),
-      createdTimestamp: Date.now(),
-      correlationId: asyncLocalStorage.getStore()?.get('correlationId'),
-      context: asyncLocalStorage.getStore()?.get('context'),
-    };
+  constructor(payload: UserLoggedInDomainEventProps) {
+    super('IAM', payload);
     this.aggregateId = payload.aggregateId;
   }
 }

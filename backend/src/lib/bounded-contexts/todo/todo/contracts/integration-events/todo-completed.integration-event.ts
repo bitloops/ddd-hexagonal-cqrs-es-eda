@@ -21,7 +21,6 @@ export class TodoCompletedIntegrationEvent extends Infra.EventBus
 
   constructor(payload: IntegrationSchemas, version: string) {
     super('Todo', payload, version);
-    console.log('INTEGRATION', this.metadata);
   }
 
   static create(

@@ -1,10 +1,10 @@
 import { Domain } from '@bitloops/bl-boilerplate-core';
 
-type TodoCompletedDomainEventProps = {
+type TodoCompletedDomainEventProps = Domain.TDomainEventProps<{
   userId: string;
   title: string;
   completed: boolean;
-} & { aggregateId: string };
+}>;
 
 export class TodoCompletedDomainEvent extends Domain.DomainEvent<TodoCompletedDomainEventProps> {
   public aggregateId: string;
