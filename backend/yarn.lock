@@ -1884,14 +1884,14 @@
     "@opentelemetry/semantic-conventions" "1.11.0"
     jaeger-client "^3.15.0"
 
-"@opentelemetry/exporter-prometheus@^0.36.0":
-  version "0.36.1"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/exporter-prometheus/-/exporter-prometheus-0.36.1.tgz#ec3ae9ebd9d24381e798e84ede1c981307d3221d"
-  integrity sha512-EMKQXb49FlD/hlEs6nQSXYUVmAjVgJdAj3o5vE6CC766F5we8pe/Gc3sXPFKj5LCVadqG5BztiT2hqIu0lkQeA==
+"@opentelemetry/exporter-prometheus@^0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/exporter-prometheus/-/exporter-prometheus-0.37.0.tgz#72b56a5176b4ba235c98155a38df25dbe5361f89"
+  integrity sha512-i8smYb6zJVimRzOm6/E8rfSG8OSZZStfBkawXD6iMWSoZ8mKznDdkHBkKF09JFep4kt0+Yb24hitetPGa3Fv9g==
   dependencies:
-    "@opentelemetry/core" "1.10.1"
-    "@opentelemetry/resources" "1.10.1"
-    "@opentelemetry/sdk-metrics" "1.10.1"
+    "@opentelemetry/core" "1.11.0"
+    "@opentelemetry/resources" "1.11.0"
+    "@opentelemetry/sdk-metrics" "1.11.0"
 
 "@opentelemetry/exporter-trace-otlp-grpc@0.37.0":
   version "0.37.0"
@@ -2394,14 +2394,6 @@
     "@opentelemetry/core" "0.24.0"
     "@opentelemetry/semantic-conventions" "0.24.0"
 
-"@opentelemetry/resources@1.10.1":
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/resources/-/resources-1.10.1.tgz#a2537ea241e09a63d5d1afd566f89e2ef5889370"
-  integrity sha512-e+wwdyO44jZtsT1aqGiWMFOfN1XuP9Tv4+H0OYP3yQajBtGdsZjdSUn9UNjw46JsW0Mb+RaTxJwsb2uvfHar0g==
-  dependencies:
-    "@opentelemetry/core" "1.10.1"
-    "@opentelemetry/semantic-conventions" "1.10.1"
-
 "@opentelemetry/resources@1.11.0", "@opentelemetry/resources@^1.10.0", "@opentelemetry/resources@^1.8.0":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/resources/-/resources-1.11.0.tgz#68e3ca399e63246a6b87bc495f819c5bd9f2c112"
@@ -2426,15 +2418,6 @@
     "@opentelemetry/api-metrics" "0.31.0"
     "@opentelemetry/core" "1.5.0"
     "@opentelemetry/resources" "1.5.0"
-    lodash.merge "4.6.2"
-
-"@opentelemetry/sdk-metrics@1.10.1":
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/sdk-metrics/-/sdk-metrics-1.10.1.tgz#1389a8524ba59dc2e1d9cf627d504119c111fca1"
-  integrity sha512-ARAD4e6lZhLwstwW+1HG2Q3XuYFA/t8vn10KK/mA4em1pZYKFn64c45RJZJcntxWp4wOZRbp9iL1RXsg7zIjow==
-  dependencies:
-    "@opentelemetry/core" "1.10.1"
-    "@opentelemetry/resources" "1.10.1"
     lodash.merge "4.6.2"
 
 "@opentelemetry/sdk-metrics@1.11.0":
