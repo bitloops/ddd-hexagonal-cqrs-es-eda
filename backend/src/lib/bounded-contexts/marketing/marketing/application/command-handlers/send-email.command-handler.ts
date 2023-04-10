@@ -37,7 +37,6 @@ export class SendEmailCommandHandler
   async execute(
     command: SendEmailCommand,
   ): Promise<SendEmailCommandHandlerResponse> {
-    console.log('SendEmailHandler');
     const sendOrError = await this.emailService.send({
       origin: command.origin,
       destination: command.destination,

@@ -52,8 +52,6 @@ export class IncrementTodosCommandHandler
   async execute(
     command: IncrementTodosCommand,
   ): Promise<IncrementDepositsCommandHandlerResponse> {
-    console.log('IncrementTodosCommandHandler');
-
     const requestUserId = new Domain.UUIDv4(command.id);
     const user = await this.userRepo.getById(requestUserId);
     if (user.isFail()) {

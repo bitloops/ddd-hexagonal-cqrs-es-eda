@@ -1,8 +1,4 @@
-import {
-  Domain,
-  Infra,
-  asyncLocalStorage,
-} from '@bitloops/bl-boilerplate-core';
+import { Infra } from '@bitloops/bl-boilerplate-core';
 import { TodoCompletedDomainEvent } from '../../domain/events/todo-completed.event';
 
 export type IntegrationSchemaV1 = {
@@ -15,25 +11,16 @@ type ToIntegrationDataMapper = (
   data: TodoCompletedDomainEvent,
 ) => IntegrationSchemas;
 
-export class TodoCompletedIntegrationEvent
-  implements Infra.EventBus.IntegrationEvent<IntegrationSchemas>
-{
+export class TodoCompletedIntegrationEvent extends Infra.EventBus
+  .IntegrationEvent<IntegrationSchemas> {
   static versions = ['v1'];
   public static readonly boundedContextId = 'Todo';
   static versionMappers: Record<string, ToIntegrationDataMapper> = {
     v1: TodoCompletedIntegrationEvent.toIntegrationDataV1,
   };
-  public metadata: Infra.EventBus.TIntegrationEventMetadata;
 
-  constructor(public payload: IntegrationSchemas, version: string) {
-    this.metadata = {
-      createdTimestamp: Date.now(),
-      boundedContextId: TodoCompletedIntegrationEvent.boundedContextId,
-      context: asyncLocalStorage.getStore()?.get('context'),
-      messageId: new Domain.UUIDv4().toString(),
-      correlationId: asyncLocalStorage.getStore()?.get('correlationId'),
-      version,
-    };
+  constructor(payload: IntegrationSchemas, version: string) {
+    super('Todo', payload, version);
   }
 
   static create(

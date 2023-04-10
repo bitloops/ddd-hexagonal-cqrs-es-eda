@@ -47,8 +47,6 @@ export class AddTodoCommandHandler
     },
   })
   async execute(command: AddTodoCommand): Promise<AddTodoUseCaseResponse> {
-    console.log('AddTodoCommand...');
-
     const title = TitleVO.create({ title: command.title });
     if (title.isFail()) {
       return fail(title.value);

@@ -46,7 +46,6 @@ export class DeleteTodoHandler
   async execute(
     command: DeleteTodoCommand,
   ): Promise<DeleteTodoUseCaseResponse> {
-    console.log('DeleteTodoHandler');
     const todo = await this.todoRepo.getById(new Domain.UUIDv4(command.id));
     if (todo.isFail()) {
       return fail(todo.value);

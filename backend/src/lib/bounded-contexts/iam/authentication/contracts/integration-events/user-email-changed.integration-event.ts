@@ -1,8 +1,4 @@
-import {
-  Infra,
-  Domain,
-  asyncLocalStorage,
-} from '@bitloops/bl-boilerplate-core';
+import { Infra } from '@bitloops/bl-boilerplate-core';
 import { UserUpdatedEmailDomainEvent } from '../../domain/events/user-updated-email.event';
 
 export type IntegrationSchemaV1 = {
@@ -15,26 +11,17 @@ type ToIntegrationDataMapper = (
   data: UserUpdatedEmailDomainEvent,
 ) => IntegrationSchemas;
 
-export class UserEmailChangedIntegrationEvent
-  implements Infra.EventBus.IntegrationEvent<IntegrationSchemas>
-{
+export class UserEmailChangedIntegrationEvent extends Infra.EventBus
+  .IntegrationEvent<IntegrationSchemas> {
   static versions = ['v1'];
   public static readonly boundedContextId = 'IAM';
   // UserUpdatedEmailDomainEvent.fromContextId; // get from it's own context in case we have some props as input
   static versionMappers: Record<string, ToIntegrationDataMapper> = {
     v1: UserEmailChangedIntegrationEvent.toIntegrationDataV1,
   };
-  public metadata: Infra.EventBus.TIntegrationEventMetadata;
 
   constructor(public payload: IntegrationSchemas, version: string) {
-    this.metadata = {
-      messageId: new Domain.UUIDv4().toString(),
-      boundedContextId: UserEmailChangedIntegrationEvent.boundedContextId,
-      version,
-      createdTimestamp: Date.now(),
-      correlationId: asyncLocalStorage.getStore()?.get('correlationId'),
-      context: asyncLocalStorage.getStore()?.get('context'),
-    };
+    super('IAM', payload, version);
   }
 
   static create(

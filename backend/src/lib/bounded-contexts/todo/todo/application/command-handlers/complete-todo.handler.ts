@@ -51,8 +51,6 @@ export class CompleteTodoHandler
   async execute(
     command: CompleteTodoCommand,
   ): Promise<CompleteTodoUseCaseResponse> {
-    console.log('CompleteTodoHandler');
-
     const todo = await this.todoRepo.getById(new Domain.UUIDv4(command.id));
 
     if (todo.isFail()) {
