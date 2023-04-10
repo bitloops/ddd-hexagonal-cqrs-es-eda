@@ -1061,10 +1061,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bitloops/bl-boilerplate-core@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@bitloops/bl-boilerplate-core/-/bl-boilerplate-core-0.3.4.tgz#84f4e77114e9ac2fc6218c2729b0a5fd0da6bcc2"
-  integrity sha512-XnGqab4/k98GmkVKRctR2mzwhEl7S5f7eStRfLeIPRS44x+YDBNcbUWWVGUDJh/Jd6Ooj/+Io806N6Uhkc4m2g==
+"@bitloops/bl-boilerplate-core@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@bitloops/bl-boilerplate-core/-/bl-boilerplate-core-0.3.5.tgz#74f96e7475cbbaa8cf1dbe5a7ce11b3206b121d1"
+  integrity sha512-3Rt1gtr4BqVOdiGm/xEnkgGlv/2ObylpPgfjj3r0x4tdBaJ72Wv5wAG1+mLNygc9pZCCZOzguW+WL9WFQNA5vw==
   dependencies:
     class-transformer "^0.5.1"
     nats "^2.10.2"
