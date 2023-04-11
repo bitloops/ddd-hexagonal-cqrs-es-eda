@@ -4,11 +4,9 @@ import { TodoReadRepository } from './repository/todo-read.repository';
 import { TodoModule as LibTodoModule } from 'src/lib/bounded-contexts/todo/todo/todo.module';
 import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
 import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers';
-import { PubSubQueryHandlers } from '@src/lib/bounded-contexts/todo/todo/application/query-handlers';
-import {
-  StreamingDomainEventHandlers,
-  StreamingIntegrationEventHandlers,
-} from '@src/lib/bounded-contexts/todo/todo/application/event-handlers';
+import { QueryHandlers } from '@src/lib/bounded-contexts/todo/todo/application/query-handlers';
+import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/todo/todo/application/event-handlers/integration';
+import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/todo/todo/application/event-handlers/domain';
 import {
   StreamingDomainEventBusToken,
   StreamingIntegrationEventBusToken,
@@ -53,7 +51,7 @@ const providers = [
         JetstreamModule.forFeature({
           moduleOfHandlers: TodoModule,
           pubSubCommandHandlers: [...PubSubCommandHandlers],
-          pubSubQueryHandlers: [...PubSubQueryHandlers],
+          pubSubQueryHandlers: [...QueryHandlers],
           streamingDomainEventHandlers: [...StreamingDomainEventHandlers],
           streamingIntegrationEventHandlers: [
             ...StreamingIntegrationEventHandlers,

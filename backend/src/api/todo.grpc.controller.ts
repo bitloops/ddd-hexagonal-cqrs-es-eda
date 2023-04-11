@@ -28,7 +28,7 @@ import { DeleteTodoCommand } from '@src/lib/bounded-contexts/todo/todo/commands/
 import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
 
 import { todo } from '../proto/generated/todo';
-import { AddTodoCommand } from '../lib/bounded-contexts/todo/todo/commands/add-todo.command';
+import { AddTodoCommand } from '@src/lib/bounded-contexts/todo/todo/commands/add-todo.command';
 import { TodoAddedPubSubIntegrationEventHandler } from './pub-sub-handlers/todo-added.integration-handler';
 import { TodoDeletedPubSubIntegrationEventHandler } from './pub-sub-handlers/todo-deleted.integration-handler';
 import { TodoCompletedPubSubIntegrationEventHandler } from './pub-sub-handlers/todo-completed.integration-handler';

@@ -1,3 +1,3 @@
 import { GetTodosHandler } from './get-todos.handler';
 
-export const PubSubQueryHandlers = [GetTodosHandler];
+export const QueryHandlers = [GetTodosHandler];

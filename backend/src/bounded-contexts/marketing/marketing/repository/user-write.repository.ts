@@ -2,6 +2,7 @@ import {
   Application,
   Domain,
   Either,
+  Infra,
   asyncLocalStorage,
   ok,
 } from '@bitloops/bl-boilerplate-core';
@@ -12,6 +13,7 @@ import { UserEntity } from '@src/lib/bounded-contexts/marketing/marketing/domain
 import { UserWriteRepoPort } from '@src/lib/bounded-contexts/marketing/marketing/ports/user-write.repo-port';
 import { ConfigService } from '@nestjs/config';
 import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
+import { StreamingDomainEventBusToken } from '@src/lib/bounded-contexts/marketing/marketing/constants';
 
 const MONGO_DB_DATABASE = process.env.MONGO_DB_DATABASE || 'marketing';
 const MONGO_DB_TODO_COLLECTION =
@@ -26,6 +28,8 @@ export class UserWriteRepository implements UserWriteRepoPort {
 
   constructor(
     @Inject('MONGO_DB_CONNECTION') private client: MongoClient,
+    @Inject(StreamingDomainEventBusToken)
+    private readonly domainEventBus: Infra.EventBus.IEventBus,
     private configService: ConfigService<AuthEnvironmentVariables, true>,
   ) {
     this.collection = this.client
@@ -59,6 +63,8 @@ export class UserWriteRepository implements UserWriteRepoPort {
         $set: userInfo,
       },
     );
+
+    this.domainEventBus.publish(user.domainEvents);
     return ok();
   }
 
@@ -113,6 +119,7 @@ export class UserWriteRepository implements UserWriteRepoPort {
       ...createdUser,
     });
 
+    this.domainEventBus.publish(user.domainEvents);
     return ok();
   }
 }

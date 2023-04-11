@@ -7,15 +7,17 @@ import {
   EmailServicePortToken,
   NotificationTemplateReadRepoPortToken,
   StreamingCommandBusToken,
+  StreamingDomainEventBusToken,
   UserWriteRepoPortToken,
 } from '@src/lib/bounded-contexts/marketing/marketing/constants';
 import { MockEmailService } from './service';
 import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
-import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers';
+import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers/integration';
 import { StreamingCommandHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers';
 import {
   NatsStreamingCommandBus,
   JetstreamModule,
+  NatsStreamingDomainEventBus,
 } from '@bitloops/bl-boilerplate-infra-nest-jetstream';
 
 const RepoProviders = [
@@ -35,6 +37,11 @@ const RepoProviders = [
     provide: StreamingCommandBusToken,
     useClass: NatsStreamingCommandBus,
   },
+
+  {
+    provide: StreamingDomainEventBusToken,
+    useClass: NatsStreamingDomainEventBus,
+  },
 ];
 @Module({
   imports: [
@@ -45,6 +52,7 @@ const RepoProviders = [
     JetstreamModule.forFeature({
       moduleOfHandlers: MarketingModule,
       streamingIntegrationEventHandlers: [...StreamingIntegrationEventHandlers],
+      // streamingDomainEventHandlers: [...StreamingDomainEventHandlers],
       streamingCommandHandlers: [...StreamingCommandHandlers],
     }),
   ],
