@@ -1,7 +1,3 @@
-import { UserUpdatedEmailPublishIntegrationEventHandler } from './updated-email-publish.event-handler';
-
-export const StreamingDomainEventHandlers = [
-  UserUpdatedEmailPublishIntegrationEventHandler,
-];
+import { StreamingDomainEventHandlers } from './domain';
 
 export const EventHandlers = [...StreamingDomainEventHandlers];
