@@ -5,7 +5,7 @@ import {
   fail,
   Domain,
 } from '@bitloops/bl-boilerplate-core';
-import { UserEntity } from '../../../domain/UserEntity';
+import { UserEntity } from '../../../domain/user.entity';
 import { UserWriteRepoPort } from '../../../ports/user-write.repo-port';
 import {
   CHANGE_EMAIL_SUCCESS_CASE,

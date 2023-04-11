@@ -1,7 +1,7 @@
 import {
   TodoReadModel,
   TTodoReadModelSnapshot,
-} from '../../domain/TodoReadModel';
+} from '../../domain/todo.read-model';
 
 export class TodoReadModelBuilder {
   private userId: string;

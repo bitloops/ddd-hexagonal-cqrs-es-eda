@@ -11,7 +11,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TodoReadModel } from '../lib/bounded-contexts/todo/todo/domain/TodoReadModel';
+import { TodoReadModel } from '../lib/bounded-contexts/todo/todo/domain/todo.read-model';
 import { AddTodoCommand } from '../lib/bounded-contexts/todo/todo/commands/add-todo.command';
 import { AddTodoDto } from './dto/add-todo.dto';
 import { CompleteTodoDto } from './dto/complete-todo.dto';

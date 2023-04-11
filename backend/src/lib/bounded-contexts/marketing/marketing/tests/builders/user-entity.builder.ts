@@ -3,8 +3,8 @@ import {
   UserEntity,
   UserProps,
 } from '@src/lib/bounded-contexts/marketing/marketing/domain/user.entity';
-import { CompletedTodosVO } from '@src/lib/bounded-contexts/marketing/marketing/domain/completed-todos.vo';
-import { EmailVO } from '../../domain/email.vo';
+import { CompletedTodosVO } from '@src/lib/bounded-contexts/marketing/marketing/domain/completed-todos.value-object';
+import { EmailVO } from '../../domain/email.value-object';
 
 export class UserEntityBuilder {
   private completedTodos: number;

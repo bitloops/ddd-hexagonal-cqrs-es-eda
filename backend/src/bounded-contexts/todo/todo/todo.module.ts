@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { TodoWriteRepository } from './repository/todo-write.repository';
 import { TodoReadRepository } from './repository/todo-read.repository';
 import { TodoModule as LibTodoModule } from 'src/lib/bounded-contexts/todo/todo/todo.module';
-import { TodoWriteRepoPortToken } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
-import { TodoReadRepoPortToken } from '@src/lib/bounded-contexts/todo/todo/ports/todo-read.repo-port';
 import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
 import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers';
 import { PubSubQueryHandlers } from '@src/lib/bounded-contexts/todo/todo/application/query-handlers';
@@ -15,6 +13,8 @@ import {
   StreamingDomainEventBusToken,
   StreamingIntegrationEventBusToken,
   PubSubIntegrationEventBusToken,
+  TodoWriteRepoPortToken,
+  TodoReadRepoPortToken,
 } from '@src/lib/bounded-contexts/todo/todo/constants';
 import {
   JetstreamModule,

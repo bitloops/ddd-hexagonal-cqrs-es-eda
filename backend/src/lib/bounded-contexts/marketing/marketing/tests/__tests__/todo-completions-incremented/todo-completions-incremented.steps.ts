@@ -11,7 +11,7 @@ import {
   UNSUCCESS_REPO_ERROR_CASE,
   UNSUCCESS_USER_REPO_ERROR_CASE,
 } from './todo-completions-incremented.mock';
-import { NotificationTemplateReadModel } from '../../../domain/read-models/notification-template.read-model';
+import { NotificationTemplateReadModel } from '../../../domain/notification-template.read-model';
 import { ApplicationErrors } from '../../../application/errors';
 import { MockStreamCommandBus } from '../../mocks/stream-command-bus.mock';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';

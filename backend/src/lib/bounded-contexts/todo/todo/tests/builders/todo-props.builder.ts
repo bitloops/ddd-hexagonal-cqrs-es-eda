@@ -1,7 +1,7 @@
 import { Domain } from '@bitloops/bl-boilerplate-core';
-import { TitleVO } from '@src/lib/bounded-contexts/todo/todo/domain/TitleVO';
-import { TodoProps } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
-import { UserIdVO } from '@src/lib/bounded-contexts/todo/todo/domain/UserIdVO';
+import { TitleVO } from '@src/lib/bounded-contexts/todo/todo/domain/title.value-object';
+import { TodoProps } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
+import { UserIdVO } from '@src/lib/bounded-contexts/todo/todo/domain/user-id.value-object';
 
 export class TodoPropsBuilder {
   private userId: string;

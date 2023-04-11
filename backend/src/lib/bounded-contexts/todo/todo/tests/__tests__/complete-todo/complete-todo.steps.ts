@@ -1,7 +1,7 @@
 import { CompleteTodoHandler } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers/complete-todo.handler';
 import { CompleteTodoCommand } from '@src/lib/bounded-contexts/todo/todo/commands/complete-todo.command';
 import { TodoCompletedDomainEvent } from '@src/lib/bounded-contexts/todo/todo/domain/events/todo-completed.event';
-import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
+import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { ApplicationErrors } from '@src/lib/bounded-contexts/todo/todo/application/errors';
 import { TodoPropsBuilder } from '../../builders/todo-props.builder';
 import { MockCompleteTodoWriteRepo } from './complete-todo-write-repo.mock';

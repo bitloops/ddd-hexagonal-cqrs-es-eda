@@ -8,7 +8,7 @@ import { TodoReadRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo
 import {
   TodoReadModel,
   TTodoReadModelSnapshot,
-} from 'src/lib/bounded-contexts/todo/todo/domain/TodoReadModel';
+} from '@src/lib/bounded-contexts/todo/todo/domain/todo.read-model';
 import { ConfigService } from '@nestjs/config';
 import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
 import {

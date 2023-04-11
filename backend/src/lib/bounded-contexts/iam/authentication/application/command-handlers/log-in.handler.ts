@@ -7,10 +7,8 @@ import {
 } from '@bitloops/bl-boilerplate-core';
 import { Inject } from '@nestjs/common';
 import { LogInCommand } from '../../commands/log-in.command';
-import {
-  UserWriteRepoPortToken,
-  UserWriteRepoPort,
-} from '../../ports/user-write.repo-port';
+import { UserWriteRepoPort } from '../../ports/user-write.repo-port';
+import { UserWriteRepoPortToken } from '../../constants';
 import { ApplicationErrors } from '../errors';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 

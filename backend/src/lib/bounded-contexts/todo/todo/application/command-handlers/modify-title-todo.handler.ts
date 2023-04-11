@@ -8,11 +8,9 @@ import {
 import { ModifyTodoTitleCommand } from '../../commands/modify-title-todo.command';
 import { Inject } from '@nestjs/common';
 import { DomainErrors } from '../../domain/errors';
-import { TitleVO } from '../../domain/TitleVO';
-import {
-  TodoWriteRepoPort,
-  TodoWriteRepoPortToken,
-} from '../../ports/todo-write.repo-port';
+import { TitleVO } from '../../domain/title.value-object';
+import { TodoWriteRepoPort } from '../../ports/todo-write.repo-port';
+import { TodoWriteRepoPortToken } from '../../constants';
 import { ApplicationErrors } from '../errors';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 

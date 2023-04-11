@@ -4,3 +4,5 @@ export const StreamingIntegrationEventBusToken = Symbol(
 export const StreamingDomainEventBusToken = Symbol(
   'StreamingDomainEventBusToken',
 );
+
+export const UserWriteRepoPortToken = Symbol('UserWriteRepoPort');

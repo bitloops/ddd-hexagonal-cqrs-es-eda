@@ -9,10 +9,8 @@ import { Inject } from '@nestjs/common';
 import { CompleteTodoCommand } from '../../commands/complete-todo.command';
 import { DomainErrors } from '../../domain/errors';
 import { ApplicationErrors } from '../errors';
-import {
-  TodoWriteRepoPort,
-  TodoWriteRepoPortToken,
-} from '../../ports/todo-write.repo-port';
+import { TodoWriteRepoPort } from '../../ports/todo-write.repo-port';
+import { TodoWriteRepoPortToken } from '../../constants';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 
 type CompleteTodoUseCaseResponse = Either<

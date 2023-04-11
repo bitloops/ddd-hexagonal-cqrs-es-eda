@@ -1,8 +1,8 @@
 import { Either, Domain, ok, fail } from '@bitloops/bl-boilerplate-core';
-import { CompletedTodosVO } from './completed-todos.vo';
+import { CompletedTodosVO } from './completed-todos.value-object';
 import { TodoCompletionsIncrementedDomainEvent } from './events/todo-completions-incremented.event';
 import { DomainErrors } from '@src/lib/bounded-contexts/marketing/marketing/domain/errors';
-import { EmailVO } from './email.vo';
+import { EmailVO } from './email.value-object';
 
 export interface UserProps {
   id?: Domain.UUIDv4;

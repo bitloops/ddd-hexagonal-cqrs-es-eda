@@ -1,5 +1,5 @@
 import { UncompleteTodoHandler } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers/uncomplete-todo.handler';
-import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
+import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { ApplicationErrors } from '@src/lib/bounded-contexts/todo/todo/application/errors';
 import { TodoPropsBuilder } from '../../builders/todo-props.builder';
 import { MockUncompleteTodoWriteRepo } from './uncomplete-todo-write-repo.mock';

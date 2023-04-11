@@ -2,7 +2,7 @@ import { AddTodoCommandHandler } from '@src/lib/bounded-contexts/todo/todo/appli
 import { AddTodoCommand } from '@src/lib/bounded-contexts/todo/todo/commands/add-todo.command';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { TodoAddedDomainEvent } from '@src/lib/bounded-contexts/todo/todo/domain/events/todo-added.event';
-import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
+import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { TodoPropsBuilder } from '../../builders/todo-props.builder';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
 import { MockAddTodoWriteRepo } from './add-todo-write-repo.mock';

@@ -9,20 +9,16 @@ import {
 import { TodoCompletionsIncrementedDomainEvent } from '../../../domain/events/todo-completions-incremented.event';
 import { SendEmailCommand } from '../../../commands/send-email.command';
 import { Inject } from '@nestjs/common';
-import {
-  NotificationTemplateReadRepoPort,
-  NotificationTemplateReadRepoPortToken,
-} from '../../../ports/notification-template-read.repo-port';
+import { NotificationTemplateReadRepoPort } from '../../../ports/notification-template-read.repo-port';
 import { MarketingNotificationService } from '../../../domain/services/marketing-notification.service';
-import { StreamingCommandBusToken } from '../../../constants';
+import {
+  NotificationTemplateReadRepoPortToken,
+  StreamingCommandBusToken,
+  UserWriteRepoPortToken,
+} from '../../../constants';
 import { ApplicationErrors } from '../../errors';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
-import { UserEntity } from '../../../domain/user.entity';
-import { CompletedTodosVO } from '../../../domain/completed-todos.vo';
-import {
-  UserWriteRepoPort,
-  UserWriteRepoPortToken,
-} from '../../../ports/user-write.repo-port';
+import { UserWriteRepoPort } from '../../../ports/user-write.repo-port';
 
 export class TodoCompletionsIncrementedHandler
   implements Application.IHandleDomainEvent

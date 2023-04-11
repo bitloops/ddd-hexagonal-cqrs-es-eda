@@ -1,6 +1,6 @@
 import { Domain, Either, ok } from '@bitloops/bl-boilerplate-core';
 import { UserLoggedInDomainEvent } from './events/user-logged-in.event';
-import { EmailVO } from './EmailVO';
+import { EmailVO } from './email.value-object';
 import { UserUpdatedEmailDomainEvent } from './events/user-updated-email.event';
 
 export interface UserProps {

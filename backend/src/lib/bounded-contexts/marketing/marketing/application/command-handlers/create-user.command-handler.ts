@@ -9,12 +9,10 @@ import { Inject } from '@nestjs/common';
 import { CreateUserCommand } from '../../commands/create-user.command';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 import { UserEntity } from '../../domain/user.entity';
-import { EmailVO } from '../../domain/email.vo';
-import { CompletedTodosVO } from '../../domain/completed-todos.vo';
-import {
-  UserWriteRepoPort,
-  UserWriteRepoPortToken,
-} from '../../ports/user-write.repo-port';
+import { EmailVO } from '../../domain/email.value-object';
+import { CompletedTodosVO } from '../../domain/completed-todos.value-object';
+import { UserWriteRepoPort } from '../../ports/user-write.repo-port';
+import { UserWriteRepoPortToken } from '../../constants';
 
 type CreateUserCommandHandlerResponse = Either<
   void,

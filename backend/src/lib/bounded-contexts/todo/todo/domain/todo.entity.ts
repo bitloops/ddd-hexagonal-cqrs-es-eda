@@ -1,6 +1,6 @@
 import { Domain, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
-import { TitleVO } from './TitleVO';
-import { UserIdVO } from './UserIdVO';
+import { TitleVO } from './title.value-object';
+import { UserIdVO } from './user-id.value-object';
 import { DomainErrors } from './errors';
 import { TodoAddedDomainEvent } from './events/todo-added.event';
 import { TodoModifiedTitleDomainEvent } from './events/todo-modified-title.event';

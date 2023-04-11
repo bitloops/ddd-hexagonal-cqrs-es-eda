@@ -8,10 +8,8 @@ import {
 import { DeleteTodoCommand } from '../../commands/delete-todo.command';
 import { Inject } from '@nestjs/common';
 import { ApplicationErrors } from '../errors';
-import {
-  TodoWriteRepoPort,
-  TodoWriteRepoPortToken,
-} from '../../ports/todo-write.repo-port';
+import { TodoWriteRepoPort } from '../../ports/todo-write.repo-port';
+import { TodoWriteRepoPortToken } from '../../constants';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 
 type DeleteTodoUseCaseResponse = Either<

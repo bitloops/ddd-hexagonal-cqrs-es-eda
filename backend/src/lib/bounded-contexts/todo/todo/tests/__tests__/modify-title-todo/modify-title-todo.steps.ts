@@ -4,7 +4,7 @@ import { ApplicationErrors } from '@src/lib/bounded-contexts/todo/todo/applicati
 import { ModifyTodoTitleCommand } from '@src/lib/bounded-contexts/todo/todo/commands/modify-title-todo.command';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { TodoModifiedTitleDomainEvent } from '@src/lib/bounded-contexts/todo/todo/domain/events/todo-modified-title.event';
-import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
+import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { TodoPropsBuilder } from '../../builders/todo-props.builder';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
 import {

@@ -5,7 +5,7 @@ import {
   fail,
   asyncLocalStorage,
 } from '@bitloops/bl-boilerplate-core';
-import { TodoReadModel } from '../../../domain/TodoReadModel';
+import { TodoReadModel } from '../../../domain/todo.read-model';
 import { TodoReadRepoPort } from '../../../ports/todo-read.repo-port';
 import {
   GET_TODOS_REPO_ERROR_CASE,

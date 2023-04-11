@@ -1,13 +1,11 @@
 import { Application, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
 import { Inject } from '@nestjs/common';
 // import { QueryHandler } from '@nestjs/cqrs';
-import { TTodoReadModelSnapshot } from '../../domain/TodoReadModel';
-import {
-  TodoReadRepoPortToken,
-  TodoReadRepoPort,
-} from '../../ports/todo-read.repo-port';
+import { TTodoReadModelSnapshot } from '../../domain/todo.read-model';
+import { TodoReadRepoPort } from '../../ports/todo-read.repo-port';
 import { GetTodosQuery } from '../../queries/get-todos.query';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { TodoReadRepoPortToken } from '../../constants';
 
 export type GetTodosQueryHandlerResponse = Either<
   TTodoReadModelSnapshot[],

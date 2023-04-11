@@ -8,13 +8,11 @@ import {
 import { Inject } from '@nestjs/common';
 import { AddTodoCommand } from '../../commands/add-todo.command';
 import { DomainErrors } from '../../domain/errors';
-import { TitleVO } from '../../domain/TitleVO';
-import { TodoEntity } from '../../domain/TodoEntity';
-import {
-  TodoWriteRepoPort,
-  TodoWriteRepoPortToken,
-} from '../../ports/todo-write.repo-port';
-import { UserIdVO } from '../../domain/UserIdVO';
+import { TitleVO } from '../../domain/title.value-object';
+import { TodoEntity } from '../../domain/todo.entity';
+import { TodoWriteRepoPort } from '../../ports/todo-write.repo-port';
+import { TodoWriteRepoPortToken } from '../../constants';
+import { UserIdVO } from '../../domain/user-id.value-object';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 
 type AddTodoUseCaseResponse = Either<
