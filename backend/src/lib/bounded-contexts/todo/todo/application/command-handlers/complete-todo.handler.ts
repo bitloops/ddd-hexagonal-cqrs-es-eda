@@ -12,7 +12,7 @@ import { ApplicationErrors } from '../errors';
 import {
   TodoWriteRepoPort,
   TodoWriteRepoPortToken,
-} from '../../ports/TodoWriteRepoPort';
+} from '../../ports/todo-write.repo-port';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 
 type CompleteTodoUseCaseResponse = Either<

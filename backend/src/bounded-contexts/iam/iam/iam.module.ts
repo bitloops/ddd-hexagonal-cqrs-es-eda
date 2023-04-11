@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { IamModule as LibIamModule } from 'src/lib/bounded-contexts/iam/authentication/iam.module';
 import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
 import { PostgresModule } from '@bitloops/bl-boilerplate-infra-postgres';
-import { UserWriteRepoPortToken } from '@src/lib/bounded-contexts/iam/authentication/ports/UserWriteRepoPort';
+import { UserWriteRepoPortToken } from '@src/lib/bounded-contexts/iam/authentication/ports/user-write.repo-port';
 import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/iam/authentication/application/command-handlers';
 import {
   JetstreamModule,

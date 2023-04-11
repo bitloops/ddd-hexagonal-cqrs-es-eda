@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { MarketingModule as LibMarketingModule } from 'src/lib/bounded-contexts/marketing/marketing/marketing.module';
 import { UserWriteRepository } from './repository/user-write.repository';
 import { UserWriteRepoPortToken } from '@src/lib/bounded-contexts/marketing/marketing/ports/user-write.repo-port';
-import { NotificationTemplateReadRepoPortToken } from '@src/lib/bounded-contexts/marketing/marketing/ports/notification-template-read.repo-port.';
+import { NotificationTemplateReadRepoPortToken } from '@src/lib/bounded-contexts/marketing/marketing/ports/notification-template-read.repo-port';
 import { NotificationTemplateReadRepository } from './repository/notification-template.repository';
 import {
   EmailServicePortToken,

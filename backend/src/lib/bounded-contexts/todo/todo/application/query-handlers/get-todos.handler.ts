@@ -5,7 +5,7 @@ import { TTodoReadModelSnapshot } from '../../domain/TodoReadModel';
 import {
   TodoReadRepoPortToken,
   TodoReadRepoPort,
-} from '../../ports/TodoReadRepoPort';
+} from '../../ports/todo-read.repo-port';
 import { GetTodosQuery } from '../../queries/get-todos.query';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 

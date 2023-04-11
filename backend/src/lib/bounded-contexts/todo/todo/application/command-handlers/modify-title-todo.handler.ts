@@ -12,7 +12,7 @@ import { TitleVO } from '../../domain/TitleVO';
 import {
   TodoWriteRepoPort,
   TodoWriteRepoPortToken,
-} from '../../ports/TodoWriteRepoPort';
+} from '../../ports/todo-write.repo-port';
 import { ApplicationErrors } from '../errors';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 

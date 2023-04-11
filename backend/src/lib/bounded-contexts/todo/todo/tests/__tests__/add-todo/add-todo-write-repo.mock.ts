@@ -6,7 +6,7 @@ import {
   ok,
 } from '@bitloops/bl-boilerplate-core';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
-import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/TodoWriteRepoPort';
+import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
 import { ADD_TODO_REPO_ERROR_CASE } from './add-todo.mock';
 
 export class MockAddTodoWriteRepo {

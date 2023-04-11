@@ -12,7 +12,7 @@ import { Inject } from '@nestjs/common';
 import {
   NotificationTemplateReadRepoPort,
   NotificationTemplateReadRepoPortToken,
-} from '../../../ports/notification-template-read.repo-port.';
+} from '../../../ports/notification-template-read.repo-port';
 import { MarketingNotificationService } from '../../../domain/services/marketing-notification.service';
 import { StreamingCommandBusToken } from '../../../constants';
 import { ApplicationErrors } from '../../errors';

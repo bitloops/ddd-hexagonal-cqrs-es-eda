@@ -6,7 +6,7 @@ import {
   fail,
 } from '@bitloops/bl-boilerplate-core';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
-import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/TodoWriteRepoPort';
+import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import {
   COMPLETE_TODO_ALREADY_COMPLETED_CASE,

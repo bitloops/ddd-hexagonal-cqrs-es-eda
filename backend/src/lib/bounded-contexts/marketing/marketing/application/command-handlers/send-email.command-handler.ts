@@ -1,7 +1,7 @@
 import { Application, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
 import { SendEmailCommand } from '../../commands/send-email.command';
 import { Inject } from '@nestjs/common';
-import { EmailServicePort } from '../../ports/email-service-port';
+import { EmailServicePort } from '../../ports/email.service-port';
 import { EmailServicePortToken } from '../../constants';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 

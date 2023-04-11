@@ -1,5 +1,5 @@
 import { Application, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
-import { NotificationTemplateReadRepoPort } from '../../ports/notification-template-read.repo-port.';
+import { NotificationTemplateReadRepoPort } from '../../ports/notification-template-read.repo-port';
 import { NotificationTemplateReadModel } from '../read-models/notification-template.read-model';
 import { UserEntity } from '../user.entity';
 

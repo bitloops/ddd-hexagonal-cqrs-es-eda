@@ -11,7 +11,7 @@ import { EmailVO } from '../../domain/EmailVO';
 import {
   UserWriteRepoPortToken,
   UserWriteRepoPort,
-} from '../../ports/UserWriteRepoPort';
+} from '../../ports/user-write.repo-port';
 import { ApplicationErrors } from '../errors';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 

@@ -2,7 +2,7 @@ import { Application, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
 import {
   EmailServicePort,
   SendEmailRequest,
-} from '@src/lib/bounded-contexts/marketing/marketing/ports/email-service-port';
+} from '@src/lib/bounded-contexts/marketing/marketing/ports/email.service-port';
 
 export class MockEmailService {
   public readonly mockSendMethod: jest.Mock;

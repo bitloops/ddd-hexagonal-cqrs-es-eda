@@ -13,7 +13,7 @@ import { TodoEntity } from '../../domain/TodoEntity';
 import {
   TodoWriteRepoPort,
   TodoWriteRepoPortToken,
-} from '../../ports/TodoWriteRepoPort';
+} from '../../ports/todo-write.repo-port';
 import { UserIdVO } from '../../domain/UserIdVO';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 

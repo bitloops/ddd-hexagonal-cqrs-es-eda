@@ -4,7 +4,7 @@ import { Collection, MongoClient } from 'mongodb';
 import * as jwtwebtoken from 'jsonwebtoken';
 // import { InjectModel } from '@nestjs/mongoose';
 // import { Todo, TodoDocument } from './schema/todo.schema';
-import { TodoReadRepoPort } from 'src/lib/bounded-contexts/todo/todo/ports/TodoReadRepoPort';
+import { TodoReadRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-read.repo-port';
 import {
   TodoReadModel,
   TTodoReadModelSnapshot,
