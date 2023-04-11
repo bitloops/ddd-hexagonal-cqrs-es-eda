@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { IamModule as LibIamModule } from '@src/lib/bounded-contexts/iam/authentication/authentication.module';
+import { AuthenticationModule as LibIamModule } from '@src/lib/bounded-contexts/iam/authentication/authentication.module';
 import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
 import { PostgresModule } from '@bitloops/bl-boilerplate-infra-postgres';
 import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/iam/authentication/application/command-handlers';

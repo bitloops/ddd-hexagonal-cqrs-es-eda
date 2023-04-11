@@ -1,10 +1,5 @@
 import { Application, Either } from '@bitloops/bl-boilerplate-core';
-
-export type SendEmailRequest = {
-  origin: string;
-  destination: string;
-  content: string;
-};
+import { SendEmailRequest } from '../structs/send-email-request.struct';
 
 export interface EmailServicePort {
   send(
