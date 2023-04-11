@@ -5,7 +5,7 @@ import {
   fail,
   ok,
 } from '@bitloops/bl-boilerplate-core';
-import { ModifyTodoTitleCommand } from '../../commands/modify-title-todo.command';
+import { ModifyTodoTitleCommand } from '../../commands/modify-todo-title.command';
 import { Inject } from '@nestjs/common';
 import { DomainErrors } from '../../domain/errors';
 import { TitleVO } from '../../domain/title.value-object';

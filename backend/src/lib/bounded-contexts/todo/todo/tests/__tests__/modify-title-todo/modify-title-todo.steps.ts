@@ -1,7 +1,7 @@
 import { Application, Domain } from '@bitloops/bl-boilerplate-core';
 import { ModifyTodoTitleHandler } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers/modify-title-todo.handler';
 import { ApplicationErrors } from '@src/lib/bounded-contexts/todo/todo/application/errors';
-import { ModifyTodoTitleCommand } from '@src/lib/bounded-contexts/todo/todo/commands/modify-title-todo.command';
+import { ModifyTodoTitleCommand } from '@src/lib/bounded-contexts/todo/todo/commands/modify-todo-title.command';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { TodoModifiedTitleDomainEvent } from '@src/lib/bounded-contexts/todo/todo/domain/events/todo-modified-title.event';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
