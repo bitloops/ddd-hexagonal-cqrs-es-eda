@@ -43,7 +43,7 @@ export class MockCompleteTodoWriteRepo {
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {
         if (
           todo.userId.id.equals(
-            new Domain.UUIDv4(COMPLETE_TODO_REPO_ERROR_SAVE_CASE.userId),
+            new Domain.UUIDv4(COMPLETE_TODO_REPO_ERROR_SAVE_CASE.userId.id),
           )
         ) {
           return Promise.resolve(

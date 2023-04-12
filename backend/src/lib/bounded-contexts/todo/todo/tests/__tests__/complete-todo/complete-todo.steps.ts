@@ -15,17 +15,26 @@ import {
 import { Application } from '@bitloops/bl-boilerplate-core';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
+import { ContextBuilder } from '../../builders/context.builder';
 
 describe('Complete todo feature test', () => {
   it('Todo completed successfully', async () => {
     const todoTitle = COMPLETE_TODO_SUCCESS_CASE.title;
     const userId = COMPLETE_TODO_SUCCESS_CASE.userId;
     const todoId = COMPLETE_TODO_SUCCESS_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockCompleteTodoWriteRepo = new MockCompleteTodoWriteRepo();
-    const completeTodoCommand = new CompleteTodoCommand({ todoId });
+    const completeTodoCommand = new CompleteTodoCommand(
+      { todoId },
+      {
+        context: new ContextBuilder()
+          .withJWT('jwt')
+          .withUserId(userId.id)
+          .build(),
+      },
+    );
 
     // when
     const completeTodoHandler = new CompleteTodoHandler(
@@ -35,9 +44,9 @@ describe('Complete todo feature test', () => {
 
     //then
     const todoProps = new TodoPropsBuilder()
-      .withTitle(todoTitle)
+      .withTitle(todoTitle.title)
       .withCompleted(true)
-      .withUserId(userId)
+      .withUserId(userId.id)
       .withId(todoId)
       .build();
 
@@ -60,7 +69,7 @@ describe('Complete todo feature test', () => {
   it('Todo completed failed, todo not found', async () => {
     const userId = COMPLETE_TODO_NOT_FOUND_CASE.userId;
     const todoId = COMPLETE_TODO_NOT_FOUND_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockCompleteTodoWriteRepo = new MockCompleteTodoWriteRepo();
@@ -81,7 +90,7 @@ describe('Complete todo feature test', () => {
   it('Todo completed failed, todo already completed', async () => {
     const userId = COMPLETE_TODO_ALREADY_COMPLETED_CASE.userId;
     const todoId = COMPLETE_TODO_ALREADY_COMPLETED_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockCompleteTodoWriteRepo = new MockCompleteTodoWriteRepo();
@@ -103,7 +112,7 @@ describe('Complete todo feature test', () => {
   it('Todo failed to be completed, getById repo error', async () => {
     const userId = COMPLETE_TODO_REPO_ERROR_GETBYID_CASE.userId;
     const todoId = COMPLETE_TODO_REPO_ERROR_GETBYID_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockCompleteTodoWriteRepo = new MockCompleteTodoWriteRepo();
@@ -125,11 +134,19 @@ describe('Complete todo feature test', () => {
     const todoTitle = COMPLETE_TODO_REPO_ERROR_SAVE_CASE.title;
     const userId = COMPLETE_TODO_REPO_ERROR_SAVE_CASE.userId;
     const todoId = COMPLETE_TODO_REPO_ERROR_SAVE_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockCompleteTodoWriteRepo = new MockCompleteTodoWriteRepo();
-    const completeTodoCommand = new CompleteTodoCommand({ todoId });
+    const completeTodoCommand = new CompleteTodoCommand(
+      { todoId },
+      {
+        context: new ContextBuilder()
+          .withJWT('jwt')
+          .withUserId(userId.id)
+          .build(),
+      },
+    );
 
     // when
     const completeTodoHandler = new CompleteTodoHandler(
@@ -139,9 +156,9 @@ describe('Complete todo feature test', () => {
 
     //then
     const todoProps = new TodoPropsBuilder()
-      .withTitle(todoTitle)
+      .withTitle(todoTitle.title)
       .withCompleted(true)
-      .withUserId(userId)
+      .withUserId(userId.id)
       .withId(todoId)
       .build();
 

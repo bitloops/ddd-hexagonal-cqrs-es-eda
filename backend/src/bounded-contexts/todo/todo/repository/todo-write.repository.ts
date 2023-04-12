@@ -59,7 +59,7 @@ export class TodoWriteRepository implements TodoWriteRepoPort {
       return ok(null);
     }
 
-    if (result.userId !== jwtPayload.sub) {
+    if (result.userId.id !== jwtPayload.sub) {
       throw new Error('Invalid userId');
     }
 
@@ -85,7 +85,7 @@ export class TodoWriteRepository implements TodoWriteRepoPort {
       throw new Error('Invalid JWT!');
     }
     const deletedTodo = todo.toPrimitives();
-    if (deletedTodo.userId !== jwtPayload.sub) {
+    if (deletedTodo.userId.id !== jwtPayload.sub) {
       throw new Error('Unauthorized userId');
     }
     const { id, userId, ...todoInfo } = todo.toPrimitives();
@@ -115,7 +115,7 @@ export class TodoWriteRepository implements TodoWriteRepoPort {
       throw new Error('Invalid JWT!');
     }
     const deletedTodo = todo.toPrimitives();
-    if (deletedTodo.userId !== jwtPayload.sub) {
+    if (deletedTodo.userId.id !== jwtPayload.sub) {
       throw new Error('Unauthorized userId');
     }
     const { id, userId } = deletedTodo;
@@ -140,7 +140,7 @@ export class TodoWriteRepository implements TodoWriteRepoPort {
       throw new Error('Invalid JWT!');
     }
     const createdTodo = todo.toPrimitives();
-    if (createdTodo.userId !== jwtPayload.sub) {
+    if (createdTodo.userId.id !== jwtPayload.sub) {
       throw new Error('Unauthorized userId');
     }
     const { id, ...todoInfo } = createdTodo;

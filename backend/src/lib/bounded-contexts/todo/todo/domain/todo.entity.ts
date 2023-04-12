@@ -17,9 +17,13 @@ export interface TodoProps {
 }
 
 type TTodoEntityPrimitives = {
-  userId: string;
   id: string;
-  title: string;
+  userId: {
+    id: string;
+  };
+  title: {
+    title: string;
+  };
   completed: boolean;
 };
 
@@ -124,11 +128,11 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
 
   public static fromPrimitives(data: TTodoEntityPrimitives): TodoEntity {
     const TodoEntityProps: TodoProps = {
-      userId: UserIdVO.create({ id: new Domain.UUIDv4(data.userId) })
-        .value as UserIdVO,
       id: new Domain.UUIDv4(data.id),
+      userId: UserIdVO.create({ id: new Domain.UUIDv4(data.userId.id) })
+        .value as UserIdVO,
       title: TitleVO.create({
-        title: data.title,
+        title: data.title.title,
       }).value as TitleVO,
       completed: data.completed,
     };
@@ -137,9 +141,11 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
 
   public toPrimitives(): TTodoEntityPrimitives {
     return {
-      userId: this.props.userId.id.toString(),
       id: this._id.toString(),
-      title: this.props.title.title,
+      userId: {
+        id: this.props.userId.id.toString(),
+      },
+      title: { title: this.props.title.title },
       completed: this.props.completed,
     };
   }

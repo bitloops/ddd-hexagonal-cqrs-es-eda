@@ -62,13 +62,15 @@ export class TodoReadRepository implements TodoReadRepoPort {
     if (!userId) {
       throw new Error('Invalid userId');
     }
-    const todos = await this.collection.find({ userId: userId }).toArray();
+    const todos = await this.collection
+      .find({ userId: { id: userId } })
+      .toArray();
     return ok(
       todos.map((todo) => {
         const res = {
           id: todo._id.toString(),
-          userId: todo.userId,
-          title: todo.title,
+          userId: todo.userId.id,
+          title: todo.title.title,
           completed: todo.completed,
         };
         return res;

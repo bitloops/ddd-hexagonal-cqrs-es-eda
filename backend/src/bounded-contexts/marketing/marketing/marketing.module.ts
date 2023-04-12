@@ -23,6 +23,7 @@ import {
   NatsStreamingIntegrationEventBus,
   NatsPubSubIntegrationEventsBus,
 } from '@bitloops/bl-boilerplate-infra-nest-jetstream';
+import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers/domain';
 
 const RepoProviders = [
   {
@@ -63,7 +64,7 @@ const RepoProviders = [
     JetstreamModule.forFeature({
       moduleOfHandlers: MarketingModule,
       streamingIntegrationEventHandlers: [...StreamingIntegrationEventHandlers],
-      // streamingDomainEventHandlers: [...StreamingDomainEventHandlers],
+      streamingDomainEventHandlers: [...StreamingDomainEventHandlers],
       streamingCommandHandlers: [...StreamingCommandHandlers],
     }),
   ],
