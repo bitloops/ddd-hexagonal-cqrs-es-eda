@@ -6,8 +6,10 @@ import { NotificationTemplateReadRepository } from './repository/notification-te
 import {
   EmailServicePortToken,
   NotificationTemplateReadRepoPortToken,
+  PubSubIntegrationEventBusToken,
   StreamingCommandBusToken,
   StreamingDomainEventBusToken,
+  StreamingIntegrationEventBusToken,
   UserWriteRepoPortToken,
 } from '@src/lib/bounded-contexts/marketing/marketing/constants';
 import { MockEmailService } from './service';
@@ -18,6 +20,8 @@ import {
   NatsStreamingCommandBus,
   JetstreamModule,
   NatsStreamingDomainEventBus,
+  NatsStreamingIntegrationEventBus,
+  NatsPubSubIntegrationEventsBus,
 } from '@bitloops/bl-boilerplate-infra-nest-jetstream';
 
 const RepoProviders = [
@@ -37,10 +41,17 @@ const RepoProviders = [
     provide: StreamingCommandBusToken,
     useClass: NatsStreamingCommandBus,
   },
-
   {
     provide: StreamingDomainEventBusToken,
     useClass: NatsStreamingDomainEventBus,
+  },
+  {
+    provide: StreamingIntegrationEventBusToken,
+    useClass: NatsStreamingIntegrationEventBus,
+  },
+  {
+    provide: PubSubIntegrationEventBusToken,
+    useClass: NatsPubSubIntegrationEventsBus,
   },
 ];
 @Module({

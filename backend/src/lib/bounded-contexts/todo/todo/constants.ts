@@ -1,3 +1,4 @@
+export const StreamingCommandBusToken = Symbol('StreamingCommandBusToken');
 export const StreamingIntegrationEventBusToken = Symbol(
   'StreamingIntegrationEventBusToken',
 );

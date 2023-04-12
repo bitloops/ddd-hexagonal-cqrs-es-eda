@@ -8,6 +8,7 @@ import { QueryHandlers } from '@src/lib/bounded-contexts/todo/todo/application/q
 import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/todo/todo/application/event-handlers/integration';
 import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/todo/todo/application/event-handlers/domain';
 import {
+  StreamingCommandBusToken,
   StreamingDomainEventBusToken,
   StreamingIntegrationEventBusToken,
   PubSubIntegrationEventBusToken,
@@ -16,6 +17,7 @@ import {
 } from '@src/lib/bounded-contexts/todo/todo/constants';
 import {
   JetstreamModule,
+  NatsStreamingCommandBus,
   NatsStreamingDomainEventBus,
   NatsStreamingIntegrationEventBus,
   NatsPubSubIntegrationEventsBus,
@@ -41,6 +43,10 @@ const providers = [
   {
     provide: PubSubIntegrationEventBusToken,
     useClass: NatsPubSubIntegrationEventsBus,
+  },
+  {
+    provide: StreamingCommandBusToken,
+    useClass: NatsStreamingCommandBus,
   },
 ];
 @Module({
