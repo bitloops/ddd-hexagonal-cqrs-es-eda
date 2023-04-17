@@ -1599,10 +1599,10 @@
     "@types/jsonwebtoken" "9.0.1"
     jsonwebtoken "9.0.0"
 
-"@nestjs/microservices@^9.3.10":
-  version "9.3.12"
-  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-9.3.12.tgz#cb340efdbdbf97fa38173cc4a429231c441f7c3a"
-  integrity sha512-V8gd2pqKrQyeYjl0GBqMrsSzMzSZmGXCPQw9y+sDfflljTqDAYgHQJiA596UDSFw6LKLZ2pdvAZMd8QQ7MEZWw==
+"@nestjs/microservices@^9.4.0":
+  version "9.4.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-9.4.0.tgz#25d5a88a4d7b5c45b53153521a78702a5c8f1f37"
+  integrity sha512-3IlURTijN2whedrfnLbJ3QQ4giDU1SxXcepXxtUL1MMkZAJgw2gN7sTquOXVgy/Ci5OMPO+vOjVyadjFejrgKA==
   dependencies:
     iterare "1.2.1"
     tslib "2.5.0"
