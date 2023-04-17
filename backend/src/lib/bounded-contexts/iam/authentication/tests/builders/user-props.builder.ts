@@ -2,8 +2,8 @@ import { Domain } from '@bitloops/bl-boilerplate-core';
 import {
   UserEntity,
   UserProps,
-} from '@src/lib/bounded-contexts/iam/authentication/domain/UserEntity';
-import { EmailVO } from '../../domain/EmailVO';
+} from '@src/lib/bounded-contexts/iam/authentication/domain/user.entity';
+import { EmailVO } from '../../domain/email.value-object';
 
 export class UserPropsBuilder {
   private id: string;

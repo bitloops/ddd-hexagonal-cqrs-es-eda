@@ -1,5 +1,5 @@
 import { Application } from '@bitloops/bl-boilerplate-core';
-import { TTodoReadModelSnapshot } from '../domain/TodoReadModel.js';
+import { TTodoReadModelSnapshot } from '../domain/todo.read-model.js';
 
 export type TodoReadRepoPort =
   Application.Repo.ICRUDReadPort<TTodoReadModelSnapshot>;
@@ -7,5 +7,3 @@ export type TodoReadRepoPort =
 // export interface ITodoReadRepository {
 //   findAll(): Promise<TodoReadModel[]>;
 // }
-
-export const TodoReadRepoPortToken = Symbol('TodoReadRepoPort');

@@ -2,21 +2,28 @@ import { Module } from '@nestjs/common';
 
 import { MarketingModule as LibMarketingModule } from 'src/lib/bounded-contexts/marketing/marketing/marketing.module';
 import { UserWriteRepository } from './repository/user-write.repository';
-import { UserWriteRepoPortToken } from '@src/lib/bounded-contexts/marketing/marketing/ports/user-write.repo-port';
-import { NotificationTemplateReadRepoPortToken } from '@src/lib/bounded-contexts/marketing/marketing/ports/notification-template-read.repo-port.';
 import { NotificationTemplateReadRepository } from './repository/notification-template.repository';
 import {
   EmailServicePortToken,
+  NotificationTemplateReadRepoPortToken,
+  PubSubIntegrationEventBusToken,
   StreamingCommandBusToken,
+  StreamingDomainEventBusToken,
+  StreamingIntegrationEventBusToken,
+  UserWriteRepoPortToken,
 } from '@src/lib/bounded-contexts/marketing/marketing/constants';
 import { MockEmailService } from './service';
 import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
-import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers';
+import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers/integration';
 import { StreamingCommandHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers';
 import {
   NatsStreamingCommandBus,
   JetstreamModule,
+  NatsStreamingDomainEventBus,
+  NatsStreamingIntegrationEventBus,
+  NatsPubSubIntegrationEventsBus,
 } from '@bitloops/bl-boilerplate-infra-nest-jetstream';
+import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers/domain';
 
 const RepoProviders = [
   {
@@ -35,6 +42,18 @@ const RepoProviders = [
     provide: StreamingCommandBusToken,
     useClass: NatsStreamingCommandBus,
   },
+  {
+    provide: StreamingDomainEventBusToken,
+    useClass: NatsStreamingDomainEventBus,
+  },
+  {
+    provide: StreamingIntegrationEventBusToken,
+    useClass: NatsStreamingIntegrationEventBus,
+  },
+  {
+    provide: PubSubIntegrationEventBusToken,
+    useClass: NatsPubSubIntegrationEventsBus,
+  },
 ];
 @Module({
   imports: [
@@ -45,6 +64,7 @@ const RepoProviders = [
     JetstreamModule.forFeature({
       moduleOfHandlers: MarketingModule,
       streamingIntegrationEventHandlers: [...StreamingIntegrationEventHandlers],
+      streamingDomainEventHandlers: [...StreamingDomainEventHandlers],
       streamingCommandHandlers: [...StreamingCommandHandlers],
     }),
   ],

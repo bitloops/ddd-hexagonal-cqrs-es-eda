@@ -1,8 +1,8 @@
 import { Infra, Application, Either, ok } from '@bitloops/bl-boilerplate-core';
 import { Inject } from '@nestjs/common';
-import { StreamingIntegrationEventBusToken } from '../../constants';
-import { UserEmailChangedIntegrationEvent } from '../../contracts/integration-events/user-email-changed.integration-event';
-import { UserUpdatedEmailDomainEvent } from '../../domain/events/user-updated-email.event';
+import { StreamingIntegrationEventBusToken } from '../../../constants';
+import { UserEmailChangedIntegrationEvent } from '../../../contracts/integration-events/user-email-changed.integration-event';
+import { UserUpdatedEmailDomainEvent } from '../../../domain/events/user-updated-email.event';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 
 export class UserUpdatedEmailPublishIntegrationEventHandler

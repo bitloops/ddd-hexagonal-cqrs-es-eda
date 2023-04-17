@@ -11,17 +11,17 @@ import {
   Request,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TodoReadModel } from '../lib/bounded-contexts/todo/todo/domain/TodoReadModel';
-import { AddTodoCommand } from '../lib/bounded-contexts/todo/todo/commands/add-todo.command';
 import { AddTodoDto } from './dto/add-todo.dto';
 import { CompleteTodoDto } from './dto/complete-todo.dto';
-import { GetTodosQuery } from '../lib/bounded-contexts/todo/todo/queries/get-todos.query';
 
 import { BUSES_TOKENS } from '@bitloops/bl-boilerplate-infra-nest-jetstream';
 import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
 import { JwtAuthGuard } from '@bitloops/bl-boilerplate-infra-nest-auth-passport';
 import { Infra } from '@bitloops/bl-boilerplate-core';
 import { CompleteTodoCommand } from '@src/lib/bounded-contexts/todo/todo/commands/complete-todo.command';
+import { TodoReadModel } from '@src/lib/bounded-contexts/todo/todo/domain/todo.read-model';
+import { AddTodoCommand } from '@src/lib/bounded-contexts/todo/todo/commands/add-todo.command';
+import { GetTodosQuery } from '@src/lib/bounded-contexts/todo/todo/queries/get-todos.query';
 
 @Injectable()
 @Controller('todo')

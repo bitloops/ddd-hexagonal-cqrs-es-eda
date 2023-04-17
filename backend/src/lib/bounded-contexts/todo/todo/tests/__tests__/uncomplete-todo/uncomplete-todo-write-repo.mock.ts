@@ -5,8 +5,8 @@ import {
   ok,
   fail,
 } from '@bitloops/bl-boilerplate-core';
-import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
-import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/TodoWriteRepoPort';
+import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
+import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import {
   UNCOMPLETE_TODO_ALREADY_UNCOMPLETED_CASE,
@@ -43,7 +43,7 @@ export class MockUncompleteTodoWriteRepo {
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {
         if (
           todo.userId.id.equals(
-            new Domain.UUIDv4(UNCOMPLETE_TODO_REPO_ERROR_SAVE_CASE.userId),
+            new Domain.UUIDv4(UNCOMPLETE_TODO_REPO_ERROR_SAVE_CASE.userId.id),
           )
         ) {
           return Promise.resolve(

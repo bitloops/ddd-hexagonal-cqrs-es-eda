@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
 
-import { IamModule as LibIamModule } from 'src/lib/bounded-contexts/iam/authentication/iam.module';
+import { AuthenticationModule as LibIamModule } from '@src/lib/bounded-contexts/iam/authentication/authentication.module';
 import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
 import { PostgresModule } from '@bitloops/bl-boilerplate-infra-postgres';
-import { UserWriteRepoPortToken } from '@src/lib/bounded-contexts/iam/authentication/ports/UserWriteRepoPort';
 import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/iam/authentication/application/command-handlers';
 import {
   JetstreamModule,
   NatsStreamingDomainEventBus,
   NatsStreamingIntegrationEventBus,
 } from '@bitloops/bl-boilerplate-infra-nest-jetstream';
-import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/iam/authentication/application/event-handlers';
+import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/iam/authentication/application/event-handlers/domain';
 import {
   StreamingDomainEventBusToken,
   StreamingIntegrationEventBusToken,
+  UserWriteRepoPortToken,
 } from '@src/lib/bounded-contexts/iam/authentication/constants';
 import { UserWritePostgresRepository } from './repository/user-write.pg.repository';
 

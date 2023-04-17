@@ -1,10 +1,10 @@
 import { Application, Domain } from '@bitloops/bl-boilerplate-core';
 import { ModifyTodoTitleHandler } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers/modify-title-todo.handler';
 import { ApplicationErrors } from '@src/lib/bounded-contexts/todo/todo/application/errors';
-import { ModifyTodoTitleCommand } from '@src/lib/bounded-contexts/todo/todo/commands/modify-title-todo.command';
+import { ModifyTodoTitleCommand } from '@src/lib/bounded-contexts/todo/todo/commands/modify-todo-title.command';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { TodoModifiedTitleDomainEvent } from '@src/lib/bounded-contexts/todo/todo/domain/events/todo-modified-title.event';
-import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
+import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { TodoPropsBuilder } from '../../builders/todo-props.builder';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
 import {
@@ -20,12 +20,12 @@ describe('Modify title todo feature test', () => {
   it('Todo title modified successfully', async () => {
     const { userId, titleId, titleAfterUpdate, completed } =
       MODIFY_TITLE_SUCCESS_CASE;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockTodoWriteRepo = new ModifyTitleWriteRepo();
     const modifyTodoTitleCommand = new ModifyTodoTitleCommand({
-      title: titleAfterUpdate,
+      title: titleAfterUpdate.title,
       id: titleId,
     });
 
@@ -37,9 +37,9 @@ describe('Modify title todo feature test', () => {
 
     //then
     const todoProps = new TodoPropsBuilder()
-      .withTitle(titleAfterUpdate)
+      .withTitle(titleAfterUpdate.title)
       .withCompleted(completed)
-      .withUserId(userId)
+      .withUserId(userId.id)
       .withId(titleId)
       .build();
 
@@ -63,7 +63,7 @@ describe('Modify title todo feature test', () => {
     // given
     const mockTodoWriteRepo = new ModifyTitleWriteRepo();
     const modifyTodoTitleCommand = new ModifyTodoTitleCommand({
-      title: titleAfterUpdate,
+      title: titleAfterUpdate.title,
       id: titleId,
     });
 
@@ -87,7 +87,7 @@ describe('Modify title todo feature test', () => {
     // given
     const mockTodoWriteRepo = new ModifyTitleWriteRepo();
     const modifyTodoTitleCommand = new ModifyTodoTitleCommand({
-      title: titleAfterUpdate,
+      title: titleAfterUpdate.title,
       id: titleId,
     });
 
@@ -112,7 +112,7 @@ describe('Modify title todo feature test', () => {
     // given
     const mockTodoWriteRepo = new ModifyTitleWriteRepo();
     const modifyTodoTitleCommand = new ModifyTodoTitleCommand({
-      title: titleAfterUpdate,
+      title: titleAfterUpdate.title,
       id: titleId,
     });
 
@@ -137,7 +137,7 @@ describe('Modify title todo feature test', () => {
     // given
     const mockTodoWriteRepo = new ModifyTitleWriteRepo();
     const modifyTodoTitleCommand = new ModifyTodoTitleCommand({
-      title: titleAfterUpdate,
+      title: titleAfterUpdate.title,
       id: titleId,
     });
 

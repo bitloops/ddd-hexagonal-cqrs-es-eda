@@ -4,11 +4,11 @@ import { Collection, MongoClient } from 'mongodb';
 import * as jwtwebtoken from 'jsonwebtoken';
 // import { InjectModel } from '@nestjs/mongoose';
 // import { Todo, TodoDocument } from './schema/todo.schema';
-import { TodoReadRepoPort } from 'src/lib/bounded-contexts/todo/todo/ports/TodoReadRepoPort';
+import { TodoReadRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-read.repo-port';
 import {
   TodoReadModel,
   TTodoReadModelSnapshot,
-} from 'src/lib/bounded-contexts/todo/todo/domain/TodoReadModel';
+} from '@src/lib/bounded-contexts/todo/todo/domain/todo.read-model';
 import { ConfigService } from '@nestjs/config';
 import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
 import {
@@ -62,13 +62,15 @@ export class TodoReadRepository implements TodoReadRepoPort {
     if (!userId) {
       throw new Error('Invalid userId');
     }
-    const todos = await this.collection.find({ userId: userId }).toArray();
+    const todos = await this.collection
+      .find({ userId: { id: userId } })
+      .toArray();
     return ok(
       todos.map((todo) => {
         const res = {
           id: todo._id.toString(),
-          userId: todo.userId,
-          title: todo.title,
+          userId: todo.userId.id,
+          title: todo.title.title,
           completed: todo.completed,
         };
         return res;

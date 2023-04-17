@@ -10,7 +10,7 @@ import { MockUserWriteRepo } from './change-email-write-repo.mock';
 import { ChangeEmailCommand } from '../../../commands/change-email.command';
 import { ChangeEmailHandler } from '../../../application/command-handlers/change-email.handler';
 import { UserPropsBuilder } from '../../builders/user-props.builder';
-import { UserEntity } from '../../../domain/UserEntity';
+import { UserEntity } from '../../../domain/user.entity';
 import { DomainErrors } from '../../../domain/errors';
 import { ApplicationErrors } from '../../../application/errors';
 import { UserUpdatedEmailDomainEvent } from '../../../domain/events/user-updated-email.event';

@@ -7,15 +7,11 @@ import {
 } from '@bitloops/bl-boilerplate-core';
 import { Inject } from '@nestjs/common';
 import { IncrementTodosCommand } from '../../commands/Increment-todos.command';
-import { CompletedTodosVO } from '../../domain/completed-todos.vo';
 import { DomainErrors } from '../../domain/errors';
-import { UserEntity } from '../../domain/user.entity';
-import {
-  UserWriteRepoPort,
-  UserWriteRepoPortToken,
-} from '../../ports/user-write.repo-port';
+import { UserWriteRepoPort } from '../../ports/user-write.repo-port';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 import { ApplicationErrors } from '../errors';
+import { UserWriteRepoPortToken } from '../../constants';
 
 type IncrementDepositsCommandHandlerResponse = Either<
   void,

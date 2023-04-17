@@ -7,8 +7,11 @@ export type TCompleteTodoCommand = {
 export class CompleteTodoCommand extends Application.Command {
   public id: string;
 
-  constructor(props: TCompleteTodoCommand) {
-    super('Todo');
+  constructor(
+    props: TCompleteTodoCommand,
+    metadata?: Partial<Application.TCommandMetadata>,
+  ) {
+    super('Todo', metadata);
     this.id = props.todoId;
   }
 }

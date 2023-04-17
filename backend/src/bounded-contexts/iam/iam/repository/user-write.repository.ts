@@ -15,9 +15,9 @@ import {
   ClientSession,
 } from 'mongodb';
 import * as jwtwebtoken from 'jsonwebtoken';
-import { UserWriteRepoPort } from '@src/lib/bounded-contexts/iam/authentication/ports/UserWriteRepoPort';
-import { UserEntity } from '@src/lib/bounded-contexts/iam/authentication/domain/UserEntity';
-import { EmailVO } from '@src/lib/bounded-contexts/iam/authentication/domain/EmailVO';
+import { UserWriteRepoPort } from '@src/lib/bounded-contexts/iam/authentication/ports/user-write.repo-port';
+import { UserEntity } from '@src/lib/bounded-contexts/iam/authentication/domain/user.entity';
+import { EmailVO } from '@src/lib/bounded-contexts/iam/authentication/domain/email.value-object';
 import { ConfigService } from '@nestjs/config';
 import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
 import { StreamingDomainEventBusToken } from '@src/lib/bounded-contexts/iam/authentication/constants';

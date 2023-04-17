@@ -7,11 +7,9 @@ import {
 } from '@bitloops/bl-boilerplate-core';
 import { Inject } from '@nestjs/common';
 import { ChangeEmailCommand } from '../../commands/change-email.command';
-import { EmailVO } from '../../domain/EmailVO';
-import {
-  UserWriteRepoPortToken,
-  UserWriteRepoPort,
-} from '../../ports/UserWriteRepoPort';
+import { EmailVO } from '../../domain/email.value-object';
+import { UserWriteRepoPort } from '../../ports/user-write.repo-port';
+import { UserWriteRepoPortToken } from '../../constants';
 import { ApplicationErrors } from '../errors';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 

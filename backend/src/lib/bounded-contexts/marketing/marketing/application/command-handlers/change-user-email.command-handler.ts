@@ -8,12 +8,10 @@ import {
 import { Inject } from '@nestjs/common';
 import { ChangeUserEmailCommand } from '../../commands/change-user-email.command';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
-import {
-  UserWriteRepoPort,
-  UserWriteRepoPortToken,
-} from '../../ports/user-write.repo-port';
+import { UserWriteRepoPort } from '../../ports/user-write.repo-port';
 import { ApplicationErrors } from '../errors';
 import { DomainErrors } from '../../domain/errors';
+import { UserWriteRepoPortToken } from '../../constants';
 
 type UpdateUserEmailCommandHandlerResponse = Either<
   void,

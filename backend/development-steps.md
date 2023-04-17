@@ -1,28 +1,34 @@
-### Source code under `lib/` folder is transpiled based on the bl code we have written.
+## Transpile bl code
 
-It contains our application and domain layers. Each application handler/use-case is injected some ports which are associated with a token. This token will be used to attach the concreted adapter.
+Transpile your bl code giving as target option path the absolute path of your project's `src/lib`.
 
-### Every folder under `bitloops/` is a nestjs plugin, and can be assumed to be a npm package.
+Remove strict and strictNullChecks from your tsconfig if present.
 
-Add `config/` folder and define some initial configuration for your app. e.g. http_port, host etc. You will be adding database, apiKeys, secrets and so on there later based on your adapters.
-`yarn add @nestjs/config`. Create a `.development.env` file and gitignore it.
+## Install dependencies
 
-## Project structure
-
-We start with 2 root modules. The `api` module, which contains all the controllers and acts as our application gateway, and the `app` module which is a modular monolith containing all our modules(with their infra, application & domain layers). We need to write the api code, and the infra code for each module(with concretions of each port used by application layers).
+```bash
+# install bitloops plugins
+yarn add @bitloops/bl-boilerplate-core \
+      @bitloops/bl-boilerplate-infra-mongo \
+      @bitloops/bl-boilerplate-infra-nest-auth-passport \
+      @bitloops/bl-boilerplate-infra-nest-jetstream \
+      @bitloops/bl-boilerplate-infra-postgres \
+      @bitloops/bl-boilerplate-infra-telemetry \
+      nats \
+      mongodb
+```
 
 ### Api module
 
-Each controller will have injected the commandBus or/and the queryBus from the bus-plugin you will be using. On `api.module.ts` we register the controllers, and as imports the buses-plugin, the auth-module plugin and nest' config module if we need it. Each controller dispatches a command/query using the appropriate bus and then handles the response matching each error to the appropriate response code.
-
-- grpc
-  `yarn add @grpc/grpc-js google-protobuf`
+Each controller will have injected the commandBus or/and the queryBus from the bus-plugin you will be using. On `api.module.ts` we register the controllers, import the buses-plugin, the auth-module plugin and nest's config module if needed. Each controller dispatches a command/query using the appropriate bus and then handles the response, by matching each error to the appropriate response code.
 
 ### App module
 
 We will be registering each bl module, connecting it with its required adapters. We can place this code under `src/bounded-contexts/[bounded-context-name]/[module-name]/`.
 
 Each bl module is a dynamic module, so when we import it, we need to pass the injected modules & adapters(nestjs providers) as arguments.
+
+Every bl module has a `constants.ts` file, listing all the injection tokens its respective infra module will have to provide.
 
 ## Tracing
 

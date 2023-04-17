@@ -5,5 +5,3 @@ export type UserWriteRepoPort = Application.Repo.ICRUDWritePort<
   UserEntity,
   Domain.UUIDv4
 >;
-
-export const UserWriteRepoPortToken = Symbol('UserWriteRepoPort');

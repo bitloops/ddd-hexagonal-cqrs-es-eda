@@ -5,8 +5,8 @@ import {
   ok,
   fail,
 } from '@bitloops/bl-boilerplate-core';
-import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
-import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/TodoWriteRepoPort';
+import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
+import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
 import {
   MODIFY_INVALID_TITLE_CASE,
   MODIFY_TITLE_SUCCESS_CASE,

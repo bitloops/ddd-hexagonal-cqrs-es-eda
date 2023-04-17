@@ -9,10 +9,8 @@ import { UncompleteTodoCommand } from '../../commands/uncomplete-todo.command';
 import { DomainErrors } from '../../domain/errors';
 import { Inject } from '@nestjs/common';
 import { ApplicationErrors } from '../errors';
-import {
-  TodoWriteRepoPort,
-  TodoWriteRepoPortToken,
-} from '../../ports/TodoWriteRepoPort';
+import { TodoWriteRepoPort } from '../../ports/todo-write.repo-port';
+import { TodoWriteRepoPortToken } from '../../constants';
 import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
 
 type UncompleteTodoUseCaseResponse = Either<

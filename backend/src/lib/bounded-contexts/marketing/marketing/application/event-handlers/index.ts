@@ -1,15 +1,5 @@
-import { TodoCompletedIntegrationEventHandler } from './integration/todo-completed.integration-handler';
-import { TodoCompletionsIncrementedHandler } from './domain/todo-completions-incremented.handler';
-import { UserRegisteredIntegrationEventHandler } from './integration/user-registered.integration-handler';
-import { UserEmailChangedIntegrationEventHandler } from './integration/user-email-changed.integration-handler';
-
-export const StreamingDomainEventHandlers = [TodoCompletionsIncrementedHandler];
-
-export const StreamingIntegrationEventHandlers = [
-  UserRegisteredIntegrationEventHandler,
-  TodoCompletedIntegrationEventHandler,
-  UserEmailChangedIntegrationEventHandler,
-];
+import { StreamingDomainEventHandlers } from './domain';
+import { StreamingIntegrationEventHandlers } from './integration';
 
 export const StreamingErrorEventHandlers = [];
 

@@ -5,8 +5,8 @@ import {
   fail,
   asyncLocalStorage,
 } from '@bitloops/bl-boilerplate-core';
-import { NotificationTemplateReadModel } from '../../../domain/read-models/notification-template.read-model';
-import { NotificationTemplateReadRepoPort } from '../../../ports/notification-template-read.repo-port.';
+import { NotificationTemplateReadModel } from '../../../domain/notification-template.read-model';
+import { NotificationTemplateReadRepoPort } from '../../../ports/notification-template-read.repo-port';
 import {
   SUCCESS_CASE,
   UNSUCCESS_REPO_ERROR_CASE,

@@ -1,5 +1,5 @@
 import { UncompleteTodoHandler } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers/uncomplete-todo.handler';
-import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/TodoEntity';
+import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { ApplicationErrors } from '@src/lib/bounded-contexts/todo/todo/application/errors';
 import { TodoPropsBuilder } from '../../builders/todo-props.builder';
 import { MockUncompleteTodoWriteRepo } from './uncomplete-todo-write-repo.mock';
@@ -21,7 +21,7 @@ describe('Uncomplete todo feature test', () => {
     const todoTitle = UNCOMPLETE_TODO_SUCCESS_CASE.title;
     const userId = UNCOMPLETE_TODO_SUCCESS_CASE.userId;
     const id = UNCOMPLETE_TODO_SUCCESS_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockUncompleteTodoWriteRepo = new MockUncompleteTodoWriteRepo();
@@ -35,9 +35,9 @@ describe('Uncomplete todo feature test', () => {
 
     //then
     const todoProps = new TodoPropsBuilder()
-      .withTitle(todoTitle)
+      .withTitle(todoTitle.title)
       .withCompleted(false)
-      .withUserId(userId)
+      .withUserId(userId.id)
       .withId(id)
       .build();
 
@@ -60,7 +60,7 @@ describe('Uncomplete todo feature test', () => {
   it('Todo uncompleted failed, todo not found', async () => {
     const userId = UNCOMPLETE_TODO_NOT_FOUND_CASE.userId;
     const id = UNCOMPLETE_TODO_NOT_FOUND_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockUncompleteTodoWriteRepo = new MockUncompleteTodoWriteRepo();
@@ -81,7 +81,7 @@ describe('Uncomplete todo feature test', () => {
   it('Todo uncompleted failed, todo already uncompleted', async () => {
     const userId = UNCOMPLETE_TODO_ALREADY_UNCOMPLETED_CASE.userId;
     const id = UNCOMPLETE_TODO_ALREADY_UNCOMPLETED_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockUncompleteTodoWriteRepo = new MockUncompleteTodoWriteRepo();
@@ -105,7 +105,7 @@ describe('Uncomplete todo feature test', () => {
   it('Todo failed to be uncompleted, getById repo error', async () => {
     const userId = UNCOMPLETE_TODO_REPO_ERROR_GETBYID_CASE.userId;
     const id = UNCOMPLETE_TODO_REPO_ERROR_GETBYID_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockCompleteTodoWriteRepo = new MockUncompleteTodoWriteRepo();
@@ -127,7 +127,7 @@ describe('Uncomplete todo feature test', () => {
     const todoTitle = UNCOMPLETE_TODO_SUCCESS_CASE.title;
     const userId = UNCOMPLETE_TODO_REPO_ERROR_SAVE_CASE.userId;
     const id = UNCOMPLETE_TODO_REPO_ERROR_SAVE_CASE.id;
-    mockAsyncLocalStorageGet(userId);
+    mockAsyncLocalStorageGet(userId.id);
 
     // given
     const mockUncompleteTodoWriteRepo = new MockUncompleteTodoWriteRepo();
@@ -141,9 +141,9 @@ describe('Uncomplete todo feature test', () => {
 
     //then
     const todoProps = new TodoPropsBuilder()
-      .withTitle(todoTitle)
+      .withTitle(todoTitle.title)
       .withCompleted(false)
-      .withUserId(userId)
+      .withUserId(userId.id)
       .withId(id)
       .build();
     expect(mockUncompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith({

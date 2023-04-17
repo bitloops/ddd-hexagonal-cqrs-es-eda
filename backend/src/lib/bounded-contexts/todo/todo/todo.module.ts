@@ -1,7 +1,7 @@
 import { Module, Provider } from '@nestjs/common';
 import { PubSubCommandHandlers } from './application/command-handlers';
 import { EventHandlers } from './application/event-handlers';
-import { PubSubQueryHandlers } from './application/query-handlers';
+import { QueryHandlers } from './application/query-handlers';
 
 @Module({})
 export class TodoModule {
@@ -17,14 +17,10 @@ export class TodoModule {
       providers: [
         ...PubSubCommandHandlers,
         ...EventHandlers,
-        ...PubSubQueryHandlers,
+        ...QueryHandlers,
         ...InjectedProviders,
       ],
-      exports: [
-        ...PubSubCommandHandlers,
-        ...EventHandlers,
-        ...PubSubQueryHandlers,
-      ],
+      exports: [...PubSubCommandHandlers, ...EventHandlers, ...QueryHandlers],
     };
   }
 }

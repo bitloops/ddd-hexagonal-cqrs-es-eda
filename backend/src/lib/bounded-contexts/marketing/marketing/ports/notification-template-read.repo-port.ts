@@ -1,5 +1,5 @@
 import { Application, Either } from '@bitloops/bl-boilerplate-core';
-import { NotificationTemplateReadModel } from '../domain/read-models/notification-template.read-model';
+import { NotificationTemplateReadModel } from '../domain/notification-template.read-model';
 
 export interface NotificationTemplateReadRepoPort
   extends Application.Repo.ICRUDReadPort<NotificationTemplateReadModel> {
@@ -12,7 +12,3 @@ export interface NotificationTemplateReadRepoPort
     >
   >;
 }
-
-export const NotificationTemplateReadRepoPortToken = Symbol(
-  'NotificationTemplateReadRepoPort',
-);

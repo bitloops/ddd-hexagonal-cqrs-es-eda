@@ -4,11 +4,11 @@ import { EventHandlers } from './application/event-handlers';
 // import { QueryHandlers } from './application/query-handlers';
 
 @Module({})
-export class IamModule {
+export class AuthenticationModule {
   static register(options: { inject: Provider<any>[]; imports: any[] }) {
     const InjectedProviders = options.inject || [];
     return {
-      module: IamModule,
+      module: AuthenticationModule,
       imports: [...options.imports],
       providers: [
         ...PubSubCommandHandlers,
