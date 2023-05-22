@@ -1635,10 +1635,10 @@
     jsonc-parser "3.2.0"
     pluralize "8.0.0"
 
-"@nestjs/testing@^9.0.0":
-  version "9.3.12"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-9.3.12.tgz#e02ed34c9a267ba9495ba7f5e3d83d4956e3414f"
-  integrity sha512-nH274IXEqU4hr4bcb71POe58hYLONt9RcfKKM5ZvOS7wYMnybMpKKR8DkC1WcfE1P2k2GQmQoHeSH5emPtYrBA==
+"@nestjs/testing@^9.4.1":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-9.4.1.tgz#46e914cbe2074c929ae45de50b4d78c520f34ada"
+  integrity sha512-DErwymDxsY80dH2v3eZDVOhjDv6oY6YsaI3GnUEU+gUrYa8qxxKPHfOofAsFF7SExfeJo5c8RQRfazW3bQupJA==
   dependencies:
     tslib "2.5.0"
 
