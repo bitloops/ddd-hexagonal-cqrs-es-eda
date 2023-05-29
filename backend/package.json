@@ -36,7 +36,7 @@
     "@nestjs/common": "^9.4.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
-    "@nestjs/microservices": "^9.3.10",
+    "@nestjs/microservices": "^9.4.2",
     "@nestjs/platform-fastify": "^9.4.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
