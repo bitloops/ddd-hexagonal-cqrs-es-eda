@@ -51,7 +51,7 @@
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
-    "@nestjs/testing": "^9.0.0",
+    "@nestjs/testing": "^9.4.3",
     "@types/google-protobuf": "^3.15.6",
     "@types/jest": "29.5.0",
     "@types/jsonwebtoken": "^9.0.1",
