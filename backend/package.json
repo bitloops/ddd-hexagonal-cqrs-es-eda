@@ -35,7 +35,7 @@
     "@grpc/grpc-js": "^1.8.13",
     "@nestjs/common": "^9.4.0",
     "@nestjs/config": "^2.3.1",
-    "@nestjs/core": "^9.0.0",
+    "@nestjs/core": "^9.4.3",
     "@nestjs/microservices": "^9.3.10",
     "@nestjs/platform-fastify": "^9.4.0",
     "class-transformer": "^0.5.1",
