@@ -44,7 +44,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.11",
-    "@types/react": "^18.0.34",
+    "@types/react": "^18.2.14",
     "@types/react-dom": "^18.0.11",
     "protoc-gen-grpc-web": "^1.4.1",
     "react-scripts": "5.0.1",
