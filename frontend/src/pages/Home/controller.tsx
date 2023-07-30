@@ -4,16 +4,9 @@ import { useIamViewModel } from '../../view-models/IamViewModel';
 
 const HomeController: React.FC = () => {
   const iamViewModel = useIamViewModel();
-  const { user, logout } = iamViewModel;
-  const { authMessage } = iamViewModel;
+  const { user } = iamViewModel;
 
-  return (
-    <HomeComponent
-      user={user}
-      logout={logout}
-      errorMessage={authMessage?.type === 'error' ? authMessage?.message : ''}
-    />
-  );
+  return <HomeComponent user={user} />;
 };
 
 export default HomeController;

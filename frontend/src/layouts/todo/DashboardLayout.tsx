@@ -1,25 +1,23 @@
 import * as React from 'react';
 
+import Header from '../../components/Header';
+import { User } from '../../models/User';
+import './Layout.css';
+
 interface IDashboardLayout {
-  // open: boolean;
-  // setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  // pageName: string | undefined;
+  user: User | null;
+  logout: () => void;
+  errorMessage: string;
   children: React.ReactNode;
 }
 
 function DashboardLayout(props: IDashboardLayout): JSX.Element {
-  const { children } = props;
-
-  // const toggleDrawer = () => {
-  //   setOpen(!open);
-  // };
-  // const openDrawer = () => {
-  //   setOpen(true);
-  // };
+  const { user, logout, errorMessage, children } = props;
 
   return (
-    <div>
-      This is the layout
+    <div className="layout_home">
+      {user && <Header user={user} logout={logout} />}
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
       {children}
     </div>
   );

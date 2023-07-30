@@ -5,20 +5,21 @@ import AuthLayout from '../layouts/Auth/Auth';
 import DashboardLayout from '../layouts/todo';
 import LoginPage from '../pages/Login';
 import RegisterPage from '../pages/Register';
-// import HomePage from '../pages/Home';
 import NotFoundPage from '../pages/NotFound';
 import ProtectedRoute from './protected-route';
 import HomePage from '../pages/Home';
+import { useIamViewModel } from '../view-models/IamViewModel';
 
 const Routes: React.FC = () => {
-  const isAuthenticated = true; // Todo Fetch this from your auth service
+  const iamViewModel = useIamViewModel();
+  const { isAuthenticated } = iamViewModel; // TODO either need to use mobx or recoil to re-render on auth change
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated]);
 
   const element = useRoutes([
     {
@@ -29,7 +30,7 @@ const Routes: React.FC = () => {
     {
       path: 'register',
       element: <AuthLayout />,
-      children: [{ path: '/register', element: <RegisterPage /> }],
+      children: [{ path: '/register', element: <RegisterPage /> }], // TODO refactor the registration page to use the same form as the login page
     },
     {
       path: '/',

@@ -16,6 +16,7 @@ const LoginController: React.FC = () => {
 
   useEffect(() => {
     if (iamViewModel.isAuthenticated) {
+      // TODO either need to use mobx or recoil to re-render on auth change
       navigate('/');
     }
   }, [iamViewModel.isAuthenticated]);

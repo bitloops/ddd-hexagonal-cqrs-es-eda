@@ -14,7 +14,7 @@ function TodoPanelController(): JSX.Element {
   }, []);
 
   const addItem = () => {
-    todoViewModel.addTodo(newTodoTitle);
+    if (newTodoTitle) todoViewModel.addTodo(newTodoTitle);
     setNewTodoTitle('');
   };
 

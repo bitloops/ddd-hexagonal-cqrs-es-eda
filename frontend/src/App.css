@@ -1,15 +1,21 @@
-@import url('https://fonts.googleapis.com/css?family=Architects+Daughter&display=swap');
-
-* {
+/* * {
   margin: 0;
   padding: 0;
   outline: 0;
 }
 
 body {
-  background-color: #ffeaa7;
-  font-family: 'Architects Daughter', sans-serif;
-  text-align: center;
+  background-color: #74EBD5;
+  background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 15fr 10fr 15fr;
+  grid-template-rows: 1fr 7fr 1fr;
 }
 
 .todo-list {
@@ -98,4 +104,4 @@ body {
 .error-message {
   color: red;
   font-size: 0.8rem;
-}
+} */
