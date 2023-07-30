@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
 import { makeAutoObservable } from 'mobx';
+import { SetterOrUpdater } from 'recoil';
 import { IIamRepository } from '../infra/repositories/iam';
 import { User } from '../models/User';
 import { useIamRepository } from '../context/DI';
@@ -36,10 +37,26 @@ class IamViewModel implements IIamViewModel {
 
   private _authMessage: { type: 'error' | 'success'; message: string } | null = null;
 
+  private setters: {
+    setUser: SetterOrUpdater<User | null> | null;
+  } = { setUser: null };
+
+  private getters: {
+    getUser: (() => User | null) | null;
+  } = { getUser: null };
+
   constructor(private iamRepository: IIamRepository) {
     makeAutoObservable(this);
     console.log('IamViewModel constructor', iamRepository);
   }
+
+  setSetters = (setUser: SetterOrUpdater<User | null>) => {
+    this.setters.setUser = setUser;
+  };
+
+  setGetters = (getUser: () => User | null) => {
+    this.getters.getUser = getUser;
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   asyncCallback = (data: any) => {
@@ -95,7 +112,8 @@ class IamViewModel implements IIamViewModel {
         EventBus.emit(Events.AUTH_CHANGED, this._user);
       }
     }
-    return this._isAuthenticated;
+    const user = this.getters.getUser ? this.getters.getUser() : null;
+    return user !== null;
   }
 
   get user() {
@@ -105,11 +123,12 @@ class IamViewModel implements IIamViewModel {
         this._user = this.iamRepository.getUser();
       }
     }
-    return this._user;
+    return this.getters.getUser ? this.getters.getUser() : null;
   }
 
   setUser(user: User | null) {
     this._user = user;
+    if (this.setters.setUser) this.setters.setUser(user);
     console.log('emitting AUTH_CHANGED');
     EventBus.emit(Events.AUTH_CHANGED, user);
     if (user) {
@@ -186,8 +205,8 @@ class IamViewModel implements IIamViewModel {
 
   logout = () => {
     this.iamRepository.logout();
+    this.setUser(null);
     this._isAuthenticated = false;
-    this._user = null;
   };
 
   updateEmail = (email: string) => {

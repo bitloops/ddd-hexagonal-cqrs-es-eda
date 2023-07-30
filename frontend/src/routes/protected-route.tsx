@@ -1,19 +1,19 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useIamViewModel } from '../view-models/IamViewModel';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../state/auth';
 
 function ProtectedRoute({ element }: { element: React.ReactNode }) {
-  const iamViewModel = useIamViewModel();
   const navigate = useNavigate();
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
-    const { isAuthenticated } = iamViewModel;
-    if (!isAuthenticated) {
+    if (user === null) {
       navigate('/login');
     }
-  }, [iamViewModel.isAuthenticated]);
+  }, [user]);
 
-  return iamViewModel.isAuthenticated ? element : null;
+  return user !== null ? element : null;
 }
 
 export default ProtectedRoute;

@@ -1,11 +1,25 @@
 import { atom, selector } from 'recoil';
 import { Email, Password } from '../../models/Auth';
+import { User } from '../../models/User';
 
 function isEmailValid(email: string): boolean {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
+
+export const userState = atom<User | null>({
+  key: 'auth/user',
+  default: null,
+});
+
+export const isAuthenticatedSelector = selector<boolean>({
+  key: 'auth/isAuthenticated',
+  get: ({ get }) => {
+    const user = get(userState);
+    return user !== null;
+  },
+});
 
 export const emailState = atom<string>({
   key: 'auth/email',

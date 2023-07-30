@@ -7,7 +7,7 @@ import LoginPage from './page';
 import { emailSelector, emailState, passwordSelector, passwordState } from '../../state/auth';
 
 const LoginController: React.FC = () => {
-  const iamViewModel = useIamViewModel();
+  const { isAuthenticated, isProcessing, loginWithEmailPassword } = useIamViewModel();
   const navigate = useNavigate();
   const email = useRecoilValue(emailSelector);
   const password = useRecoilValue(passwordSelector);
@@ -15,11 +15,11 @@ const LoginController: React.FC = () => {
   const updatePassword = useSetRecoilState(passwordState);
 
   useEffect(() => {
-    if (iamViewModel.isAuthenticated) {
+    if (isAuthenticated) {
       // TODO either need to use mobx or recoil to re-render on auth change
       navigate('/');
     }
-  }, [iamViewModel.isAuthenticated]);
+  }, [isAuthenticated]);
 
   const clearEmailAndPassword = () => {
     updateEmail('');
@@ -34,9 +34,9 @@ const LoginController: React.FC = () => {
       updatePassword={updatePassword}
       submit={() => {
         if (email.isValid && password.isValid)
-          iamViewModel.loginWithEmailPassword(email, password, clearEmailAndPassword);
+          loginWithEmailPassword(email, password, clearEmailAndPassword);
       }}
-      isProcessing={iamViewModel.isProcessing}
+      isProcessing={isProcessing}
     />
   );
 };
