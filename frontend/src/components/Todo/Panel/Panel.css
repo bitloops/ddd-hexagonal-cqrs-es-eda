@@ -1,0 +1,194 @@
+body{
+	background: #f5f5f5;
+}
+
+.container{
+	width: 100%;
+	max-width: 300px;
+	margin: 50px auto;
+}
+
+.heading{
+  /* display: flex; */
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo{
+  width: 175px;
+  height: 40px;
+}
+
+.title{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #333;
+  /* text-align: center;
+  margin: 0;
+  padding: 0; */
+  margin-bottom: 20px;
+}
+
+.todo_list{
+	background: #fff;
+	box-shadow: 0 0 27px #ccc;
+}
+
+.todo_list ul {
+	list-style: none;
+	padding: 0;
+}
+
+.todo_list ul li label{
+	display: block;
+	position: relative;
+	padding: 0 10px;
+}
+
+.hidden_real_check{
+	width: 100%;
+	height: 100%;
+	opacity:0;
+	position: absolute;
+}
+
+.todo_element{
+	border-bottom: 1px solid #ddd;
+	padding: 10px 0;
+}
+.todo_list ul li:last-child .todo_element{
+	border-bottom: none;
+}
+
+.customized_ckeck{
+	display: inline-flex;
+	width: 15%;
+	height: 2em;
+	align-items: center;
+	justify-content: flex-end;
+}
+.element_title{
+	display: inline-block;
+	width: 85%;
+	height: 2em;
+	float: right;
+	font-family: 'Open Sans', sans-serif;
+	line-height: 2em;
+	position : relative;
+	color:#333;
+	letter-spacing:1px;
+}
+
+.element_title:after{
+	content: '';
+	position: absolute;
+	top :50%;
+	height: 2px;
+	width: 0;
+	background-image: linear-gradient(90deg, #4facfe, #00f2fe);
+	left: -5px;
+	z-index: 2;
+	transition: 0.3s;
+}
+
+.element_title:before{
+	content: '';
+	position: absolute;
+	top :0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(255,255,255,0.7);
+	z-index: 1;
+	transition: 0.3s;
+	opacity:0;
+}
+
+.todo_list ul li label .hidden_real_check:checked + .todo_element .element_title::after {width: 90%;}
+.todo_list ul li label .hidden_real_check:checked + .todo_element .element_title::before {opacity: 1;}
+.checkbox {
+	width: 25px;
+	height: 25px;
+	margin-right:5px;
+	position: relative;
+	transition: 0.1s;
+	transition-delay: 0.3s;
+}
+.checkbox span[class*='internal_'] {
+	position: absolute;
+	top: 0; right: 0; left: 0; bottom: 0;
+}
+.checkbox:after{
+	content: '✔';
+	position: absolute;
+	top:0; left: 2px; right: -2px; bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content:center;
+	color: #4facfe;
+	transform: scale(0);
+	transition: 0.4s;
+}
+.checkbox:before{
+	content: '';
+	position: absolute;
+	top:0; left: 2px; right: -2px; bottom: 0;
+	border-radius:50%;
+	border : 5px dotted #4facfe;
+	transform: scale(0) rotate(0);
+	transition: 0.5s;
+	transition-delay: 0.3s;
+}
+.checkbox span[class*='internal_']::after, .checkbox span[class*='internal_']::before{
+	content: '';
+	position: absolute;
+	top: 0px; left: 2px;
+	height: 100%;
+	width: 100%;
+	border-radius:50%;
+	border: 2px solid transparent;
+	transform: rotate(45deg);
+	box-sizing: border-box;
+}
+.checkbox span.internal_one::after{
+	border-top-color:#4facfe !important;
+	transition: 0.4s;
+}
+.checkbox span.internal_one::before{
+	border-left-color:#4facfe !important;
+	transition: 0.3s;
+	transition-delay:0.1s;
+}
+.checkbox span.internal_two::after{
+	border-bottom-color:#4facfe !important;
+	transition: 0.2s;
+	transition-delay:0.2s;
+}
+.checkbox span.internal_two::before{
+	border-right-color:#4facfe !important;
+	transition: 0.1s;
+	transition-delay:0.3s;
+}
+.todo_list ul li label .hidden_real_check:checked + .todo_element .checkbox .internal_one:after{
+	transform: rotate(-225deg);
+}
+.todo_list ul li label .hidden_real_check:checked + .todo_element .checkbox .internal_one:before{
+	transform: rotate(-135deg);
+}
+.todo_list ul li label .hidden_real_check:checked + .todo_element .checkbox .internal_two:after{
+	transform: rotate(-45deg);
+}
+.todo_list ul li label .hidden_real_check:checked + .todo_element .checkbox span[class*='internal_']:after,
+.todo_list ul li label .hidden_real_check:checked + .todo_element .checkbox span[class*='internal_']:before{
+	border-color: transparent !important;
+}
+.todo_list ul li label .hidden_real_check:checked + .todo_element .checkbox:after {
+	transform : scale(1);
+}
+.todo_list ul li label .hidden_real_check:checked + .todo_element .checkbox:before {
+	transform : scale(1.6) rotate(-90deg);
+	opacity: 0;
+} 

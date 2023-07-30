@@ -1,19 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { RecoilRoot } from 'recoil';
+import { ChakraProvider } from '@chakra-ui/react';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { TodoServiceClient } from './bitloops/proto/TodoServiceClientPb';
-import { PROXY_URL } from './config';
+import ViewModelProviders from './context/ViewModelProviders';
+import App from './App';
 
-const todo = new TodoServiceClient(PROXY_URL);
-
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <App service={todo} />
+    <RecoilRoot>
+      <ChakraProvider>
+        <ViewModelProviders>
+          <App />
+        </ViewModelProviders>
+      </ChakraProvider>
+    </RecoilRoot>
   </React.StrictMode>
 );
 
