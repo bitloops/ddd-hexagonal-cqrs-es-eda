@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import TodoEntryComponent from './TodoEntryComponent';
 import { useTodoViewModel } from '../../../view-models/TodoViewModel';
 import { Todo, todosState } from '../../../state/todos';
@@ -11,11 +11,14 @@ interface TodoEntityProps {
 function TodoEntryController(props: TodoEntityProps): JSX.Element {
   const { id } = props;
   const [editable, setEditable] = React.useState<string | null>(null);
-  const todo = useRecoilValue<Todo>(todosState(id));
+  const [todo, setTodo] = useRecoilState<Todo>(todosState(id));
   const todoViewModel = useTodoViewModel();
 
   const updateLocalItem = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('updateLocalItem', e);
+    const { value } = e.target;
+    const newData: Todo = { ...todo, title: value };
+    setTodo(newData);
   };
 
   const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -13,8 +13,9 @@ function TodoPanelController(): JSX.Element {
     todoViewModel.fetchAllTodo();
   }, []);
 
-  const addItem = (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLInputElement>) => {
-    todoViewModel.addTodo((e.target as HTMLInputElement).value);
+  const addItem = () => {
+    todoViewModel.addTodo(newTodoTitle);
+    setNewTodoTitle('');
   };
 
   return (

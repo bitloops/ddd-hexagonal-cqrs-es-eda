@@ -40,8 +40,10 @@ class TodoViewModel implements ITodoViewModel {
     if (payload)
       switch (eventName) {
         case 'onAdded':
-          console.log('onAdded');
-          if (this.setters.setTodoIds)
+          if (
+            this.setters.setTodoIds &&
+            this.todoIds.filter((id) => id === (payload as Todo).id).length === 0
+          )
             this.setters.setTodoIds([...this.todoIds, (payload as Todo).id]);
           if (this.setters.setTodoItem) this.setters.setTodoItem(payload as Todo);
           break;
@@ -126,10 +128,11 @@ class TodoViewModel implements ITodoViewModel {
 
   modifyTitle = (id: string, title: string) => {
     const todo = this.getters.getTodoItem ? this.getters.getTodoItem(id) : null;
+    console.log('modifyTitle', id, title, todo);
     if (!todo) return;
     // const backup = { ...todo };
-    todo.title = title;
-    console.log('modifyTitle', id, title);
+    // const newTodo = {...todo, title};
+
     this.todoRepository.modifyTodoTitle(id, title).catch(() => {
       // TODO show error message
     });
