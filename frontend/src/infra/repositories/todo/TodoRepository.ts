@@ -224,9 +224,9 @@ class TodoRepository implements ITodoRepository {
     const localTodos =
       LocalStorageRepository.getLocalStorageObject<Todo[]>(TODO_LOCAL_STORAGE_KEY) ?? [];
     const token = LocalStorageRepository.getAccessToken();
-    try {
-      // eslint-disable-next-line no-new, no-async-promise-executor
-      new Promise<GetAllTodoResponse>(async (resolve) => {
+    // eslint-disable-next-line no-new, no-async-promise-executor
+    new Promise<GetAllTodoResponse>(async (resolve) => {
+      try {
         const getAllTodoResponse: GetAllTodosResponse = await this.todoService.GetAll(
           new GetAllTodosRequest(),
           {
@@ -263,21 +263,22 @@ class TodoRepository implements ITodoRepository {
             error: undefined,
           });
         }
-      }).then((response) => {
-        if (callback) {
-          callback(response);
-        }
-      });
-    } catch (error) {
-      // If there error message is CACHE_HIT, it means that the response was
-      // cached and we don't need to do anything.
-      if ((error as { message: string }).message !== Errors.CACHE_HIT) {
-        if ((error as { message: string }).message === Errors.INVALID_JWT) {
-          console.log('Invalid JWT token');
-          EventBus.emit(Events.AUTH_CHANGED, null);
+      } catch (error) {
+        // If there error message is CACHE_HIT, it means that the response was
+        // cached and we don't need to do anything.
+        if ((error as { message: string }).message !== Errors.CACHE_HIT) {
+          if ((error as { message: string }).message === Errors.INVALID_JWT) {
+            console.log('Invalid JWT token');
+            EventBus.emit(Events.AUTH_CHANGED, null);
+          }
         }
       }
-    }
+    }).then((response) => {
+      if (callback) {
+        callback(response);
+      }
+    });
+
     return {
       status: 'cached',
       todos: localTodos,

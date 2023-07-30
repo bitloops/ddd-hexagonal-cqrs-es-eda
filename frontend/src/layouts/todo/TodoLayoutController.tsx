@@ -1,6 +1,9 @@
 import { observer } from 'mobx-react-lite';
-import DashboardLayoutComponent from './DashboardLayout';
+import { useRecoilValue } from 'recoil';
+
+import DashboardLayoutComponent from './TodoLayout';
 import { useIamViewModel } from '../../view-models/IamViewModel';
+import { userState } from '../../state/auth';
 
 interface DashboardControllerProps {
   children: React.ReactNode;
@@ -9,7 +12,8 @@ interface DashboardControllerProps {
 function DashboardLayoutController(props: DashboardControllerProps): JSX.Element {
   const { children } = props;
   const iamViewModel = useIamViewModel();
-  const { authMessage, user, logout } = iamViewModel;
+  const { authMessage, logout } = iamViewModel;
+  const user = useRecoilValue(userState);
 
   return (
     <DashboardLayoutComponent

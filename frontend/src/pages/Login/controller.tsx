@@ -4,15 +4,22 @@ import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useIamViewModel } from '../../view-models/IamViewModel';
 import LoginPage from './page';
-import { emailSelector, emailState, passwordSelector, passwordState } from '../../state/auth';
+import {
+  emailSelector,
+  emailState,
+  isAuthenticatedSelector,
+  passwordSelector,
+  passwordState,
+} from '../../state/auth';
 
 const LoginController: React.FC = () => {
-  const { isAuthenticated, isProcessing, loginWithEmailPassword } = useIamViewModel();
+  const { isProcessing, loginWithEmailPassword } = useIamViewModel();
   const navigate = useNavigate();
   const email = useRecoilValue(emailSelector);
   const password = useRecoilValue(passwordSelector);
   const updateEmail = useSetRecoilState(emailState);
   const updatePassword = useSetRecoilState(passwordState);
+  const isAuthenticated = useRecoilValue(isAuthenticatedSelector);
 
   useEffect(() => {
     if (isAuthenticated) {

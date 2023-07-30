@@ -1,5 +1,4 @@
 import { createContext, useContext, useMemo } from 'react';
-import { makeAutoObservable } from 'mobx';
 import { SetterOrUpdater } from 'recoil';
 import { IIamRepository } from '../infra/repositories/iam';
 import { User } from '../models/User';
@@ -8,14 +7,19 @@ import { ValidEmail, ValidPassword } from '../models/Auth';
 import { EventBus, Events } from '../Events';
 
 interface IIamViewModel {
-  isAuthenticated: boolean | null;
-  user: User | null;
+  // isAuthenticated: boolean | null;
+  // user: User | null;
   setUser: (user: User | null) => void;
   isProcessing: boolean;
   authMessage: { type: 'error' | 'success'; message: string } | null;
   loginWithGoogle: () => Promise<void | Error>;
   logout: () => void;
   loginWithEmailPassword: (
+    email: ValidEmail,
+    password: ValidPassword,
+    onSuccessCallback: () => void
+  ) => Promise<void>;
+  registerWithEmailPassword: (
     email: ValidEmail,
     password: ValidPassword,
     onSuccessCallback: () => void
@@ -45,10 +49,14 @@ class IamViewModel implements IIamViewModel {
     getUser: (() => User | null) | null;
   } = { getUser: null };
 
-  constructor(private iamRepository: IIamRepository) {
-    makeAutoObservable(this);
-    console.log('IamViewModel constructor', iamRepository);
-  }
+  // eslint-disable-next-line no-useless-constructor, no-empty-function
+  constructor(private iamRepository: IIamRepository) {}
+
+  init = () => {
+    const user = this.iamRepository.getUser();
+    this.setUser(user);
+    console.log('IamViewModel constructor', this.iamRepository);
+  };
 
   setSetters = (setUser: SetterOrUpdater<User | null>) => {
     this.setters.setUser = setUser;
@@ -104,27 +112,32 @@ class IamViewModel implements IIamViewModel {
     return this._isProcessing;
   }
 
-  get isAuthenticated() {
-    if (this._isAuthenticated === null) {
-      this._isAuthenticated = this.iamRepository.isAuthenticated();
-      if (this._isAuthenticated) {
-        this._user = this.iamRepository.getUser();
-        EventBus.emit(Events.AUTH_CHANGED, this._user);
-      }
-    }
-    const user = this.getters.getUser ? this.getters.getUser() : null;
-    return user !== null;
-  }
+  // get isAuthenticated() {
+  //   console.log('get isAuthenticated', this._isAuthenticated);
+  //   if (this._isAuthenticated === null) {
+  //     const isAuth = this.iamRepository.isAuthenticated();
+  //     this._isAuthenticated = isAuth;
+  //     console.log('get isAuth', isAuth, this.setters.setUser);
+  //     if (isAuth) {
+  //       const user = this.iamRepository.getUser();
+  //       if (this.setters.setUser) this.setters.setUser(user);
+  //       EventBus.emit(Events.AUTH_CHANGED, user);
+  //       this.setUser(user);
+  //     }
+  //   }
+  //   const user = this.getters.getUser ? this.getters.getUser() : null;
+  //   return user !== null;
+  // }
 
-  get user() {
-    if (this._isAuthenticated === null) {
-      this._isAuthenticated = this.iamRepository.isAuthenticated();
-      if (this._isAuthenticated) {
-        this._user = this.iamRepository.getUser();
-      }
-    }
-    return this.getters.getUser ? this.getters.getUser() : null;
-  }
+  // get user() {
+  //   if (this._isAuthenticated === null) {
+  //     this._isAuthenticated = this.iamRepository.isAuthenticated();
+  //     if (this._isAuthenticated) {
+  //       this._user = this.iamRepository.getUser();
+  //     }
+  //   }
+  //   return this.getters.getUser ? this.getters.getUser() : null;
+  // }
 
   setUser(user: User | null) {
     this._user = user;
@@ -169,11 +182,16 @@ class IamViewModel implements IIamViewModel {
     this._authMessage = null;
   };
 
-  registerWithEmailPassword = async (): Promise<void> => {
+  registerWithEmailPassword = async (
+    email: ValidEmail,
+    password: ValidPassword,
+    onSuccessCallback: () => void
+  ): Promise<void> => {
     this._isProcessing = true;
     try {
-      await this.iamRepository.registerWithEmailPassword(this._email, this._password);
+      await this.iamRepository.registerWithEmailPassword(email.value, password.value);
       this.setAuthMessage({ type: 'success', message: 'Registered successfully!' });
+      onSuccessCallback();
     } catch (error) {
       this.setAuthMessage({ type: 'error', message: (error as Error).message });
     }

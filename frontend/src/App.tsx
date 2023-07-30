@@ -11,6 +11,11 @@ import { userState } from './state/auth';
 function App(): JSX.Element {
   // IamViewModel
   const iamViewModel = useIamViewModel();
+
+  useEffect(() => {
+    iamViewModel.init();
+  }, []);
+
   const setUser = useSetRecoilState(userState);
   const getUser = useRecoilCallback(({ snapshot }) => () => {
     const loadable = snapshot.getLoadable(userState);

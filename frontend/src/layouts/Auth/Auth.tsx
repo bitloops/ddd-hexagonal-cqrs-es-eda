@@ -1,9 +1,12 @@
 import * as React from 'react';
+
 import { Outlet } from 'react-router-dom';
+import './Layout.css';
+import Heading from '../../components/Heading';
 
 const Layout: React.FC = () => (
-  <div>
-    This is the auth layout
+  <div className="layout_auth">
+    <Heading />
     <Outlet />
   </div>
 );

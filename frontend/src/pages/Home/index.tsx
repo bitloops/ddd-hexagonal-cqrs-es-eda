@@ -1,3 +1,3 @@
-import HomePage from './controller';
+import HomePage from './page';
 
 export default HomePage;

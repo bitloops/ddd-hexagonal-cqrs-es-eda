@@ -1,3 +1,3 @@
-import DashboardLayout from './DashboardLayoutController';
+import DashboardLayout from './TodoLayoutController';
 
 export default DashboardLayout;

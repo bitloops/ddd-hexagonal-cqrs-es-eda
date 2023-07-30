@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate, useRoutes } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
 import AuthLayout from '../layouts/Auth/Auth';
 import DashboardLayout from '../layouts/todo';
@@ -8,11 +9,10 @@ import RegisterPage from '../pages/Register';
 import NotFoundPage from '../pages/NotFound';
 import ProtectedRoute from './protected-route';
 import HomePage from '../pages/Home';
-import { useIamViewModel } from '../view-models/IamViewModel';
+import { isAuthenticatedSelector } from '../state/auth';
 
 const Routes: React.FC = () => {
-  const iamViewModel = useIamViewModel();
-  const { isAuthenticated } = iamViewModel; // TODO either need to use mobx or recoil to re-render on auth change
+  const isAuthenticated = useRecoilValue(isAuthenticatedSelector);
   const navigate = useNavigate();
 
   useEffect(() => {

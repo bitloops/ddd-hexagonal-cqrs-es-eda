@@ -24,39 +24,43 @@ function EmailPassForm(props: EmailPassFormProps): JSX.Element {
   };
 
   return (
-    <Stack>
-      <FormControl>
-        <Input
-          id="email-input"
-          placeholder="Email"
-          type="email"
-          value={email.value}
-          onChange={handleEmailChange}
-        />
-        <Input
-          id="password-input"
-          placeholder="Password"
-          type="password"
-          value={password.value}
-          onChange={handlePasswordChange}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && email && password) {
-              submit();
-            }
-          }}
-        />
-      </FormControl>
-      <Button
-        isDisabled={!email.isValid || !password.isValid}
-        onClick={submit}
-        isLoading={isProcessing}
-      >
-        {view}
-      </Button>
-      {(email.message || password.message) && (
-        <Alert status="error">{email.message || password.message}</Alert>
-      )}
-    </Stack>
+    <form>
+      <Stack>
+        <FormControl>
+          <Input
+            id="email-input"
+            placeholder="Email"
+            type="email"
+            autoComplete="email"
+            value={email.value}
+            onChange={handleEmailChange}
+          />
+          <Input
+            id="password-input"
+            placeholder="Password"
+            type="password"
+            value={password.value}
+            autoComplete="current-password"
+            onChange={handlePasswordChange}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && email && password) {
+                submit();
+              }
+            }}
+          />
+        </FormControl>
+        <Button
+          isDisabled={!email.isValid || !password.isValid}
+          onClick={submit}
+          isLoading={isProcessing}
+        >
+          {view}
+        </Button>
+        {(email.message || password.message) && (
+          <Alert status="error">{email.message || password.message}</Alert>
+        )}
+      </Stack>
+    </form>
   );
 }
 export { EmailPassForm };
