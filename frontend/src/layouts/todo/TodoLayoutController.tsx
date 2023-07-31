@@ -1,31 +1,26 @@
-import { observer } from 'mobx-react-lite';
-import { useRecoilValue } from 'recoil';
+import React from 'react';
 
-import DashboardLayoutComponent from './TodoLayout';
+import TodoLayoutComponent from './TodoLayoutComponent';
 import { useIamViewModel } from '../../view-models/IamViewModel';
-import { userState } from '../../state/auth';
 
-interface DashboardControllerProps {
+interface TodoControllerProps {
   children: React.ReactNode;
 }
 
-function DashboardLayoutController(props: DashboardControllerProps): JSX.Element {
+function TodoLayoutController(props: TodoControllerProps): JSX.Element {
   const { children } = props;
-  const iamViewModel = useIamViewModel();
-  const { authMessage, logout } = iamViewModel;
-  const user = useRecoilValue(userState);
+  const { logout, useIamSelectors } = useIamViewModel();
+  const { authMessage, user } = useIamSelectors();
 
   return (
-    <DashboardLayoutComponent
+    <TodoLayoutComponent
       errorMessage={authMessage?.type === 'error' ? authMessage?.message : ''}
       user={user}
       logout={logout}
     >
       {children}
-    </DashboardLayoutComponent>
+    </TodoLayoutComponent>
   );
 }
 
-const DashboardLayout = observer(DashboardLayoutController);
-
-export default DashboardLayout;
+export default TodoLayoutController;

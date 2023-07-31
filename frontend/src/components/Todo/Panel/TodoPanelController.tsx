@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { useState } from 'react';
+
 import TodoPanelComponent from './TodoPanelComponent';
 import { useTodoViewModel } from '../../../view-models/TodoViewModel';
-import { todoIdsState } from '../../../state/todos';
 
 function TodoPanelController(): JSX.Element {
   const todoViewModel = useTodoViewModel();
   const [newTodoTitle, setNewTodoTitle] = useState<string>('');
-  const data = useRecoilValue(todoIdsState);
-
-  useEffect(() => {
-    todoViewModel.fetchAllTodo();
-  }, []);
+  const { useTodoSelectors } = useTodoViewModel();
+  const { todoIds } = useTodoSelectors();
 
   const addItem = () => {
     if (newTodoTitle) todoViewModel.addTodo(newTodoTitle);
@@ -20,7 +16,7 @@ function TodoPanelController(): JSX.Element {
 
   return (
     <TodoPanelComponent
-      data={data}
+      data={todoIds}
       newTodoTitle={newTodoTitle}
       setNewTodoTitle={setNewTodoTitle}
       addItem={addItem}

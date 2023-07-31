@@ -1,24 +1,28 @@
 import { createContext, useContext, useMemo } from 'react';
-import { SetterOrUpdater } from 'recoil';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { IIamRepository } from '../infra/repositories/iam';
 import { User } from '../models/User';
 import { useIamRepository } from '../context/DI';
-import { ValidEmail, ValidPassword } from '../models/Auth';
+import { AuthMessage, Email, Password, ValidEmail, ValidPassword } from '../models/Auth';
 import { EventBus, Events } from '../Events';
+import { AUTH_MESSAGE_DURATION } from '../constants';
+import {
+  authMessageState,
+  emailSelector,
+  isAuthenticatedSelector,
+  isProcessingState,
+  passwordSelector,
+  userState,
+} from '../state/auth';
 
 interface IIamViewModel {
-  // isAuthenticated: boolean | null;
-  // user: User | null;
-  setUser: (user: User | null) => void;
-  isProcessing: boolean;
-  authMessage: { type: 'error' | 'success'; message: string } | null;
   loginWithGoogle: () => Promise<void | Error>;
-  logout: () => void;
   loginWithEmailPassword: (
     email: ValidEmail,
     password: ValidPassword,
     onSuccessCallback: () => void
   ) => Promise<void>;
+  logout: () => void;
   registerWithEmailPassword: (
     email: ValidEmail,
     password: ValidPassword,
@@ -26,160 +30,83 @@ interface IIamViewModel {
   ) => Promise<void>;
   updateEmail: (email: string) => void;
   updatePassword: (password: string) => void;
+  setGetters: (
+    getUser: () => User | null,
+    getEmail: () => Email | null,
+    getPassword: () => Password | null
+  ) => void;
+  setSetters: (
+    setAuthMessage: SetterOrUpdater<AuthMessage | null>,
+    setUser: SetterOrUpdater<User | null>,
+    setEmail: SetterOrUpdater<string>,
+    setPassword: SetterOrUpdater<string>,
+    setIsProcessing: SetterOrUpdater<boolean>
+  ) => void;
+  useIamSelectors: () => {
+    authMessage: AuthMessage | null;
+    email: Email | null;
+    isAuthenticated: boolean;
+    isProcessing: boolean;
+    password: Password | null;
+    user: User | null;
+  };
 }
 
 class IamViewModel implements IIamViewModel {
-  private _email = '';
-
-  private _password = '';
-
-  private _isAuthenticated: boolean | null = null;
-
-  private _isProcessing = false;
-
-  private _user: User | null = null;
-
-  private _authMessage: { type: 'error' | 'success'; message: string } | null = null;
-
   private setters: {
+    setAuthMessage: SetterOrUpdater<AuthMessage | null> | null;
     setUser: SetterOrUpdater<User | null> | null;
-  } = { setUser: null };
+    setEmail: SetterOrUpdater<string> | null;
+    setPassword: SetterOrUpdater<string> | null;
+    setIsProcessing: SetterOrUpdater<boolean> | null;
+  } = {
+    setAuthMessage: null,
+    setUser: null,
+    setEmail: null,
+    setPassword: null,
+    setIsProcessing: null,
+  };
 
   private getters: {
     getUser: (() => User | null) | null;
-  } = { getUser: null };
+    getEmail: (() => Email | null) | null;
+    getPassword: (() => Password | null) | null;
+  } = {
+    getUser: null,
+    getEmail: null,
+    getPassword: null,
+  };
 
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(private iamRepository: IIamRepository) {}
 
   init = () => {
-    const user = this.iamRepository.getUser();
-    this.setUser(user);
-    console.log('IamViewModel constructor', this.iamRepository);
+    console.debug('IamViewModel constructor', this.iamRepository);
+    this.setUser(this.iamRepository.getUser());
   };
 
-  setSetters = (setUser: SetterOrUpdater<User | null>) => {
+  setSetters = (
+    setAuthMessage: SetterOrUpdater<AuthMessage | null>,
+    setUser: SetterOrUpdater<User | null>,
+    setEmail: SetterOrUpdater<string>,
+    setPassword: SetterOrUpdater<string>,
+    setIsProcessing: SetterOrUpdater<boolean>
+  ) => {
+    this.setters.setAuthMessage = setAuthMessage;
     this.setters.setUser = setUser;
+    this.setters.setEmail = setEmail;
+    this.setters.setPassword = setPassword;
+    this.setters.setIsProcessing = setIsProcessing;
   };
 
-  setGetters = (getUser: () => User | null) => {
+  setGetters = (
+    getUser: () => User | null,
+    getEmail: () => Email | null,
+    getPassword: () => Password | null
+  ) => {
     this.getters.getUser = getUser;
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  asyncCallback = (data: any) => {
-    console.log('asyncCallback', data);
-    const { event, session } = data;
-    const jwt = session?.access_token;
-    const user = session?.user;
-    const uid = user?.id;
-    const name = user?.user_metadata?.full_name;
-    if (!(jwt && uid && name)) {
-      this._isAuthenticated = false;
-      this._user = null;
-    }
-
-    switch (event) {
-      case 'INITIAL_SESSION':
-        console.log('switch INITIAL_SESSION', session);
-        if (jwt && uid && name) {
-          this._isAuthenticated = true;
-          this._user = { id: uid, name, jwt };
-        } else {
-          this._isAuthenticated = false;
-          this._user = null;
-        }
-        break;
-      case 'SIGNED_IN':
-        console.log('switch SIGNED_IN', session);
-        if (jwt && uid && name) {
-          this._isAuthenticated = true;
-          this._user = { id: uid, name, jwt };
-        }
-        break;
-      case 'SIGNED_OUT':
-        console.log('switch SIGNED_OUT', session);
-        this._isAuthenticated = false;
-        this._user = null;
-        break;
-      default:
-        console.log('switch DEFAULT', event, session);
-        break;
-    }
-  };
-
-  get isProcessing(): boolean {
-    return this._isProcessing;
-  }
-
-  // get isAuthenticated() {
-  //   console.log('get isAuthenticated', this._isAuthenticated);
-  //   if (this._isAuthenticated === null) {
-  //     const isAuth = this.iamRepository.isAuthenticated();
-  //     this._isAuthenticated = isAuth;
-  //     console.log('get isAuth', isAuth, this.setters.setUser);
-  //     if (isAuth) {
-  //       const user = this.iamRepository.getUser();
-  //       if (this.setters.setUser) this.setters.setUser(user);
-  //       EventBus.emit(Events.AUTH_CHANGED, user);
-  //       this.setUser(user);
-  //     }
-  //   }
-  //   const user = this.getters.getUser ? this.getters.getUser() : null;
-  //   return user !== null;
-  // }
-
-  // get user() {
-  //   if (this._isAuthenticated === null) {
-  //     this._isAuthenticated = this.iamRepository.isAuthenticated();
-  //     if (this._isAuthenticated) {
-  //       this._user = this.iamRepository.getUser();
-  //     }
-  //   }
-  //   return this.getters.getUser ? this.getters.getUser() : null;
-  // }
-
-  setUser(user: User | null) {
-    this._user = user;
-    if (this.setters.setUser) this.setters.setUser(user);
-    console.log('emitting AUTH_CHANGED');
-    EventBus.emit(Events.AUTH_CHANGED, user);
-    if (user) {
-      this.iamRepository.setUser(user);
-    } else this.iamRepository.logout();
-  }
-
-  get email() {
-    return this._email;
-  }
-
-  get password() {
-    return this._password;
-  }
-
-  get authMessage() {
-    if (this._authMessage) {
-      setTimeout(() => {
-        this.clearAuthMessage();
-      }, 5000);
-    }
-    return this._authMessage;
-  }
-
-  private setAuthMessage = (message: { type: 'error' | 'success'; message: string } | null) => {
-    this._authMessage = message;
-  };
-
-  private setIsAuthenticated = (isAuthenticated: boolean | null) => {
-    this._isAuthenticated = isAuthenticated;
-  };
-
-  // private setUser = (user: User | null) => {
-  //   this._user = user;
-  // };
-
-  private clearAuthMessage = () => {
-    this._authMessage = null;
+    this.getters.getEmail = getEmail;
+    this.getters.getPassword = getPassword;
   };
 
   registerWithEmailPassword = async (
@@ -187,15 +114,25 @@ class IamViewModel implements IIamViewModel {
     password: ValidPassword,
     onSuccessCallback: () => void
   ): Promise<void> => {
-    this._isProcessing = true;
+    this.setIsProcessing(true);
     try {
       await this.iamRepository.registerWithEmailPassword(email.value, password.value);
-      this.setAuthMessage({ type: 'success', message: 'Registered successfully!' });
+      this.setAuthMessage({
+        type: 'success',
+        message: 'Registered successfully!',
+        startAt: Date.now(),
+        duration: AUTH_MESSAGE_DURATION,
+      });
       onSuccessCallback();
     } catch (error) {
-      this.setAuthMessage({ type: 'error', message: (error as Error).message });
+      this.setAuthMessage({
+        type: 'error',
+        message: (error as Error).message,
+        startAt: Date.now(),
+        duration: AUTH_MESSAGE_DURATION,
+      });
     }
-    this._isProcessing = false;
+    this.setIsProcessing(false);
   };
 
   loginWithEmailPassword = async (
@@ -203,18 +140,26 @@ class IamViewModel implements IIamViewModel {
     password: ValidPassword,
     onSuccessCallback: () => void
   ): Promise<void> => {
-    this._isProcessing = true;
+    this.setIsProcessing(true);
     try {
       const user = await this.iamRepository.loginWithEmailPassword(email.value, password.value);
-      this.setIsAuthenticated(true);
       this.setUser(user);
-      this.setAuthMessage({ type: 'success', message: 'Login successful!' });
+      this.setAuthMessage({
+        type: 'success',
+        message: 'Login successful!',
+        startAt: Date.now(),
+        duration: AUTH_MESSAGE_DURATION,
+      });
       onSuccessCallback();
     } catch (error) {
-      // console.log(error);
-      this.setAuthMessage({ type: 'error', message: (error as Error).message });
+      this.setAuthMessage({
+        type: 'error',
+        message: (error as Error).message,
+        startAt: Date.now(),
+        duration: AUTH_MESSAGE_DURATION,
+      });
     }
-    this._isProcessing = false;
+    this.setIsProcessing(false);
   };
 
   loginWithGoogle = async (): Promise<void> => {
@@ -224,23 +169,50 @@ class IamViewModel implements IIamViewModel {
   logout = () => {
     this.iamRepository.logout();
     this.setUser(null);
-    this._isAuthenticated = false;
+    this.setAuthMessage(null);
+    this.updateEmail('');
+    this.updatePassword('');
   };
 
   updateEmail = (email: string) => {
-    this._email = email;
+    if (this.setters.setEmail) this.setters.setEmail(email);
+    else throw new Error('setters.setEmail is not set');
   };
 
   updatePassword = (password: string) => {
-    this._password = password;
+    if (this.setters.setPassword) this.setters.setPassword(password);
+    else throw new Error('setters.setPassword is not set');
   };
 
-  clearEmail = () => {
-    this._email = '';
+  useIamSelectors = () => ({
+    authMessage: useRecoilValue(authMessageState),
+    email: useRecoilValue(emailSelector),
+    isProcessing: useRecoilValue(isProcessingState),
+    isAuthenticated: useRecoilValue(isAuthenticatedSelector),
+    password: useRecoilValue(passwordSelector),
+    user: useRecoilValue(userState),
+  });
+
+  private setAuthMessage = (message: AuthMessage | null) => {
+    if (this.setters.setAuthMessage) {
+      this.setters.setAuthMessage(message);
+    } else {
+      throw new Error('setAuthMessage is not set');
+    }
   };
 
-  clearPassword = () => {
-    this._password = '';
+  private setUser = (user: User | null) => {
+    if (this.setters.setUser) this.setters.setUser(user);
+    else throw new Error('setters.setUser is null');
+    EventBus.emit(Events.AUTH_CHANGED, user);
+    if (user) {
+      this.iamRepository.setUser(user);
+    } else this.iamRepository.logout();
+  };
+
+  private setIsProcessing = (isProcessing: boolean) => {
+    if (this.setters.setIsProcessing) this.setters.setIsProcessing(isProcessing);
+    else throw new Error('setters.setIsProcessing is null');
   };
 }
 
@@ -255,12 +227,6 @@ const IamViewModelProvider: React.FC<IamViewModelProviderProps> = ({
 }: IamViewModelProviderProps) => {
   const iamRepository = useIamRepository();
   const loginViewModel = useMemo(() => new IamViewModel(iamRepository), [iamRepository]);
-
-  // useEffect(() => {
-  //   // iamRepository.onAuthStateChanged((user: User) => {
-  //   //   loginViewModel.asyncCallback(user);
-  //   // });
-  // }, []);
 
   return (
     <IamViewModelContext.Provider value={loginViewModel}>{children}</IamViewModelContext.Provider>

@@ -7,3 +7,5 @@ export const Errors = {
   CACHE_HIT: 'CACHE_HIT',
   INVALID_JWT: 'Invalid JWT Token',
 };
+
+export const AUTH_MESSAGE_DURATION = 5000;

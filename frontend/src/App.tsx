@@ -3,22 +3,38 @@ import { useRecoilCallback, useRecoilSnapshot, useSetRecoilState } from 'recoil'
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import Routes from './routes';
-import { Todo, todoIdsState, todosState } from './state/todos';
+import { todoIdsState, todosState } from './state/todos';
 import { useTodoViewModel } from './view-models/TodoViewModel';
 import { useIamViewModel } from './view-models/IamViewModel';
-import { userState } from './state/auth';
+import {
+  authMessageState,
+  emailSelector,
+  emailState,
+  isProcessingState,
+  passwordSelector,
+  passwordState,
+  userState,
+} from './state/auth';
+import Todo from './models/Todo';
 
 function App(): JSX.Element {
   // IamViewModel
   const iamViewModel = useIamViewModel();
-
-  useEffect(() => {
-    iamViewModel.init();
-  }, []);
-
+  const setAuthMessage = useSetRecoilState(authMessageState);
   const setUser = useSetRecoilState(userState);
+  const setEmail = useSetRecoilState(emailState);
+  const setPassword = useSetRecoilState(passwordState);
+  const setIsProcessing = useSetRecoilState(isProcessingState);
   const getUser = useRecoilCallback(({ snapshot }) => () => {
     const loadable = snapshot.getLoadable(userState);
+    return loadable.state === 'hasValue' ? loadable.contents : null;
+  });
+  const getEmail = useRecoilCallback(({ snapshot }) => () => {
+    const loadable = snapshot.getLoadable(emailSelector);
+    return loadable.state === 'hasValue' ? loadable.contents : null;
+  });
+  const getPassword = useRecoilCallback(({ snapshot }) => () => {
+    const loadable = snapshot.getLoadable(passwordSelector);
     return loadable.state === 'hasValue' ? loadable.contents : null;
   });
 
@@ -40,12 +56,16 @@ function App(): JSX.Element {
 
   useEffect(() => {
     // IamViewModel
-    iamViewModel.setSetters(setUser);
-    iamViewModel.setGetters(getUser);
+    iamViewModel.setSetters(setAuthMessage, setUser, setEmail, setPassword, setIsProcessing);
+    iamViewModel.setGetters(getUser, getEmail, getPassword);
+
+    iamViewModel.init();
 
     // TodoViewModel
-    todoViewModel.setSetters(setTodoIds, setTodoItem);
-    todoViewModel.setGetters(getTodoIds, getTodoItem);
+    todoViewModel.setSetters(setTodoItem, setTodoIds);
+    todoViewModel.setGetters(getTodoItem, getTodoIds);
+
+    todoViewModel.init();
   }, []);
 
   function DebugObserver() {

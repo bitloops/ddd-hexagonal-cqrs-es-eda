@@ -1,8 +1,7 @@
 import React from 'react';
-import { useRecoilState } from 'recoil';
 import TodoEntryComponent from './TodoEntryComponent';
 import { useTodoViewModel } from '../../../view-models/TodoViewModel';
-import { Todo, todosState } from '../../../state/todos';
+import Todo from '../../../models/Todo';
 
 interface TodoEntityProps {
   id: string;
@@ -10,14 +9,16 @@ interface TodoEntityProps {
 
 function TodoEntryController(props: TodoEntityProps): JSX.Element {
   const { id } = props;
+  const { setTodo, useTodoSelectors } = useTodoViewModel();
+  const { todo } = useTodoSelectors();
   const [editable, setEditable] = React.useState<string | null>(null);
-  const [todo, setTodo] = useRecoilState<Todo>(todosState(id));
   const todoViewModel = useTodoViewModel();
+  const oldTodo = todo(id);
 
   const updateLocalItem = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('updateLocalItem', e);
     const { value } = e.target;
-    const newData: Todo = { ...todo, title: value };
+    const newData: Todo = { ...oldTodo, title: value };
     setTodo(newData);
   };
 
@@ -38,14 +39,11 @@ function TodoEntryController(props: TodoEntityProps): JSX.Element {
   return (
     <TodoEntryComponent
       updateLocalItem={updateLocalItem}
-      todo={todo}
+      todo={oldTodo}
       editable={editable}
       setEditable={setEditable}
       handleCheckbox={handleCheckbox}
       modifyTitle={modifyTitle}
-      // updateLocalItem={(e) => {
-      //   todoViewModel.updateLocalItem(id, e);
-      // }}
       removeItem={() => {
         todoViewModel.deleteTodo(id);
       }}

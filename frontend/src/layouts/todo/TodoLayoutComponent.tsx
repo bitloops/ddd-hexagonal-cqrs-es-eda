@@ -11,7 +11,7 @@ interface IDashboardLayout {
   children: React.ReactNode;
 }
 
-function DashboardLayout(props: IDashboardLayout): JSX.Element {
+function TodoLayoutComponent(props: IDashboardLayout): JSX.Element {
   const { user, logout, errorMessage, children } = props;
 
   return (
@@ -23,4 +23,4 @@ function DashboardLayout(props: IDashboardLayout): JSX.Element {
   );
 }
 
-export default DashboardLayout;
+export default TodoLayoutComponent;

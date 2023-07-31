@@ -1,87 +1,90 @@
 import { createContext, useContext, useMemo } from 'react';
-import { SetterOrUpdater } from 'recoil';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { GetAllTodoResponse, ITodoRepository } from '../infra/repositories/todo';
 import { useTodoRepository } from '../context/DI';
 import Todo from '../models/Todo';
 import { EventBus, Events } from '../Events';
+import { todoIdsState, todosState } from '../state/todos';
 
 interface ITodoViewModel {
-  todoIds: string[];
-  todo: (id: string) => Todo | null;
-  modifyTitle: (id: string, title: string) => void;
+  init: () => void;
   completeTodo: (id: string) => void;
-  uncompleteTodo: (id: string) => void;
   deleteTodo: (id: string) => void;
+  modifyTitle: (id: string, title: string) => void;
+  uncompleteTodo: (id: string) => void;
+  setSetters: (setTodo: (todo: Todo) => void, setTodoIds: SetterOrUpdater<string[]>) => void;
+  setGetters: (getTodo: (id: string) => Todo | null, getTodoIds: () => string[]) => void;
+  setTodo: (todo: Todo) => void;
+  useTodoSelectors: () => {
+    todoIds: string[];
+    todo: (id: string) => Todo | null;
+  };
 }
 
 class TodoViewModel implements ITodoViewModel {
-  private fetchTodoCallback: ((response: GetAllTodoResponse) => void) | null = null;
+  private setters: {
+    setTodo: ((todo: Todo) => void) | null;
+    setTodoIds: SetterOrUpdater<string[]> | null;
+  } = { setTodo: null, setTodoIds: null };
+
+  private getters: {
+    getTodo: ((id: string) => Todo | null) | null;
+    getTodoIds: (() => string[]) | null;
+  } = { getTodo: null, getTodoIds: null };
 
   private initialized = false;
 
-  private setters: {
-    setTodoIds: SetterOrUpdater<string[]> | null;
-    setTodoItem: ((todo: Todo) => void) | null;
-  } = { setTodoIds: null, setTodoItem: null };
-
-  private getters: {
-    getTodoIds: (() => string[]) | null;
-    getTodoItem: ((id: string) => Todo | null) | null;
-  } = { getTodoIds: null, getTodoItem: null };
-
   constructor(private todoRepository: ITodoRepository) {
-    console.log('TodoViewModel constructor', todoRepository);
+    console.debug('TodoViewModel constructor', todoRepository);
+  }
+
+  init() {
     EventBus.subscribe(Events.TODO_EVENT, this.onTodoEvent);
+    this.fetchAllTodo();
   }
 
   private onTodoEvent = (data: { eventName: string; payload: unknown }) => {
     console.log('onTodoEvent', data);
     const { eventName, payload } = data;
-    if (payload)
+    if (payload) {
+      let todo: Todo | null = null;
       switch (eventName) {
         case 'onAdded':
-          if (
-            this.setters.setTodoIds &&
-            this.todoIds.filter((id) => id === (payload as Todo).id).length === 0
-          )
-            this.setters.setTodoIds([...this.todoIds, (payload as Todo).id]);
-          if (this.setters.setTodoItem) this.setters.setTodoItem(payload as Todo);
+          if (this.getTodoIds()?.filter((id) => id === (payload as Todo).id).length === 0) {
+            this.setTodoIds([...this.getTodoIds(), (payload as Todo).id]);
+            this.setTodo(payload as Todo);
+          }
           break;
         case 'onDeleted':
           console.log('onDeleted');
-          if (this.setters.setTodoIds)
-            this.setters.setTodoIds(
-              this.todoIds.filter((todoId) => todoId !== (payload as Todo).id)
-            );
+          this.setTodoIds(this.getTodoIds()?.filter((todoId) => todoId !== (payload as Todo).id));
           // TODO remove atom from todo family
           break;
         case 'onModifiedTitle':
           console.log('onModifiedTitle');
-          if (this.getters.getTodoItem) {
-            const item = this.getters.getTodoItem((payload as Todo).id);
-            if (item !== null && this.setters.setTodoItem)
-              this.setters.setTodoItem({ ...item, title: (payload as Todo).title });
+          todo = this.getTodo((payload as Todo).id);
+          if (todo !== null && this.setTodo) {
+            this.setTodo({ ...todo, title: (payload as Todo).title });
           }
           break;
         case 'onCompleted':
           console.log('onCompleted');
-          if (this.getters.getTodoItem) {
-            const item = this.getters.getTodoItem((payload as Todo).id);
-            if (item !== null && this.setters.setTodoItem)
-              this.setters.setTodoItem({ ...item, isCompleted: true });
+          todo = this.getTodo((payload as Todo).id);
+          if (todo !== null) {
+            this.setTodo({ ...todo, isCompleted: true });
           }
           break;
         case 'onUncompleted':
           console.log('onUncompleted');
-          if (this.getters.getTodoItem) {
-            const item = this.getters.getTodoItem((payload as Todo).id);
-            if (item !== null && this.setters.setTodoItem)
-              this.setters.setTodoItem({ ...item, isCompleted: false });
+          todo = this.getTodo((payload as Todo).id);
+          if (todo !== null) {
+            this.setTodo({ ...todo, isCompleted: false });
           }
           break;
         default:
           break;
       }
+    }
   };
 
   fetchAllTodo = () => {
@@ -94,45 +97,28 @@ class TodoViewModel implements ITodoViewModel {
     console.log('privateAllTodoFetched', asyncResponse);
     const todoIds = asyncResponse.todos?.map((todo: Todo) => {
       // use the `setTodoItem` callback to update each todo item
-      if (this.setters.setTodoItem) this.setters.setTodoItem(todo);
+      this.setTodo(todo);
       return todo.id;
     });
     if (todoIds) {
-      if (this.setters.setTodoIds) this.setters.setTodoIds(todoIds);
+      this.setTodoIds(todoIds);
     }
   };
 
-  get todoIds(): string[] {
-    if (!this.initialized) {
-      this.initialized = true;
-      this.fetchAllTodo();
-    }
-    const ids = this.getters.getTodoIds ? this.getters.getTodoIds() : [];
-    return ids;
-  }
-
-  todo(id: string): Todo | null {
-    const todo = this.getters.getTodoItem ? this.getters.getTodoItem(id) : null;
-    return todo;
-  }
-
-  setSetters = (setTodoIds: SetterOrUpdater<string[]>, setTodoItem: (todo: Todo) => void) => {
+  setSetters = (setTodo: (todo: Todo) => void, setTodoIds: SetterOrUpdater<string[]>) => {
+    this.setters.setTodo = setTodo;
     this.setters.setTodoIds = setTodoIds;
-    this.setters.setTodoItem = setTodoItem;
   };
 
-  setGetters = (getTodoIds: () => string[], getTodoItem: (id: string) => Todo | null) => {
+  setGetters = (getTodo: (id: string) => Todo | null, getTodoIds: () => string[]) => {
+    this.getters.getTodo = getTodo;
     this.getters.getTodoIds = getTodoIds;
-    this.getters.getTodoItem = getTodoItem;
   };
 
   modifyTitle = (id: string, title: string) => {
-    const todo = this.getters.getTodoItem ? this.getters.getTodoItem(id) : null;
+    const todo = this.getTodo(id);
     console.log('modifyTitle', id, title, todo);
-    if (!todo) return;
-    // const backup = { ...todo };
-    // const newTodo = {...todo, title};
-
+    if (todo === null) return;
     this.todoRepository.modifyTodoTitle(id, title).catch(() => {
       // TODO show error message
     });
@@ -156,6 +142,31 @@ class TodoViewModel implements ITodoViewModel {
   addTodo = (title: string) => {
     console.log('addTodo', title);
     this.todoRepository.addTodo(title);
+  };
+
+  useTodoSelectors = () => ({
+    todoIds: useRecoilValue(todoIdsState),
+    todo: (id: string) => useRecoilValue(todosState(id)),
+  });
+
+  private setTodoIds = (todoIds: string[]) => {
+    if (this.setters.setTodoIds) this.setters.setTodoIds(todoIds);
+    else throw new Error('setTodoIds is not set');
+  };
+
+  setTodo = (todo: Todo) => {
+    if (this.setters.setTodo) this.setters.setTodo(todo);
+    else throw new Error('setTodo is not set');
+  };
+
+  private getTodoIds = (): string[] => {
+    if (this.getters.getTodoIds) return this.getters.getTodoIds();
+    throw new Error('getTodoIds is not set');
+  };
+
+  private getTodo = (id: string): Todo | null => {
+    if (this.getters.getTodo) return this.getters.getTodo(id);
+    throw new Error('getTodo is not set');
   };
 }
 

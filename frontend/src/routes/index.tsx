@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate, useRoutes } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 
-import AuthLayout from '../layouts/Auth/Auth';
-import DashboardLayout from '../layouts/todo';
+import AuthLayout from '../layouts/Auth';
+import TodoLayout from '../layouts/todo';
 import LoginPage from '../pages/Login';
 import RegisterPage from '../pages/Register';
 import NotFoundPage from '../pages/NotFound';
 import ProtectedRoute from './protected-route';
 import HomePage from '../pages/Home';
-import { isAuthenticatedSelector } from '../state/auth';
+import { useIamViewModel } from '../view-models/IamViewModel';
 
 const Routes: React.FC = () => {
-  const isAuthenticated = useRecoilValue(isAuthenticatedSelector);
+  const { useIamSelectors } = useIamViewModel();
+  const { isAuthenticated } = useIamSelectors();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,20 +24,28 @@ const Routes: React.FC = () => {
   const element = useRoutes([
     {
       path: 'login',
-      element: <AuthLayout />,
+      element: (
+        <AuthLayout>
+          <Outlet />
+        </AuthLayout>
+      ),
       children: [{ path: '/login', element: <LoginPage /> }],
     },
     {
       path: 'register',
-      element: <AuthLayout />,
-      children: [{ path: '/register', element: <RegisterPage /> }], // TODO refactor the registration page to use the same form as the login page
+      element: (
+        <AuthLayout>
+          <Outlet />
+        </AuthLayout>
+      ),
+      children: [{ path: '/register', element: <RegisterPage /> }],
     },
     {
       path: '/',
       element: isAuthenticated ? (
-        <DashboardLayout>
+        <TodoLayout>
           <Outlet />
-        </DashboardLayout>
+        </TodoLayout>
       ) : null,
       children: [
         {

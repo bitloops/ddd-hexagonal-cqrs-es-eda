@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { Email, Password } from '../../models/Auth';
+import { AuthMessage, Email, Password } from '../../models/Auth';
 import { User } from '../../models/User';
 
 function isEmailValid(email: string): boolean {
@@ -8,17 +8,9 @@ function isEmailValid(email: string): boolean {
   return re.test(String(email).toLowerCase());
 }
 
-export const userState = atom<User | null>({
-  key: 'auth/user',
+export const authMessageState = atom<AuthMessage | null>({
+  key: 'auth/authMessage',
   default: null,
-});
-
-export const isAuthenticatedSelector = selector<boolean>({
-  key: 'auth/isAuthenticated',
-  get: ({ get }) => {
-    const user = get(userState);
-    return user !== null;
-  },
 });
 
 export const emailState = atom<string>({
@@ -42,7 +34,24 @@ export const emailSelector = selector<Email>({
       message: 'Please enter a valid email address',
     };
   },
-  // set: ({ set }, newValue) => set(emailState, newValue),
+});
+
+export const userState = atom<User | null>({
+  key: 'auth/user',
+  default: null,
+});
+
+export const isAuthenticatedSelector = selector<boolean>({
+  key: 'auth/isAuthenticated',
+  get: ({ get }) => {
+    const user = get(userState);
+    return user !== null;
+  },
+});
+
+export const isProcessingState = atom<boolean>({
+  key: 'auth/isProcessing',
+  default: false,
 });
 
 export const passwordState = atom<string>({
