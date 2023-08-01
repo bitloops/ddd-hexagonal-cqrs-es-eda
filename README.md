@@ -123,11 +123,11 @@ from the terminal inside the project **in order to download and run the necessar
 Then the ReactJS front-end application will be visible at: `http://localhost:3000`.
 
 <p align="center" style="margin-bottom: 0px !important;">
-  <img width="400" src="https://storage.googleapis.com/bitloops-github-assets/todo-frontend.png" alt="Frontend application" align="center">
+  <img width="400" alt="image" src="https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda/assets/1571105/4570473b-4e67-4050-9935-967acfe0b7c6" alt="Frontend application" align="center">  
 </p>
 
 <p align="center">
-Frontend React JS application
+Frontend React JS application (new version using MVVM!)
 </p>
 
 # IV. Design Process and Decisions 
