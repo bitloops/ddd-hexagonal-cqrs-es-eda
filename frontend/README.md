@@ -86,4 +86,4 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### `yarn proto` or `npm run proto`
 
-Regenerates the TodoServiceClientPb.ts and todo_pb.js and todo_pb.d.ts files based on the todo.proto file.
+Regenerates the TodoServiceClientPb.ts and todo.ts and todo_pb.d.ts files based on the todo.proto file.
