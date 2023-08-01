@@ -1,5 +1,7 @@
 # Getting Started with the Bitloops Todo App
 
+<img width="488" alt="image" src="https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda/assets/1571105/4570473b-4e67-4050-9935-967acfe0b7c6">
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 You should not need to run it directly from this folder as it is part of the docker build file but if you want to run it locally for development you can follow the instructions below at "Available Scripts".
