@@ -1,0 +1,63 @@
+{
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
+  "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "airbnb",
+        "airbnb-typescript",
+        "plugin:react/recommended",
+        "plugin:jsx-a11y/recommended",
+        "prettier"
+    ],
+    "overrides": [
+        {
+            "extends": [],
+            "files": [
+                "*.ts",
+                "*.tsx"
+            ]
+        }
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "plugins": [
+        "react",
+        "jsx-a11y",
+        "react-hooks",
+        "@typescript-eslint",
+        "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error",
+      "no-shadow": "off",
+      "@typescript-eslint/no-shadow": ["error"],
+      "react/function-component-definition": "off",
+      "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }],
+      "react/react-in-jsx-scope": "off",
+      "class-methods-use-this": "off",
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "ts": "never",
+          "tsx": "never",
+          "js": "never",
+          "jsx": "never"
+        }
+      ],
+      "quotes": ["error", "single"],
+      "@typescript-eslint/quotes": ["error", "single"],
+      "no-underscore-dangle": "off"
+    }
+}

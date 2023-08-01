@@ -1,0 +1,28 @@
+.todo_element{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: left;
+  font-size: 1.4rem;
+  font-weight: 300;
+  width: 100%;
+  min-width: 200px;
+}
+
+.checkbox {
+  width: 25px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.element_title {
+  margin: 25px;
+  min-width: 100px;
+}
+
+.delete_button {
+  margin: 20px;
+  /* Align to the right */
+  margin-left: auto;
+
+}

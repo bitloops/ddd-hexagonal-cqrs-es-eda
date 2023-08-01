@@ -1,0 +1,9 @@
+*/proto/*
+/src/bitloops/proto/*
+*/src/bitloops/proto/*
+/src/bitloops/proto/todo.ts
+*/src/bitloops/proto/todo.ts
+/src/bitloops/proto/todo_pb.d.ts
+*/src/bitloops/proto/todo_pb.d.ts
+/src/bitloops/proto/TodoServiceClient_Pb.ts
+*/src/bitloops/proto/TodoServiceClient_Pb.ts
