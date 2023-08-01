@@ -1,10 +1,10 @@
 import { createContext, useContext, useMemo } from 'react';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
-import { GetAllTodoResponse, ITodoRepository } from '../infra/repositories/todo';
 import { useTodoRepository } from '../context/DI';
 import Todo from '../models/Todo';
 import { EventBus, Events } from '../Events';
 import { todoIdsState, todosState } from '../state/todos';
+import { GetAllTodoResponse, ITodoRepository } from '../infra/interfaces/ITodoRepository';
 
 interface ITodoViewModel {
   init: () => void;
@@ -17,7 +17,7 @@ interface ITodoViewModel {
   setTodo: (todo: Todo) => void;
   useTodoSelectors: () => {
     todoIds: string[];
-    todo: (id: string) => Todo | null;
+    useTodo: (id: string) => Todo | null;
   };
 }
 
@@ -146,7 +146,7 @@ class TodoViewModel implements ITodoViewModel {
 
   useTodoSelectors = () => ({
     todoIds: useRecoilValue(todoIdsState),
-    todo: (id: string) => useRecoilValue(todosState(id)),
+    useTodo: (id: string) => useRecoilValue(todosState(id)),
   });
 
   private setTodoIds = (todoIds: string[]) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import TodoPanelComponent from './TodoPanelComponent';
 import { useTodoViewModel } from '../../../view-models/TodoViewModel';
@@ -8,6 +8,10 @@ function TodoPanelController(): JSX.Element {
   const [newTodoTitle, setNewTodoTitle] = useState<string>('');
   const { useTodoSelectors } = useTodoViewModel();
   const { todoIds } = useTodoSelectors();
+
+  useEffect(() => {
+    todoViewModel.fetchAllTodo();
+  }, []);
 
   const addItem = () => {
     if (newTodoTitle) todoViewModel.addTodo(newTodoTitle);

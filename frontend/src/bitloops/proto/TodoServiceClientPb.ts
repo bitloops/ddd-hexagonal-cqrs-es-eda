@@ -17,7 +17,7 @@
 
 import * as grpcWeb from 'grpc-web';
 
-import * as src_bitloops_proto_todo_pb from './todo_pb.d';
+import * as src_bitloops_proto_todo_pb from '../../../src/bitloops/proto/todo_pb';
 
 
 export class TodoServiceClient {

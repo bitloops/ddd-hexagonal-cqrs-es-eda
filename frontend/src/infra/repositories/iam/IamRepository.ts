@@ -1,5 +1,5 @@
 import JwtDecode from 'jwt-decode';
-import { IIamRepository } from '.';
+import { IIamRepository } from '../../interfaces/IIamRepository';
 import { User } from '../../../models/User';
 import { IIamService } from '../../interfaces/IIamService';
 import { EventBus, Events } from '../../../Events';
@@ -29,7 +29,6 @@ const isExpired = (token: string): boolean => {
 };
 
 class IamRepository implements IIamRepository {
-  // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(private iamService: IIamService) {
     EventBus.subscribe(Events.AUTH_CHANGED, this.setUser);
   }

@@ -10,10 +10,10 @@ interface TodoEntityProps {
 function TodoEntryController(props: TodoEntityProps): JSX.Element {
   const { id } = props;
   const { setTodo, useTodoSelectors } = useTodoViewModel();
-  const { todo } = useTodoSelectors();
+  const { useTodo } = useTodoSelectors();
   const [editable, setEditable] = React.useState<string | null>(null);
   const todoViewModel = useTodoViewModel();
-  const oldTodo = todo(id);
+  const oldTodo = useTodo(id);
 
   const updateLocalItem = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('updateLocalItem', e);

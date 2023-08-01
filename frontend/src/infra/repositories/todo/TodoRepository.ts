@@ -1,5 +1,4 @@
 import { ClientReadableStream } from 'grpc-web';
-import { GetAllTodoResponse, ITodoRepository } from '.';
 import {
   AddTodoRequest,
   CompleteTodoRequest,
@@ -23,6 +22,7 @@ import { User } from '../../../models/User';
 import Helpers from '../../Helpers';
 import LocalStorageRepository from '../../LocalStorage';
 import { EventBus, Events } from '../../../Events';
+import { GetAllTodoResponse, ITodoRepository } from '../../interfaces/ITodoRepository';
 
 class TodoRepository implements ITodoRepository {
   private subscriptionId: string | null = null;

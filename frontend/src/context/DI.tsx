@@ -1,11 +1,11 @@
 import React, { ReactNode, createContext, useContext } from 'react';
 import IamService from '../infra/services/IamService';
-import { IamRepository, IIamRepository } from '../infra/repositories/iam';
-import { ITodoRepository, TodoRepository } from '../infra/repositories/todo';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { TodoServiceClient } from '../bitloops/proto/todo';
 import { PROXY_URL } from '../config';
+import { IIamRepository } from '../infra/interfaces/IIamRepository';
+import { ITodoRepository } from '../infra/interfaces/ITodoRepository';
+import IamRepository from '../infra/repositories/iam';
+import TodoRepository from '../infra/repositories/todo';
 
 export interface AppContext {
   iamRepository: IIamRepository;

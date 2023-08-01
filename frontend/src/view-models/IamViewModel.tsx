@@ -1,6 +1,5 @@
 import { createContext, useContext, useMemo } from 'react';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
-import { IIamRepository } from '../infra/repositories/iam';
 import { User } from '../models/User';
 import { useIamRepository } from '../context/DI';
 import { AuthMessage, Email, Password, ValidEmail, ValidPassword } from '../models/Auth';
@@ -14,6 +13,7 @@ import {
   passwordSelector,
   userState,
 } from '../state/auth';
+import { IIamRepository } from '../infra/interfaces/IIamRepository';
 
 interface IIamViewModel {
   loginWithGoogle: () => Promise<void | Error>;
