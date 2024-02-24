@@ -1,4 +1,4 @@
-import JwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { IIamRepository } from '../../interfaces/IIamRepository';
 import { User } from '../../../models/User';
 import { IIamService } from '../../interfaces/IIamService';
@@ -18,7 +18,7 @@ const clearLocalStorage = (): void => {
 
 const isExpired = (token: string): boolean => {
   try {
-    const decoded = JwtDecode(token) as DecodedToken;
+    const decoded = jwtDecode(token) as DecodedToken;
     const now = Date.now().valueOf() / 1000; // in seconds
     return decoded.exp < now;
   } catch (err) {
@@ -38,7 +38,7 @@ class IamRepository implements IIamRepository {
     const token = loginResponse.access_token;
     console.log('setting access token', loginResponse);
     try {
-      const decoded = JwtDecode(token) as DecodedToken;
+      const decoded = jwtDecode(token) as DecodedToken;
       const user: User = { id: decoded.sub, jwt: token };
       this.setUser(user);
       return user;
@@ -67,7 +67,7 @@ class IamRepository implements IIamRepository {
     const token = LocalStorageRepository.getAccessToken();
     if (token === null) return null;
     try {
-      const decoded = JwtDecode(token) as DecodedToken;
+      const decoded = jwtDecode(token) as DecodedToken;
       if (isExpired(token)) {
         clearLocalStorage();
         return null;
