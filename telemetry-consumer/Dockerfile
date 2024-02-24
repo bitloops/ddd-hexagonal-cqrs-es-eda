@@ -1,4 +1,4 @@
-FROM golang:1.17-alpine
+FROM golang:1.22-alpine
 
 WORKDIR /app
 
@@ -9,8 +9,8 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o /bitloops-telemetry-consumer
+RUN go build -o ./bitloops-telemetry-consumer
 
 EXPOSE 8080
 
-CMD [ "/bitloops-telemetry-consumer" ]
+CMD [ "./bitloops-telemetry-consumer" ]
