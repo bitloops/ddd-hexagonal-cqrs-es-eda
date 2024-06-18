@@ -8,7 +8,7 @@
     "@chakra-ui/system": "^2.6.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@grpc/grpc-js": "^1.8.21",
+    "@grpc/grpc-js": "^1.10.9",
     "eventemitter3": "^5.0.1",
     "framer-motion": "^11.0.6",
     "google-protobuf": "^3.21.2",
