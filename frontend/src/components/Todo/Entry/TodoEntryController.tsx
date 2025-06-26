@@ -1,7 +1,7 @@
-import React from 'react';
+import { type JSX, useState } from 'react';
 import TodoEntryComponent from './TodoEntryComponent';
 import { useTodoViewModel } from '../../../view-models/TodoViewModel';
-import Todo from '../../../models/Todo';
+import { type Todo } from '../../../models/Todo';
 
 interface TodoEntityProps {
   id: string;
@@ -11,7 +11,7 @@ function TodoEntryController(props: TodoEntityProps): JSX.Element {
   const { id } = props;
   const { setTodo, useTodoSelectors } = useTodoViewModel();
   const { useTodo } = useTodoSelectors();
-  const [editable, setEditable] = React.useState<string | null>(null);
+  const [editable, setEditable] = useState<string | null>(null);
   const todoViewModel = useTodoViewModel();
   const oldTodo = useTodo(id);
 

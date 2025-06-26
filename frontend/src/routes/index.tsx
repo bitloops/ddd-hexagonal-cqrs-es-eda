@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate, useRoutes } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
 import AuthLayout from '../layouts/Auth';
 import TodoLayout from '../layouts/todo';
@@ -8,11 +9,10 @@ import RegisterPage from '../pages/Register';
 import NotFoundPage from '../pages/NotFound';
 import ProtectedRoute from './protected-route';
 import HomePage from '../pages/Home';
-import { useIamViewModel } from '../view-models/IamViewModel';
+import { isAuthenticatedSelector } from '../state/auth';
 
 const Routes: React.FC = () => {
-  const { useIamSelectors } = useIamViewModel();
-  const { isAuthenticated } = useIamSelectors();
+  const isAuthenticated = useRecoilValue(isAuthenticatedSelector);
   const navigate = useNavigate();
 
   useEffect(() => {

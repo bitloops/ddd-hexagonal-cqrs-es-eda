@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Alert, AlertIcon } from '@chakra-ui/react';
+import { Alert } from '@chakra-ui/react';
 
 interface HeaderProps {
   message: string;
@@ -20,10 +20,10 @@ function BitloopsAlert(props: HeaderProps) {
 
   if (show)
     return (
-      <Alert status={type}>
-        <AlertIcon />
-        {message}
-      </Alert>
+      <Alert.Root status={type} title={message}>
+        <Alert.Indicator />
+        <Alert.Title>{message}</Alert.Title>
+      </Alert.Root>
     );
   return null;
 }

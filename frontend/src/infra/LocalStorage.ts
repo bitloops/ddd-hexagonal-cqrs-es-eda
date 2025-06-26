@@ -1,6 +1,6 @@
 import { TODO_LOCAL_STORAGE_KEY, USER_LOCAL_STORAGE_KEY } from '../constants';
-import Todo from '../models/Todo';
-import { User } from '../models/User';
+import { type Todo } from '../models/Todo';
+import { type User } from '../models/User';
 
 class LocalStorageRepository {
   static getLocalStorageObject<T>(key: string): T | null {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, type JSX } from 'react';
 import { useRecoilCallback, useRecoilSnapshot, useSetRecoilState } from 'recoil';
 import { BrowserRouter as Router } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ import {
   passwordState,
   userState,
 } from './state/auth';
-import Todo from './models/Todo';
+import { type Todo } from './models/Todo';
 
 function App(): JSX.Element {
   // IamViewModel

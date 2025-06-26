@@ -1,86 +1,38 @@
 {
   "name": "todo-frontend",
-  "version": "0.2.1",
   "private": true,
-  "dependencies": {
-    "@chakra-ui/icons": "^2.1.0",
-    "@chakra-ui/react": "^2.8.0",
-    "@chakra-ui/system": "^2.6.0",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "event-source-polyfill": "^1.0.31",
-    "eventemitter3": "^5.0.1",
-    "framer-motion": "^11.0.6",
-    "google-protobuf": "^3.21.2",
-    "jwt-decode": "^4.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-icons": "^5.0.1",
-    "react-router-dom": "^6.14.2",
-    "recoil": "^0.7.7",
-    "source-map-loader": "^5.0.0"
-  },
+  "version": "0.3.0",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "proto": "protoc -I=. src/bitloops/proto/todo.proto --ts_out=. --ts_opt=target=web,json_names,unary_rpc_promise=true,no_namespace --grpc-web_out=import_style=typescript,mode=grpcwebtext:.",
-    "docker:build": "docker build -t todo-frontend .",
-    "docker:run": "docker run -dp 3000:3000 --name todo-frontend todo-frontend",
-    "docker": "docker build -t todo-frontend . && docker run -dp 3000:3000 --name todo-frontend todo-frontend",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "preview": "vite preview",
     "openapi-ts": "openapi-ts"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "@chakra-ui/react": "^3.21.0",
+    "@vitejs/plugin-react": "^4.6.0",
+    "event-source-polyfill": "^1.0.31",
+    "eventemitter3": "^5.0.1",
+    "jwt-decode": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.6.2",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@eslint/js": "^9.29.0",
     "@hey-api/openapi-ts": "^0.77.0",
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
-    "@testing-library/user-event": "^14.5.2",
-    "@types/event-source-polyfill": "^1.0.5",
-    "@types/google-protobuf": "^3.15.6",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.20",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": ">=6.0.0",
-    "@typescript-eslint/parser": ">=6.0.0",
-    "eslint": ">=8.0.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^17.1.0",
-    "eslint-config-prettier": "^8.9.0",
-    "eslint-config-xo": "^0.43.1",
-    "eslint-config-xo-typescript": "^1.0.1",
-    "eslint-plugin-import": "^2.28.0",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-react": "^7.33.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "openapi": "^1.0.1",
-    "patch-package": "^8.0.0",
-    "postinstall-postinstall": "^2.1.0",
-    "prettier": "^3.0.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^5.8.3",
-    "web-vitals": "^3.5.2"
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "eslint": "^9.29.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.2.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.34.1",
+    "vite": "^7.0.0"
   }
 }

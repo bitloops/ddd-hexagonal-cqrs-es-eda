@@ -7,11 +7,11 @@ import {
   todoControllerDeleteTodo,
 } from '../../../api/sdk.gen';
 import { TODO_LOCAL_STORAGE_KEY } from '../../../constants';
-import Todo from '../../../models/Todo';
-import { User } from '../../../models/User';
+import { type Todo } from '../../../models/Todo';
+import { type User } from '../../../models/User';
 import LocalStorageRepository from '../../LocalStorage';
 import { EventBus, Events } from '../../../Events';
-import { GetAllTodoResponse, ITodoRepository } from '../../interfaces/ITodoRepository';
+import { type GetAllTodoResponse, type ITodoRepository } from '../../interfaces/ITodoRepository';
 
 import { client } from '../../../api/client.gen';
 import { PROXY_URL } from '../../../config';

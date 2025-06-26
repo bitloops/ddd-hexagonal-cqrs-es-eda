@@ -1,5 +1,5 @@
 import { AUTH_URL, REGISTRATION_URL } from '../../config';
-import { IIamService, LoginResponse } from '../interfaces/IIamService';
+import { type IIamService, type LoginResponse } from '../interfaces/IIamService';
 
 class IamService implements IIamService {
   async loginWithEmailPassword(email: string, password: string): Promise<LoginResponse> {

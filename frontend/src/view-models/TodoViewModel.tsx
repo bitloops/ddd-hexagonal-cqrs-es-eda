@@ -1,10 +1,10 @@
 import { createContext, useContext, useMemo } from 'react';
-import { SetterOrUpdater, useRecoilValue } from 'recoil';
+import { type SetterOrUpdater, useRecoilValue } from 'recoil';
 import { useTodoRepository } from '../context/DI';
-import Todo from '../models/Todo';
+import { type Todo } from '../models/Todo';
 import { EventBus, Events } from '../Events';
 import { todoIdsState, todosState } from '../state/todos';
-import { GetAllTodoResponse, ITodoRepository } from '../infra/interfaces/ITodoRepository';
+import { type GetAllTodoResponse, type ITodoRepository } from '../infra/interfaces/ITodoRepository';
 
 interface ITodoViewModel {
   init: () => void;
@@ -33,9 +33,11 @@ class TodoViewModel implements ITodoViewModel {
   } = { getTodo: null, getTodoIds: null };
 
   private initialized = false;
+  private todoRepository: ITodoRepository;
 
-  constructor(private todoRepository: ITodoRepository) {
+  constructor(todoRepository: ITodoRepository) {
     console.debug('TodoViewModel constructor', todoRepository);
+    this.todoRepository = todoRepository;
   }
 
   init() {
@@ -50,6 +52,7 @@ class TodoViewModel implements ITodoViewModel {
       let todo: Todo | null = null;
       switch (eventName) {
         case 'onAdded':
+          console.log('onAdded', payload);
           if (this.getTodoIds()?.filter((id) => id === (payload as Todo).id).length === 0) {
             this.setTodoIds([...this.getTodoIds(), (payload as Todo).id]);
             this.setTodo(payload as Todo);

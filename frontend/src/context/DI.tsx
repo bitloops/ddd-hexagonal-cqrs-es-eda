@@ -1,7 +1,7 @@
-import React, { ReactNode, createContext, useContext } from 'react';
+import React, { type ReactNode, createContext, useContext } from 'react';
 import IamService from '../infra/services/IamService';
-import { IIamRepository } from '../infra/interfaces/IIamRepository';
-import { ITodoRepository } from '../infra/interfaces/ITodoRepository';
+import { type IIamRepository } from '../infra/interfaces/IIamRepository';
+import { type ITodoRepository } from '../infra/interfaces/ITodoRepository';
 import IamRepository from '../infra/repositories/iam';
 import TodoRepository from '../infra/repositories/todo';
 

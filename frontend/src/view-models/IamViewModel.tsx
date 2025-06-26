@@ -1,8 +1,8 @@
 import { createContext, useContext, useMemo } from 'react';
-import { SetterOrUpdater, useRecoilValue } from 'recoil';
-import { User } from '../models/User';
+import { type SetterOrUpdater, useRecoilValue } from 'recoil';
+import { type User } from '../models/User';
 import { useIamRepository } from '../context/DI';
-import { AuthMessage, Email, Password, ValidEmail, ValidPassword } from '../models/Auth';
+import { type AuthMessage, type Email, type Password, type ValidEmail, type ValidPassword } from '../models/Auth';
 import { EventBus, Events } from '../Events';
 import { AUTH_MESSAGE_DURATION } from '../constants';
 import {
@@ -13,7 +13,7 @@ import {
   passwordSelector,
   userState,
 } from '../state/auth';
-import { IIamRepository } from '../infra/interfaces/IIamRepository';
+import { type IIamRepository } from '../infra/interfaces/IIamRepository';
 
 interface IIamViewModel {
   loginWithGoogle: () => Promise<void | Error>;
@@ -77,8 +77,10 @@ class IamViewModel implements IIamViewModel {
     getPassword: null,
   };
 
-  // eslint-disable-next-line no-useless-constructor, no-empty-function
-  constructor(private iamRepository: IIamRepository) {}
+  private iamRepository: IIamRepository;
+  constructor(iamRepository: IIamRepository) {
+    this.iamRepository = iamRepository;
+  }
 
   init = () => {
     console.debug('IamViewModel constructor', this.iamRepository);

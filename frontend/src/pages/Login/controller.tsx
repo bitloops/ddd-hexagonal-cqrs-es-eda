@@ -1,14 +1,19 @@
-import React, { useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useIamViewModel } from '../../view-models/IamViewModel';
 import LoginPage from './page';
+import { useRecoilValue } from 'recoil';
+import { emailSelector, isProcessingState, isAuthenticatedSelector, passwordSelector } from '../../state/auth';
 
-const LoginController: React.FC = () => {
-  const { loginWithEmailPassword, updateEmail, updatePassword, useIamSelectors } =
+const LoginController: FC = () => {
+  const { loginWithEmailPassword, updateEmail, updatePassword } =
     useIamViewModel();
   const navigate = useNavigate();
-  const { email, password, isProcessing, isAuthenticated } = useIamSelectors();
+  const email = useRecoilValue(emailSelector);
+  const password = useRecoilValue(passwordSelector);
+  const isProcessing = useRecoilValue(isProcessingState);
+  const isAuthenticated = useRecoilValue(isAuthenticatedSelector);
 
   useEffect(() => {
     if (isAuthenticated) {

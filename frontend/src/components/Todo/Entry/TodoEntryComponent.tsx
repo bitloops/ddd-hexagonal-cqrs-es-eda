@@ -1,9 +1,8 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
-import { HStack, IconButton, Spacer, Tooltip } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { FaTrash } from 'react-icons/fa';
+import { Tooltip } from '../../ui/Tooltip';
 
-import Todo from '../../../models/Todo';
+import { type Todo } from '../../../models/Todo';
 import './Entry.css';
 
 interface TodoProps {
@@ -22,16 +21,16 @@ const buttonProps = {
   'aria-label': 'delete',
 };
 
-function TodoEntryComponent(props: TodoProps): JSX.Element {
+function TodoEntryComponent(props: TodoProps) {
   const { todo, editable, setEditable, handleCheckbox, modifyTitle, updateLocalItem, removeItem } =
     props;
 
   const { title, isCompleted } = todo;
   return (
     <li key={todo.id}>
-      <HStack key={todo.id}>
+      <div key={todo.id} className="flex flex-row space-between items-center">
         <div className="todo_element">
-          <Tooltip label={todo.isCompleted ? 'Uncomplete Todo' : 'Complete Todo'}>
+          <Tooltip content={todo.isCompleted ? 'Uncomplete Todo' : 'Complete Todo'}>
             <input
               className="checkbox"
               id={todo.id}
@@ -76,18 +75,20 @@ function TodoEntryComponent(props: TodoProps): JSX.Element {
               {title}
             </p>
           )}
-          <Spacer />
-          <Tooltip label="Delete Todo">
-            <IconButton
-              className="delete_button"
+          <div className="delete_button">
+          <Tooltip content="Delete Todo">
+            <Button
               onClick={() => {
                 removeItem(todo.id);
               }}
               {...buttonProps}
-            />
+            >
+              <FaTrash />
+            </Button>
           </Tooltip>
+          </div>
         </div>
-      </HStack>
+      </div>
     </li>
   );
 }

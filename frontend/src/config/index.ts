@@ -1,4 +1,4 @@
-export const AUTH_URL = process.env.AUTH_URL || 'http://localhost:8080/auth/login';
-export const PROXY_URL = process.env.PROXY_URL || 'http://localhost:8080';
+export const AUTH_URL = import.meta.env.AUTH_URL || 'http://localhost:8080/auth/login';
+export const PROXY_URL = import.meta.env.PROXY_URL || 'http://localhost:8080';
 export const REGISTRATION_URL =
-  process.env.REGISTRATION_URL || 'http://localhost:8080/auth/register';
+  import.meta.env.REGISTRATION_URL || 'http://localhost:8080/auth/register';
