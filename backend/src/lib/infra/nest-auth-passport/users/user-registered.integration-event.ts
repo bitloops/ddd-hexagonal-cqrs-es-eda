@@ -23,6 +23,7 @@ export class UserRegisteredIntegrationEvent
       context: {},
       correlationId: asyncLocalStorage.getStore()?.get('correlationId'),
     };
-    Object.assign(this, payload, this.metadata);
+    this.payload = payload;
+    Object.assign(this, this.payload, this.metadata);
   }
 }
