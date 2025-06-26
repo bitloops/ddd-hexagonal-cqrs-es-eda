@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common';
 import { TodoAddedDomainEvent } from '../../../domain/events/todo-added.event';
 import { StreamingIntegrationEventBusToken } from '../../../constants';
 import { TodoAddedIntegrationEvent } from '../../../contracts/integration-events/todo-added.integration-event';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 
 export class TodoAddedDomainToIntegrationEventHandler
   implements Application.IHandleDomainEvent

@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common';
 import { TodoModifiedTitleDomainEvent } from '../../../domain/events/todo-modified-title.event';
 import { PubSubIntegrationEventBusToken } from '../../../constants';
 import { TodoModifiedTitleIntegrationEvent } from '../../../contracts/integration-events/todo-modified-title.integration-event';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 
 export class TodoModifiedTitleDomainToPubSubIntegrationEventHandler
   implements Application.IHandleDomainEvent

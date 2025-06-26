@@ -3,12 +3,6 @@ export interface AppConfig {
     port: number;
     ip: string;
   };
-  grpc: {
-    port: number;
-    ip: string;
-    packageName: string;
-    protoPath: string;
-  };
   database: {
     iam_mongo: {
       database: string;
@@ -32,14 +26,8 @@ export interface AppConfig {
 }
 export default (): AppConfig => ({
   http: {
-    port: process.env.HTTP_PORT ? parseInt(process.env.HTTP_PORT, 10) : 8082,
+    port: process.env.HTTP_PORT ? parseInt(process.env.HTTP_PORT, 10) : 8080,
     ip: process.env.HTTP_IP ?? '0.0.0.0',
-  },
-  grpc: {
-    port: process.env.GRPC_PORT ? parseInt(process.env.GRPC_PORT, 10) : 8081,
-    ip: process.env.GRPC_IP ?? '0.0.0.0',
-    packageName: process.env.GRPC_PACKAGE_NAME ?? 'todo',
-    protoPath: process.env.GRPC_PROTO_PATH ?? 'src/proto/todo.proto',
   },
   database: {
     iam_mongo: {

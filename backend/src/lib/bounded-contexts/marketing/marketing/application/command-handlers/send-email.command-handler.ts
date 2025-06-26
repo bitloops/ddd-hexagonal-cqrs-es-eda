@@ -3,7 +3,7 @@ import { SendEmailCommand } from '../../commands/send-email.command';
 import { Inject } from '@nestjs/common';
 import { EmailServicePort } from '../../ports/email.service-port';
 import { EmailServicePortToken } from '../../constants';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 
 type SendEmailCommandHandlerResponse = Either<
   void,

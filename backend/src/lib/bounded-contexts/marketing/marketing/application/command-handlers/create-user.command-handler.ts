@@ -7,7 +7,7 @@ import {
 } from '@bitloops/bl-boilerplate-core';
 import { Inject } from '@nestjs/common';
 import { CreateUserCommand } from '../../commands/create-user.command';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 import { UserEntity } from '../../domain/user.entity';
 import { EmailVO } from '../../domain/email.value-object';
 import { CompletedTodosVO } from '../../domain/completed-todos.value-object';

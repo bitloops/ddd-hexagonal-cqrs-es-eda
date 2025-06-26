@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   todo-frontend:
@@ -10,19 +8,18 @@ services:
     networks:
       - bitloops
 
-  todo-backend:
-    build:
-      context: backend/
-    ports:
-      - '8081:8081'
-      - '8082:8082'
-    networks:
-      - bitloops
+  # todo-backend:
+  #   build:
+  #     context: backend/
+  #   ports:
+  #     - '8080:8080'
+  #   networks:
+  #     - bitloops
 
   bl-mongo:
     image: mongo:5
-    container_name: mongo1
-    command: ['--replSet', 'my-replica-set', '--bind_ip_all', '--port', '30001']
+    container_name: bl_mongo1
+    command: ['--port', '30001']
     volumes:
       - bl-mongo_data:/data/db
     ports:
@@ -36,7 +33,7 @@ services:
 
   bl-nats:
     image: nats:latest
-    container_name: nats
+    container_name: bl_nats
     ports:
       - '4222:4222'
       - '8222:8222'
@@ -74,7 +71,7 @@ services:
 
   bl-jaeger:
     image: jaegertracing/all-in-one:latest
-    container_name: jaeger
+    container_name: bl_jaeger
     ports:
       - '6831:6831'
       - '6832:6832'
@@ -94,7 +91,7 @@ services:
 
   bl-pushgateway:
     image: prom/pushgateway
-    container_name: pushgateway
+    container_name: bl_pushgateway
     restart: unless-stopped
     expose:
       - 9091
@@ -107,7 +104,7 @@ services:
 
   bl-prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
+    container_name: bl_prometheus
     volumes:
       - ./prometheus:/etc/prometheus/
       - bl-prometheus_data:/prometheus
@@ -128,7 +125,7 @@ services:
 
   bl-grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: bl_grafana
     env_file:
       - grafana/config
     volumes:
@@ -145,14 +142,6 @@ services:
       - bitloops
     labels:
       org.label-schema.group: 'monitoring'
-  
-  bl-envoy:
-    build:
-      context: ./envoy
-    ports:
-      - '8080:8080'
-    networks:
-      - bitloops
 
   bl-telemetry-consumer:
     container_name: bl-telemetry-consumer

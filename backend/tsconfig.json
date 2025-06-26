@@ -21,9 +21,10 @@
       "@src/*": ["src/*"],
       "@modules/*": ["src/modules/*"],
       "@config/*": ["src/configs/*"],
-      "@bitloops/*": ["src/bitloops/*"],
-      "@lib": ["src/lib/*"],
+      "@lib/*": ["src/lib/*"],
       "@tests/*": ["tests/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "dist", "build"],
+  "include": ["src/**/*.ts", "test/**/*.ts"]
 }

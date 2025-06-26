@@ -16,7 +16,7 @@ export interface AppContext {
 const iamService = new IamService();
 const iamRepository = new IamRepository(iamService);
 const todoService = new TodoServiceClient(PROXY_URL);
-const todoRepository = new TodoRepository(todoService);
+const todoRepository = new TodoRepository();
 
 export const initialContext: AppContext = {
   iamRepository,

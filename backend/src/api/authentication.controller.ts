@@ -1,18 +1,18 @@
 import {
   Body,
   Controller,
-  Get,
   Post,
   Request,
   UseGuards,
   Inject,
   HttpStatus,
   HttpException,
+  Patch,
 } from '@nestjs/common';
 import { ChangeEmailCommand } from '@src/lib/bounded-contexts/iam/authentication/commands/change-email.command';
-import { UpdateEmailDTO } from './dto/update-email.dto';
-import { RegisterDTO } from './dto/register.dto';
-import { BUSES_TOKENS } from '@bitloops/bl-boilerplate-infra-nest-jetstream';
+import { UpdateEmailRequestDto } from './dto/update-email.dto';
+import { RegisterRequestDto } from './dto/register.dto';
+import { BUSES_TOKENS } from '@lib/infra/nest-jetstream';
 import {
   Application,
   Infra,
@@ -22,8 +22,8 @@ import {
   AuthService,
   JwtAuthGuard,
   LocalAuthGuard,
-} from '@bitloops/bl-boilerplate-infra-nest-auth-passport';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+} from '@lib/infra/nest-auth-passport';
+import { Traceable } from '@lib/infra/telemetry';
 
 @Controller('auth')
 export class AuthController {
@@ -50,8 +50,8 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('updateEmail')
-  async updateEmail(@Request() req, @Body() dto: UpdateEmailDTO) {
+  @Patch('updateEmail')
+  async updateEmail(@Request() req, @Body() dto: UpdateEmailRequestDto) {
     console.log('req', req.user);
     const command = new ChangeEmailCommand({
       email: dto.email,
@@ -63,7 +63,7 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() body: RegisterDTO) {
+  async register(@Body() body: RegisterRequestDto) {
     const user = { email: body.email, password: body.password };
     const result = await this.authService.register(user);
     // const command = new RegisterCommand({

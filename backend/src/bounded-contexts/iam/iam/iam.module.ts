@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 
 import { AuthenticationModule as LibIamModule } from '@src/lib/bounded-contexts/iam/authentication/authentication.module';
-import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
-import { PostgresModule } from '@bitloops/bl-boilerplate-infra-postgres';
+import { MongoModule } from '@lib/infra/mongo';
+import { PostgresModule } from '@lib/infra/postgres';
 import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/iam/authentication/application/command-handlers';
 import {
   JetstreamModule,
   NatsStreamingDomainEventBus,
   NatsStreamingIntegrationEventBus,
-} from '@bitloops/bl-boilerplate-infra-nest-jetstream';
+} from '@lib/infra/nest-jetstream';
 import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/iam/authentication/application/event-handlers/domain';
 import {
   StreamingDomainEventBusToken,

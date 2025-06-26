@@ -24,10 +24,10 @@ ENV NATS_HOST bl-nats
 ENV GRAFANA_ADMIN_USER admin
 ENV GRAFANA_ADMIN_PASSWORD admin
 ENV NODE_ENV production
-ENV AUTH_URL "http://todo-backend:8082/auth/login"
+ENV AUTH_URL "http://todo-backend:8080/auth/login"
 ENV PROXY_URL "http://todo-backend:8080"
-ENV REGISTRATION_URL "http://todo-backend:8082/auth/register"
+ENV REGISTRATION_URL "http://todo-backend:8080/auth/register"
 # Expose the port on which the app will be running (3000 is the default that `serve` uses)
-EXPOSE 8081 8082
+EXPOSE 8080
 # Start the app
 CMD [ "yarn", "start:prod" ]

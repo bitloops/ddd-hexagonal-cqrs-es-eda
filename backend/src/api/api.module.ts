@@ -2,21 +2,22 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './authentication.controller';
 import { TodoController } from './todo.rest.controller';
-import { TodoGrpcController } from './todo.grpc.controller';
+import { TodoSSEController } from './todo.sse.controller';
 import {
   JetstreamModule,
   NatsStreamingIntegrationEventBus,
   NatsStreamingMessageBus,
-} from '@bitloops/bl-boilerplate-infra-nest-jetstream';
+} from '@lib/infra/nest-jetstream';
 import configuration from '@src/config/configuration';
 import authConfiguration, {
   AuthEnvironmentVariables,
 } from '@src/config/auth.configuration';
-import { AuthModule } from '@bitloops/bl-boilerplate-infra-nest-auth-passport';
+import { AuthModule } from '@lib/infra/nest-auth-passport';
 import {
   // CorrelationIdMiddleware,
   TracingModule,
-} from '@bitloops/bl-boilerplate-infra-telemetry';
+} from '@lib/infra/telemetry';
+import { SSEModule } from './sse.module';
 
 @Module({
   imports: [
@@ -60,12 +61,12 @@ import {
         }`,
       ],
     }),
-
+    SSEModule,
     TracingModule.register({
       messageBus: NatsStreamingMessageBus,
     }),
   ],
-  controllers: [AuthController, TodoController, TodoGrpcController],
+  controllers: [AuthController, TodoController, TodoSSEController],
 })
 // implements NestModule
 export class ApiModule {

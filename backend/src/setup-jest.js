@@ -7,7 +7,7 @@ Object.defineProperty(global, 'crypto', {
   },
 });
 
-jest.mock('@bitloops/bl-boilerplate-infra-telemetry', () => ({
+jest.mock('@lib/infra/telemetry', () => ({
   Traceable: () => jest.fn(),
 }));
 

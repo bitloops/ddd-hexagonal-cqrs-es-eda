@@ -9,6 +9,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@grpc/grpc-js": "^1.8.21",
+    "event-source-polyfill": "^1.0.31",
     "eventemitter3": "^5.0.1",
     "framer-motion": "^11.0.6",
     "google-protobuf": "^3.21.2",
@@ -31,7 +32,8 @@
     "docker:run": "docker run -dp 3000:3000 --name todo-frontend todo-frontend",
     "docker": "docker build -t todo-frontend . && docker run -dp 3000:3000 --name todo-frontend todo-frontend",
     "postinstall": "patch-package",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "openapi-ts": "openapi-ts"
   },
   "eslintConfig": {
     "extends": [
@@ -53,9 +55,11 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@hey-api/openapi-ts": "^0.77.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@testing-library/user-event": "^14.5.2",
+    "@types/event-source-polyfill": "^1.0.5",
     "@types/google-protobuf": "^3.15.6",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.20",
@@ -74,12 +78,13 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "openapi": "^1.0.1",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.0.0",
     "protoc-gen-grpc-web": "^1.4.2",
     "react-scripts": "5.0.1",
-    "typescript": "5.1.6",
+    "typescript": "^5.8.3",
     "web-vitals": "^3.5.2"
   }
 }
