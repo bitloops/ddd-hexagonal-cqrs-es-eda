@@ -4,7 +4,7 @@ services:
     build:
       context: frontend/
     ports:
-      - '5175:5175'
+      - '4173:4173'
     networks:
       - bitloops
 

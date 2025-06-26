@@ -76,15 +76,15 @@ When a todo is completed, if this is the first completed todo, an email should b
 * **Authentication**
 * **Authorization** (Even at the repository level)
 * **Automatic JWT renewal**
-* **gRPC query caching**
-* **Automatic client code generation using gRPC**
+* **gRPC query caching** (deprecated)
+* **Automatic client code generation using OpenAPI**
 
 ## Technologies Used - Overview
 Here are listed some of the specific technologies used for the implementation of the project:
 * **Authentication**: [JSON Web Tokens - JWT](https://jwt.io/)
 * **Databases - Persistence**: [MongoDB](https://www.mongodb.com/), [PostgeSQL](https://www.postgresql.org/)
 * **Testing**: [JEST](https://jestjs.io/)
-* **External Communication Protocols**: [REST](https://en.wikipedia.org/wiki/Representational_state_transfer), [gRPC](https://grpc.io/)
+* **External Communication Protocols**: [REST](https://en.wikipedia.org/wiki/Representational_state_transfer), [gRPC](https://grpc.io/) (deprecated)
 * **Frameworks**: [ΝestJS](https://nestjs.com/)
 * **PubSub technology**: [NATS](https://nats.io/)
 * **Message Streaming Technology**: [JetStream](https://docs.nats.io/nats-concepts/jetstream) *by NATS*
@@ -120,14 +120,14 @@ docker compose -p bitloops-todo-app up -d
 ``` 
 from the terminal inside the project **in order to download and run the necessary containers**.
 
-Then the ReactJS front-end application will be visible at: `http://localhost:3000`.
+Then the ReactJS front-end application will be visible at: `http://localhost:4173`.
 
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="400" alt="image" src="https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda/assets/1571105/4570473b-4e67-4050-9935-967acfe0b7c6" alt="Frontend application" align="center">  
 </p>
 
 <p align="center">
-Frontend React JS application (new version using MVVM!)
+Frontend React JS application (new version using Vite and MVVM!)
 </p>
 
 # IV. Design Process and Decisions 
