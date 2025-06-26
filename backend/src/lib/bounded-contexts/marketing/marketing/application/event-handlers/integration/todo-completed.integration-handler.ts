@@ -3,7 +3,7 @@ import { TodoCompletedIntegrationEvent } from '@src/lib/bounded-contexts/todo/to
 import { IncrementTodosCommand } from '../../../commands/Increment-todos.command';
 import { StreamingCommandBusToken } from '../../../constants';
 import { Inject } from '@nestjs/common';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 
 export class TodoCompletedIntegrationEventHandler
   implements Application.IHandleIntegrationEvent

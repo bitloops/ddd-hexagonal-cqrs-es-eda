@@ -1,5 +1,5 @@
 import { atom, atomFamily } from 'recoil';
-import Todo from '../../models/Todo';
+import { type Todo } from '../../models/Todo';
 
 export const todosState = atomFamily<Todo, string>({
   key: 'TodosState',

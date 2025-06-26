@@ -1,4 +1,4 @@
-import Todo from '../../models/Todo';
+import { type Todo } from '../../models/Todo';
 
 type GetAllTodoSuccessResponse = {
   status: 'success';

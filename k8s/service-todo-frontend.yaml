@@ -8,6 +8,6 @@ spec:
     app: todo-frontend
   ports:
     - protocol: TCP
-      port: 3000
-      targetPort: 3000
+      port: 4173
+      targetPort: 4173
   type: LoadBalancer

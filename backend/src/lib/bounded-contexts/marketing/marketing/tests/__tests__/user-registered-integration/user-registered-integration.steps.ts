@@ -1,4 +1,4 @@
-import { UserRegisteredIntegrationEvent } from '@bitloops/bl-boilerplate-infra-nest-auth-passport';
+import { UserRegisteredIntegrationEvent } from '@lib/infra/nest-auth-passport';
 import { UserRegisteredIntegrationEventHandler } from '../../../application/event-handlers/integration/user-registered.integration-handler';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
 import { MockStreamCommandBus } from '../../mocks/stream-command-bus.mock';

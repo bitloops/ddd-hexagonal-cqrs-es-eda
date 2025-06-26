@@ -1,4 +1,4 @@
-.todo_element{
+.todo_element {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -24,5 +24,4 @@
   margin: 20px;
   /* Align to the right */
   margin-left: auto;
-
 }

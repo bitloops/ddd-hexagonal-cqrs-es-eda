@@ -1,0 +1,430 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/updateEmail": {
+      "patch": {
+        "operationId": "AuthController_updateEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmailRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/todos": {
+      "post": {
+        "operationId": "TodoController_addTodo",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTodoRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Todo created successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new todo",
+        "tags": [
+          "todos"
+        ]
+      },
+      "get": {
+        "operationId": "TodoController_getAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns all todos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllTodosResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get all todos",
+        "tags": [
+          "todos"
+        ]
+      }
+    },
+    "/todos/{id}/complete": {
+      "patch": {
+        "operationId": "TodoController_completeTodo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Todo ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Todo marked as completed"
+          },
+          "400": {
+            "description": "Invalid todo ID"
+          },
+          "404": {
+            "description": "Todo not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Mark a todo as completed",
+        "tags": [
+          "todos"
+        ]
+      }
+    },
+    "/todos/{id}/uncomplete": {
+      "patch": {
+        "operationId": "TodoController_uncompleteTodo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Todo ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Todo marked as uncompleted"
+          },
+          "400": {
+            "description": "Invalid todo ID"
+          },
+          "404": {
+            "description": "Todo not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Mark a todo as uncompleted",
+        "tags": [
+          "todos"
+        ]
+      }
+    },
+    "/todos/{id}/title": {
+      "patch": {
+        "operationId": "TodoController_modifyTitle",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Todo ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyTodoTitleRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Todo title updated"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Todo not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a todo title",
+        "tags": [
+          "todos"
+        ]
+      }
+    },
+    "/todos/{id}": {
+      "delete": {
+        "operationId": "TodoController_deleteTodo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Todo ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Todo deleted"
+          },
+          "400": {
+            "description": "Invalid todo ID"
+          },
+          "404": {
+            "description": "Todo not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a todo",
+        "tags": [
+          "todos"
+        ]
+      }
+    },
+    "/sse/todos/stream": {
+      "get": {
+        "operationId": "TodoSSEController_stream",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "TodoSSE"
+        ]
+      }
+    },
+    "/sse/todos/On": {
+      "post": {
+        "operationId": "TodoSSEController_on",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "TodoSSE"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API Documentation",
+    "description": "API description",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "UpdateEmailRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The new email address"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "RegisterRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email address"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AddTodoRequestDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the todo"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "TodoDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the todo"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the todo"
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "The completion status of the todo"
+          },
+          "createdAt": {
+            "type": "number",
+            "description": "The creation timestamp of the todo"
+          },
+          "updatedAt": {
+            "type": "number",
+            "description": "The last update timestamp of the todo"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "completed",
+          "createdAt"
+        ]
+      },
+      "GetAllTodosResponseDto": {
+        "type": "object",
+        "properties": {
+          "todos": {
+            "description": "Array of todo items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TodoDto"
+            }
+          }
+        },
+        "required": [
+          "todos"
+        ]
+      },
+      "ModifyTodoTitleRequestDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the todo"
+          },
+          "title": {
+            "type": "string",
+            "description": "The new title of the todo"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ]
+      }
+    }
+  }
+}

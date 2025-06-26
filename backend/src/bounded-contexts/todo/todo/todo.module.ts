@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TodoWriteRepository } from './repository/todo-write.repository';
 import { TodoReadRepository } from './repository/todo-read.repository';
 import { TodoModule as LibTodoModule } from 'src/lib/bounded-contexts/todo/todo/todo.module';
-import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
+import { MongoModule } from '@lib/infra/mongo';
 import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers';
 import { QueryHandlers } from '@src/lib/bounded-contexts/todo/todo/application/query-handlers';
 import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/todo/todo/application/event-handlers/integration';
@@ -21,7 +21,7 @@ import {
   NatsStreamingDomainEventBus,
   NatsStreamingIntegrationEventBus,
   NatsPubSubIntegrationEventsBus,
-} from '@bitloops/bl-boilerplate-infra-nest-jetstream';
+} from '@lib/infra/nest-jetstream';
 
 const providers = [
   {

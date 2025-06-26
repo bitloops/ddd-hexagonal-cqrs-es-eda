@@ -11,7 +11,7 @@ import { DomainErrors } from '../../domain/errors';
 import { ApplicationErrors } from '../errors';
 import { TodoWriteRepoPort } from '../../ports/todo-write.repo-port';
 import { TodoWriteRepoPortToken } from '../../constants';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 
 type CompleteTodoUseCaseResponse = Either<
   void,

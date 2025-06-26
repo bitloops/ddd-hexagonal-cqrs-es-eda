@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useIamViewModel } from '../view-models/IamViewModel';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../state/auth';
 
-function ProtectedRoute({ element }: { element: React.ReactNode }) {
+function ProtectedRoute({ element }: { element: ReactNode }) {
   const navigate = useNavigate();
-  const { useIamSelectors } = useIamViewModel();
-  const { user } = useIamSelectors();
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
     if (user === null) {

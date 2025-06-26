@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common';
 import { TodoDeletedDomainEvent } from '../../../domain/events/todo-deleted.event';
 import { PubSubIntegrationEventBusToken } from '../../../constants';
 import { TodoDeletedIntegrationEvent } from '../../../contracts/integration-events/todo-deleted.integration-event';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 
 export class TodoDeletedDomainToPubSubIntegrationEventHandler
   implements Application.IHandleDomainEvent

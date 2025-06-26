@@ -1,7 +1,7 @@
 import { Application, ok, Either } from '@bitloops/bl-boilerplate-core';
 import { TodoAddedIntegrationEvent } from '@src/lib/bounded-contexts/todo/todo/contracts/integration-events/todo-added.integration-event';
 import { todo } from '../../proto/generated/todo';
-import { Subscriptions, Subscribers } from '../todo.grpc.controller';
+import { Subscriptions, Subscribers } from '../todo.sse.controller';
 
 export class TodoAddedPubSubIntegrationEventHandler
   implements Application.IHandleIntegrationEvent
@@ -31,35 +31,19 @@ export class TodoAddedPubSubIntegrationEventHandler
     const { payload } = event;
 
     const { userId } = payload;
-    // console.log('TodoIntegrationEvent', event);
-    // console.log('subscritpions', this.subscriptions);
-    // console.log('subscribers', this.subscribers);
-    // const call = this.subscribers[userId]?.call;
-    // console.log('call', call);
+
     const subscription =
       this.subscriptions[TodoAddedPubSubIntegrationEventHandler.name];
     const subscriptionsSubscribers = subscription?.subscribers;
-    console.log('found subscribers', subscriptionsSubscribers);
     if (subscriptionsSubscribers) {
       for (const subscriber of subscriptionsSubscribers) {
         const call = this.subscribers[subscriber]?.call;
-        console.log('subscriber call', !!call);
         if (call) {
-          const todoObject = new todo.Todo({
+          call('todo.added', {
             id: payload.todoId,
             title: payload.title,
-            completed: false, // data.completed, // put completed in schema?
-          });
-          // console.log({ todoObject });
-          const message = new todo.OnEvent({
-            onAdded: todoObject,
-          });
-          call.write(message as any);
-          // const subscriberIds = Object.keys(this.subscribers);
-          // for (const subscriberId of subscriberIds) {
-          //   const subscriber = this.subscribers[subscriberId];
-          //   const call = subscriber.call;
-          // }
+            completed: false,
+          }, userId);
         }
       }
     }

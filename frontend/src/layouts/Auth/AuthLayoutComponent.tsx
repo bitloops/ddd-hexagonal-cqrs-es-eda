@@ -1,8 +1,8 @@
-import * as React from 'react';
+import { type JSX } from 'react';
 
 import './Layout.css';
 import Heading from '../../components/Heading';
-import { AuthMessage } from '../../models/Auth';
+import { type AuthMessage } from '../../models/Auth';
 import BitloopsAlert from '../../components/Alert';
 
 interface IAuthLayoutComponentProps {

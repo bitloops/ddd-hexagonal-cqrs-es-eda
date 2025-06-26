@@ -1,7 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
-import { IIamRepository } from '../../interfaces/IIamRepository';
-import { User } from '../../../models/User';
-import { IIamService } from '../../interfaces/IIamService';
+import { type IIamRepository } from '../../interfaces/IIamRepository';
+import { type User } from '../../../models/User';
+import { type IIamService } from '../../interfaces/IIamService';
 import { EventBus, Events } from '../../../Events';
 import LocalStorageRepository from '../../LocalStorage';
 
@@ -29,7 +29,9 @@ const isExpired = (token: string): boolean => {
 };
 
 class IamRepository implements IIamRepository {
-  constructor(private iamService: IIamService) {
+  private iamService: IIamService;
+  constructor(iamService: IIamService) {
+    this.iamService = iamService;
     EventBus.subscribe(Events.AUTH_CHANGED, this.setUser);
   }
 

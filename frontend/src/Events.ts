@@ -1,14 +1,35 @@
 import { EventEmitter } from 'eventemitter3';
-import { User } from './models/User';
+import { type User } from './models/User';
 
-export enum Events {
-  AUTH_CHANGED = 'AUTH_CHANGED',
-  TODO_EVENT = 'TODO_EVENT',
-}
+export const Events = {
+  // Auth events
+  AUTH_CHANGED: 'AUTH_CHANGED',
+  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+  LOGOUT: 'LOGOUT',
+
+  // Todo events
+  TODO_EVENT: 'TODO_EVENT',
+
+  // SSE events
+  SSE_CONNECTION_ESTABLISHED: 'SSE_CONNECTION_ESTABLISHED',
+  SSE_CONNECTION_ERROR: 'SSE_CONNECTION_ERROR',
+  SSE_CONNECTION_CLOSED: 'SSE_CONNECTION_CLOSED',
+
+  // UI events
+  SHOW_TOAST: 'SHOW_TOAST',
+  HIDE_TOAST: 'HIDE_TOAST',
+} as const;
 
 type EventMap = {
   [Events.AUTH_CHANGED]: User | null;
+  [Events.LOGIN_SUCCESS]: User;
+  [Events.LOGOUT]: null;
   [Events.TODO_EVENT]: { eventName: string; payload: unknown };
+  [Events.SSE_CONNECTION_ESTABLISHED]: null;
+  [Events.SSE_CONNECTION_ERROR]: { message: string };
+  [Events.SSE_CONNECTION_CLOSED]: null;
+  [Events.SHOW_TOAST]: { message: string; type?: 'success' | 'error' | 'info' | 'warning' };
+  [Events.HIDE_TOAST]: null;
 };
 
 class EventBus {

@@ -13,7 +13,7 @@ import {
   UserWriteRepoPortToken,
 } from '@src/lib/bounded-contexts/marketing/marketing/constants';
 import { MockEmailService } from './service';
-import { MongoModule } from '@bitloops/bl-boilerplate-infra-mongo';
+import { MongoModule } from '@lib/infra/mongo';
 import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers/integration';
 import { StreamingCommandHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers';
 import {
@@ -22,7 +22,7 @@ import {
   NatsStreamingDomainEventBus,
   NatsStreamingIntegrationEventBus,
   NatsPubSubIntegrationEventsBus,
-} from '@bitloops/bl-boilerplate-infra-nest-jetstream';
+} from '@lib/infra/nest-jetstream';
 import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers/domain';
 
 const RepoProviders = [

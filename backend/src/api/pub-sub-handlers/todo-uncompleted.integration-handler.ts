@@ -1,7 +1,7 @@
 import { Application, ok, Either } from '@bitloops/bl-boilerplate-core';
 import { TodoUncompletedIntegrationEvent } from '@src/lib/bounded-contexts/todo/todo/contracts/integration-events/todo-uncompleted.integration-event';
 import { todo } from '../../proto/generated/todo';
-import { Subscriptions, Subscribers } from '../todo.grpc.controller';
+import { Subscriptions, Subscribers } from '../todo.sse.controller';
 
 export class TodoUncompletedPubSubIntegrationEventHandler
   implements Application.IHandleIntegrationEvent
@@ -45,20 +45,10 @@ export class TodoUncompletedPubSubIntegrationEventHandler
         const call = this.subscribers[subscriber]?.call;
         console.log('subscriber call', !!call);
         if (call) {
-          const todoObject = new todo.Todo({
+          call('todo.uncompleted', {
             id: payload.todoId,
             userId: userId,
-          });
-          // console.log({ todoObject });
-          const message = new todo.OnEvent({
-            onUncompleted: todoObject,
-          });
-          call.write(message as any);
-          // const subscriberIds = Object.keys(this.subscribers);
-          // for (const subscriberId of subscriberIds) {
-          //   const subscriber = this.subscribers[subscriberId];
-          //   const call = subscriber.call;
-          // }
+          }, userId);
         }
       }
     }

@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
-import { Button, HStack, Input, StackDivider, Tooltip, VStack } from '@chakra-ui/react';
+import { type JSX } from 'react';
+import { Button, HStack, Input, VStack } from '@chakra-ui/react';
+import { Tooltip } from '../../ui/Tooltip';
 
 import logo from '../../../assets/bitloops_175x40_transparent.png';
 import TodoElement from '../Entry';
@@ -21,7 +22,6 @@ const vStackProps = {
   borderWidth: '2px',
   borderRadius: 'lg',
   alignItems: 'stretch',
-  divider: <StackDivider />,
 };
 
 function TodoPanel(props: TodoProps): JSX.Element {
@@ -43,7 +43,7 @@ function TodoPanel(props: TodoProps): JSX.Element {
         >
           <HStack m="8">
             <Input
-              variant="filled"
+              variant="subtle"
               placeholder="Add your new todo here..."
               value={newTodoTitle}
               onChange={(e) => {
@@ -51,7 +51,7 @@ function TodoPanel(props: TodoProps): JSX.Element {
               }}
               onKeyDown={(e) => e.key === 'Enter' && addItem()}
             />
-            <Tooltip label="Add Todo">
+            <Tooltip content="Add Todo">
               <Button type="submit" colorScheme="green" px="8">
                 Add Todo
               </Button>

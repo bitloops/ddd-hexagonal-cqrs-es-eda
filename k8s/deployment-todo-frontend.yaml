@@ -17,7 +17,7 @@ spec:
       - name: todo-frontend
         context: ../frontend
         ports:
-        - containerPort: 3000
+        - containerPort: 4173
         volumeMounts:
         - name: frontend-context
           mountPath: /frontend

@@ -17,8 +17,7 @@ spec:
       - name: todo-backend
         context: ../backend
     ports:
-    - containerPort: 8081
-    - containerPort: 8082
+    - containerPort: 8080
     volumeMounts:
     - name: backend-context
       mountPath: /backend

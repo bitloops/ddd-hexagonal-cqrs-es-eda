@@ -1,5 +1,5 @@
 import { Infra, Application, Either, ok } from '@bitloops/bl-boilerplate-core';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 import { EmailNotFoundIntegrationErrorEvent } from '@src/lib/bounded-contexts/iam/authentication/application/error-events/email-not-found.integration-event';
 
 export class EmailNotFoundIntegrationErrorEventHandler

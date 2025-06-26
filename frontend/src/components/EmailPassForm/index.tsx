@@ -1,6 +1,7 @@
-import { Alert, Button, FormControl, Input, Stack } from '@chakra-ui/react';
-import { ChangeEvent } from 'react';
-import { Email, Password } from '../../models/Auth';
+import { Button, Input, Stack, Field } from '@chakra-ui/react';
+import { type ChangeEvent, type JSX } from 'react';
+import { type Email, type Password } from '../../models/Auth';
+import BitloopsAlert from '../Alert';
 
 export interface EmailPassFormProps {
   email: Email;
@@ -26,7 +27,7 @@ function EmailPassForm(props: EmailPassFormProps): JSX.Element {
   return (
     <form>
       <Stack>
-        <FormControl>
+        <Field.Root>
           <Input
             id="email-input"
             placeholder="Email"
@@ -48,16 +49,16 @@ function EmailPassForm(props: EmailPassFormProps): JSX.Element {
               }
             }}
           />
-        </FormControl>
+        </Field.Root>
         <Button
-          isDisabled={!email.isValid || !password.isValid}
+          disabled={!email.isValid || !password.isValid}
           onClick={submit}
-          isLoading={isProcessing}
+          loading={isProcessing}
         >
           {view}
         </Button>
         {(email.message || password.message) && (
-          <Alert status="error">{email.message || password.message}</Alert>
+          <BitloopsAlert message={email.message || password.message || ''} type="error" duration={3000} />
         )}
       </Stack>
     </form>

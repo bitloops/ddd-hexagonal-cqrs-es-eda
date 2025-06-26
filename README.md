@@ -76,15 +76,15 @@ When a todo is completed, if this is the first completed todo, an email should b
 * **Authentication**
 * **Authorization** (Even at the repository level)
 * **Automatic JWT renewal**
-* **gRPC query caching**
-* **Automatic client code generation using gRPC**
+* **gRPC query caching** (deprecated)
+* **Automatic client code generation using OpenAPI**
 
 ## Technologies Used - Overview
 Here are listed some of the specific technologies used for the implementation of the project:
 * **Authentication**: [JSON Web Tokens - JWT](https://jwt.io/)
 * **Databases - Persistence**: [MongoDB](https://www.mongodb.com/), [PostgeSQL](https://www.postgresql.org/)
 * **Testing**: [JEST](https://jestjs.io/)
-* **External Communication Protocols**: [REST](https://en.wikipedia.org/wiki/Representational_state_transfer), [gRPC](https://grpc.io/)
+* **External Communication Protocols**: [REST](https://en.wikipedia.org/wiki/Representational_state_transfer), [gRPC](https://grpc.io/) (deprecated)
 * **Frameworks**: [ΝestJS](https://nestjs.com/)
 * **PubSub technology**: [NATS](https://nats.io/)
 * **Message Streaming Technology**: [JetStream](https://docs.nats.io/nats-concepts/jetstream) *by NATS*
@@ -120,14 +120,14 @@ docker compose -p bitloops-todo-app up -d
 ``` 
 from the terminal inside the project **in order to download and run the necessary containers**.
 
-Then the ReactJS front-end application will be visible at: `http://localhost:3000`.
+Then the ReactJS front-end application will be visible at: `http://localhost:4173`.
 
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="400" alt="image" src="https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda/assets/1571105/4570473b-4e67-4050-9935-967acfe0b7c6" alt="Frontend application" align="center">  
 </p>
 
 <p align="center">
-Frontend React JS application (new version using MVVM!)
+Frontend React JS application (new version using Vite and MVVM!)
 </p>
 
 # IV. Design Process and Decisions 
@@ -241,7 +241,7 @@ You may find tutorials on how to use **Postman** for REST and gRPC requests belo
 * REST ([link](https://hevodata.com/learn/postman-rest-client/))
 * gRPC ([link](https://learning.postman.com/docs/sending-requests/grpc/first-grpc-request/))
 
-To just test the app is app and running you can just invoke `http://localhost:8082` URI with Post request as shown in the picture below:
+To just test the app is app and running you can just invoke `http://localhost:8080` URI with Post request as shown in the picture below:
 
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="900" src="https://storage.googleapis.com/bitloops-github-assets/app-testing-confirmation.png" alt="App Running Confirmation" align="center">
@@ -258,7 +258,7 @@ A faster way to test the app works is to use **[cURL](https://curl.se/)**. In mo
 
 To just test the app is app and running you can just run the following command on terminal:
 
-```curl http://localhost:8082/```
+```curl http://localhost:8080/```
 
 The server should respond (in the terminal) with: 
 ```{"statusCode":404,"message":"Cannot GET /auth/register","error":"Not Found"}```
@@ -420,28 +420,76 @@ Below is a summary of all the software architecture and design patterns used in 
 
 ## Table of Contents
 
-- [Software Architecture](#software-architecture)
-  - [Layered Architecture](#layered-architecture)
-    - [Separation of concerns benefits example](#separation-of-concerns-benefits-example)
-    - [Limitations of the classical layered architecture](#limitations-of-the-classical-layered-architecture)
-    - [Modern Layered Architectures](#modern-layered-architectures)
-    - [The Anti-pattern (beware)](#the-anti-pattern-beware)
-  - [Hexagonal Architecture (or Clean / Onion Architecture)](#hexagonal-architecture-or-clean--onion-architecture)
-  - [Ports And Adapters](#ports-and-adapters)
-  - [Driven Adapters vs Driving Adapters](#driven-adapters-vs-driving-adapters)
-  - [Inversion of Control](#inversion-of-control)
-- [Domain Driven Design (DDD)](#domain-driven-design-ddd)
-  - [Key advantages of using DDD](#key-advantages-of-using-ddd)
-  - [Strategic and Tactical DDD](#strategic-and-tactical-ddd)
+- [ddd-hexagonal-cqrs-es-eda](#ddd-hexagonal-cqrs-es-eda)
+- [Table of Contents](#table-of-contents)
+- [I. Introduction](#i-introduction)
+  - [Overview](#overview)
+  - [Todo application business requirements](#todo-application-business-requirements)
+- [II. Technologies and Technical Features](#ii-technologies-and-technical-features)
+  - [Technical Features](#technical-features)
+  - [Technologies Used - Overview](#technologies-used---overview)
+- [III. Quick start - running the ToDo App](#iii-quick-start---running-the-todo-app)
+  - [Prerequisites](#prerequisites)
+  - [Running the app](#running-the-app)
+- [IV. Design Process and Decisions](#iv-design-process-and-decisions)
+  - [Design Process - Event Storming](#design-process---event-storming)
+  - [Design Decisions](#design-decisions)
+- [V. Running in development mode](#v-running-in-development-mode)
+  - [A. Project Setup](#a-project-setup)
+    - [Prerequisites](#prerequisites-1)
+    - [Running the app](#running-the-app-1)
+  - [B. Application Validation](#b-application-validation)
+    - [Test the application is running](#test-the-application-is-running)
+      - [Postman](#postman)
+      - [cURL (only for initial testing)](#curl-only-for-initial-testing)
+    - [Running the application tests](#running-the-application-tests)
+  - [C. Understanding the project structure](#c-understanding-the-project-structure)
+    - [API Folder](#api-folder)
+    - [Bounded-Contexts Folder](#bounded-contexts-folder)
+    - [Config Folder](#config-folder)
+    - [Lib Folder](#lib-folder)
+    - [Module Structure](#module-structure)
+      - [Application Folder](#application-folder)
+      - [Commands folder](#commands-folder)
+      - [Queries folder](#queries-folder)
+      - [Domain folder](#domain-folder)
+      - [Contracts folder](#contracts-folder)
+      - [Ports folder](#ports-folder)
+      - [Tests folder](#tests-folder)
+    - [proto folder](#proto-folder)
+- [VI. Conclusion](#vi-conclusion)
+  - [❓ Questions](#-questions)
+- [📚 Theoretical Review](#-theoretical-review)
+  - [Table of Contents](#table-of-contents-1)
+  - [Software Architecture](#software-architecture)
+    - [Layered Architecture](#layered-architecture)
+      - [Separation of concerns benefits example](#separation-of-concerns-benefits-example)
+      - [Limitations of the classical layered architecture](#limitations-of-the-classical-layered-architecture)
+      - [Modern Layered Architectures](#modern-layered-architectures)
+      - [The Anti-pattern (beware)](#the-anti-pattern-beware)
+    - [Hexagonal Architecture (or Clean / Onion Architecture)](#hexagonal-architecture-or-clean--onion-architecture)
+    - [Ports And Adapters](#ports-and-adapters)
+    - [Driven Adapters vs Driving Adapters](#driven-adapters-vs-driving-adapters)
+    - [Inversion of Control](#inversion-of-control)
+  - [Domain Driven Design (DDD)](#domain-driven-design-ddd)
+    - [Key advantages of using DDD](#key-advantages-of-using-ddd)
+    - [Strategic and Tactical DDD](#strategic-and-tactical-ddd)
+      - [Strategic: Building a Domain Model](#strategic-building-a-domain-model)
+      - [Tactically: Implementing DDD](#tactically-implementing-ddd)
     - [DDD \& Hexagonal Architecture are Complementary](#ddd--hexagonal-architecture-are-complementary)
-- [Behavior Driven Development (BDD)](#behavior-driven-development-bdd)
-- [Event-Driven Architecture](#event-driven-architecture)
-- [Command and Query Responsibility Segregation (CQRS)](#command-and-query-responsibility-segregation-cqrs)
-- [Event Sourcing (ES)](#event-sourcing-es)
-- [Eventual Consistency](#eventual-consistency)
-- [Event Storming](#event-storming)
-- [🚀 Bringing this all together!](#-bringing-this-all-together)
-- [🙌 Contributing](#-contributing)
+  - [Behavior Driven Development (BDD)](#behavior-driven-development-bdd)
+  - [Event-Driven Architecture](#event-driven-architecture)
+  - [Command and Query Responsibility Segregation (CQRS)](#command-and-query-responsibility-segregation-cqrs)
+  - [Event Sourcing (ES)](#event-sourcing-es)
+  - [Eventual Consistency](#eventual-consistency)
+  - [Event Storming](#event-storming)
+    - [Big Picture Event Storming](#big-picture-event-storming)
+    - [Process Level Event Storming](#process-level-event-storming)
+    - [Design Level Event Storming](#design-level-event-storming)
+    - [Event Storming Syntax](#event-storming-syntax)
+    - [More on Event Storming](#more-on-event-storming)
+  - [🚀 Bringing this all together!](#-bringing-this-all-together)
+  - [🙌 Contributing](#-contributing)
 - [👨‍💻 Additional learning resources](#-additional-learning-resources)
   - [Articles](#articles)
   - [Blogs](#blogs)

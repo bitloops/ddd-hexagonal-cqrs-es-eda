@@ -1,8 +1,8 @@
-import React from 'react';
+import { type JSX } from 'react';
 import { Heading, Link, Stack, Text } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { EmailPassForm } from '../../components/EmailPassForm';
-import { Email, Password } from '../../models/Auth';
+import { type Email, type Password } from '../../models/Auth';
 
 interface LogInPageProps {
   email: Email;
@@ -30,7 +30,7 @@ function RegisterPage(props: LogInPageProps): JSX.Element {
       />
       <Stack>
         <Text>{'Already have an account? '}</Text>
-        <Link as={RouterLink} to="/login">
+        <Link as={RouterLink} href="/login">
           LOGIN
         </Link>
       </Stack>

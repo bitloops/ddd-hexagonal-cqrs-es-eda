@@ -1,6 +1,6 @@
 import { atom, selector } from 'recoil';
-import { AuthMessage, Email, Password } from '../../models/Auth';
-import { User } from '../../models/User';
+import { type AuthMessage, type Email, type Password } from '../../models/Auth';
+import { type User } from '../../models/User';
 
 function isEmailValid(email: string): boolean {
   const re =

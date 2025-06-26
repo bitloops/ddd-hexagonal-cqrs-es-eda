@@ -9,7 +9,7 @@ import { Inject } from '@nestjs/common';
 import { IncrementTodosCommand } from '../../commands/Increment-todos.command';
 import { DomainErrors } from '../../domain/errors';
 import { UserWriteRepoPort } from '../../ports/user-write.repo-port';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 import { ApplicationErrors } from '../errors';
 import { UserWriteRepoPortToken } from '../../constants';
 

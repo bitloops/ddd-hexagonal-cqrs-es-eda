@@ -7,7 +7,7 @@ import {
 } from '@bitloops/bl-boilerplate-core';
 import { Inject } from '@nestjs/common';
 import { ChangeUserEmailCommand } from '../../commands/change-user-email.command';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 import { UserWriteRepoPort } from '../../ports/user-write.repo-port';
 import { ApplicationErrors } from '../errors';
 import { DomainErrors } from '../../domain/errors';

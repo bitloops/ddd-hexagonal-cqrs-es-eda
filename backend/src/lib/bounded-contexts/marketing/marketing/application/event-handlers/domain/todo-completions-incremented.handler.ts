@@ -17,7 +17,7 @@ import {
   UserWriteRepoPortToken,
 } from '../../../constants';
 import { ApplicationErrors } from '../../errors';
-import { Traceable } from '@bitloops/bl-boilerplate-infra-telemetry';
+import { Traceable } from '@lib/infra/telemetry';
 import { UserWriteRepoPort } from '../../../ports/user-write.repo-port';
 
 export class TodoCompletionsIncrementedHandler

@@ -1,14 +1,14 @@
-import * as React from 'react';
+import { type JSX, type ReactNode } from 'react';
 
 import Header from '../../components/Header';
-import { User } from '../../models/User';
+import { type User } from '../../models/User';
 import './Layout.css';
 
 interface IDashboardLayout {
   user: User | null;
   logout: () => void;
   errorMessage: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 function TodoLayoutComponent(props: IDashboardLayout): JSX.Element {

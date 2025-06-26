@@ -1,16 +1,16 @@
-import React from 'react';
+import { type JSX, type ReactNode } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import AuthLayoutComponent from './AuthLayoutComponent';
-import { useIamViewModel } from '../../view-models/IamViewModel';
+import { authMessageState } from '../../state/auth';
 
 interface AuthControllerProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 function AuthLayoutController(props: AuthControllerProps): JSX.Element {
   const { children } = props;
-  const { useIamSelectors } = useIamViewModel();
-  const { authMessage } = useIamSelectors();
+  const authMessage = useRecoilValue(authMessageState);
 
   return <AuthLayoutComponent authMessage={authMessage}>{children}</AuthLayoutComponent>;
 }
