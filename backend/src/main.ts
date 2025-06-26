@@ -21,7 +21,7 @@ async function bootstrap() {
     }),
     { abortOnError: false },
   );
-  
+
   // Swagger configuration
   const swaggerConfig = new DocumentBuilder()
     .setTitle('API Documentation')
@@ -29,14 +29,14 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .build();
-  
+
   const document = SwaggerModule.createDocument(api, swaggerConfig);
   SwaggerModule.setup('api', api, document);
-  
+
   writeFileSync('swagger.json', JSON.stringify(document, null, 2));
 
   api.enableCors({
-    origin: ['http://localhost:5175', 'http://localhost:4173'],
+    origin: ['http://localhost:5175', 'http://localhost:4173', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization', 'Cache-Control', 'Last-Event-ID', 'x-request-id', 'x-user-agent', 'cache-hash'],
     exposedHeaders: ['Authorization', 'Content-Type'],

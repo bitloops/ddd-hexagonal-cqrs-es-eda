@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Outlet, useNavigate, useRoutes } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useRoutes } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 import AuthLayout from '../layouts/Auth';
@@ -14,12 +14,20 @@ import { isAuthenticatedSelector } from '../state/auth';
 const Routes: React.FC = () => {
   const isAuthenticated = useRecoilValue(isAuthenticatedSelector);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    // List of public routes
+    const publicRoutes = ['/login', '/register'];
+    // If not authenticated and not on a public route, redirect to /login
+    if (
+      !isAuthenticated &&
+      !publicRoutes.includes(location.pathname)
+    ) {
       navigate('/login');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, location.pathname, navigate]);
+
 
   const element = useRoutes([
     {
