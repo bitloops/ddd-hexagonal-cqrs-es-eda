@@ -17,4 +17,4 @@ ENV REGISTRATION_URL "http://host.docker.internal:8080/auth/register"
 # Expose the port on which the app will be running (4173 is the default that Vite `preview` uses)
 EXPOSE 4173
 # Start the app
-CMD [ "npm", "run", "preview" ]
+CMD [ "npm", "run", "preview", "--", "--host"]
