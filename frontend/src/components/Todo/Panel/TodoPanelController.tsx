@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import TodoPanelComponent from './TodoPanelComponent';
 import { useTodoViewModel } from '../../../view-models/TodoViewModel';

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import logo from '../../assets/bitloops_175x40_transparent.png';
 import './Heading.css';
 

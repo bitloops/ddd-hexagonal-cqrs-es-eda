@@ -32,7 +32,6 @@ class TodoViewModel implements ITodoViewModel {
     getTodoIds: (() => string[]) | null;
   } = { getTodo: null, getTodoIds: null };
 
-  private initialized = false;
   private todoRepository: ITodoRepository;
 
   constructor(todoRepository: ITodoRepository) {

@@ -36,7 +36,7 @@ async function bootstrap() {
   writeFileSync('swagger.json', JSON.stringify(document, null, 2));
 
   api.enableCors({
-    origin: ['http://localhost:5175'],
+    origin: ['http://localhost:5175', 'http://localhost:4173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization', 'Cache-Control', 'Last-Event-ID', 'x-request-id', 'x-user-agent', 'cache-hash'],
     exposedHeaders: ['Authorization', 'Content-Type'],
