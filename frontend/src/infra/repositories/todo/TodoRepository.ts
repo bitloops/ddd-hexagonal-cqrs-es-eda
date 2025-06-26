@@ -14,7 +14,7 @@ import { EventBus, Events } from '../../../Events';
 import { type GetAllTodoResponse, type ITodoRepository } from '../../interfaces/ITodoRepository';
 
 import { client } from '../../../api/client.gen';
-import { PROXY_URL } from '../../../config';
+import { TODO_URL } from '../../../config';
 import { todoSSEClient } from '../../services/SSEClient';
 
 class TodoRepository implements ITodoRepository {
@@ -39,7 +39,7 @@ class TodoRepository implements ITodoRepository {
 
       // Update API client configuration
       client.setConfig({
-        baseUrl: PROXY_URL,
+        baseUrl: TODO_URL,
         headers: {
           authorization: `Bearer ${user.jwt}`,
         },

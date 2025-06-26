@@ -1,6 +1,6 @@
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import { todoSseControllerOn } from '../../api/sdk.gen';
-import { PROXY_URL } from '../../config';
+import { TODO_URL } from '../../config';
 
 type SSEClientOptions = {
   onMessage?: (event: MessageEvent) => void;
@@ -121,20 +121,6 @@ export class SSEClient {
             subscriberId: this.subscriptionId,
           },
         });
-        /*
-        const onTodoRequest = new OnTodoRequest();
-        onTodoRequest.events = [
-          TODO_EVENTS.ADDED,
-          TODO_EVENTS.DELETED,
-          TODO_EVENTS.MODIFIED_TITLE,
-          TODO_EVENTS.COMPLETED,
-          TODO_EVENTS.UNCOMPLETED,
-        ];
-        onTodoRequest.subscriberId = subscriptionId;
-        const onStream = this.todoService.On(onTodoRequest, {
-          authorization: `Bearer ${this.user?.jwt}`,
-        });
-        */
       };
 
       this.eventSource.onerror = (error) => {
@@ -196,4 +182,4 @@ export class SSEClient {
 }
 
 // Create a singleton instance
-export const todoSSEClient = new SSEClient(`${PROXY_URL}/sse/todos/stream`);
+export const todoSSEClient = new SSEClient(`${TODO_URL}/sse/todos/stream`);
