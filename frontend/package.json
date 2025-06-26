@@ -8,12 +8,10 @@
     "@chakra-ui/system": "^2.6.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@grpc/grpc-js": "^1.8.21",
     "event-source-polyfill": "^1.0.31",
     "eventemitter3": "^5.0.1",
     "framer-motion": "^11.0.6",
     "google-protobuf": "^3.21.2",
-    "grpc-web": "^1.4.2",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -31,7 +29,6 @@
     "docker:build": "docker build -t todo-frontend .",
     "docker:run": "docker run -dp 3000:3000 --name todo-frontend todo-frontend",
     "docker": "docker build -t todo-frontend . && docker run -dp 3000:3000 --name todo-frontend todo-frontend",
-    "postinstall": "patch-package",
     "lint": "eslint .",
     "openapi-ts": "openapi-ts"
   },
@@ -82,7 +79,6 @@
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.0.0",
-    "protoc-gen-grpc-web": "^1.4.2",
     "react-scripts": "5.0.1",
     "typescript": "^5.8.3",
     "web-vitals": "^3.5.2"
