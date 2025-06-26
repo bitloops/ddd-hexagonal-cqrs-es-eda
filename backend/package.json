@@ -1,6 +1,6 @@
 {
   "name": "todo",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Todo Backend using Domain Driven Design (DDD), Hexagonal Architecture, CQRS, Event Sourcing (ES), Event Driven Architecture (EDA), Behaviour Driven Development (BDD) using TypeScript and NestJS. Like what you see? Don't forget to star! ⭐",
   "author": "Bitloops S.A.",
   "private": false,
