@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     ...defaultPlugins,
     {
-      asClass: false, // default 
+      asClass: false, // default
       name: '@hey-api/sdk',
     },
   ],
