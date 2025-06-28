@@ -125,9 +125,9 @@ class TodoRepository implements ITodoRepository {
     }
   }
 
-  async getAllTodo(): Promise<GetAllTodoResponse> {
+  async getAllTodo(limit: number, offset: number): Promise<GetAllTodoResponse> {
     try {
-      const response = await todoControllerGetAll();
+      const response = await todoControllerGetAll({ query: { limit, offset } });
       return {
         status: 'success',
         todos: response.data?.todos?.map((todo) => ({

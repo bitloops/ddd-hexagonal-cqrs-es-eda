@@ -50,9 +50,31 @@ export const initTodos = createAsyncThunk<
         // Fetch all todos
         try {
             const todoRepository = new TodoRepository();
-            const response = await todoRepository.getAllTodo();
+            const response = await todoRepository.getAllTodo(5, 0); //Getting only 5 todos on page load
             if (response.status === 'success' && response.todos) {
                 dispatch(setTodos({ type: 'init', todos: response.todos }));
+            } else {
+                return rejectWithValue(response.error ?? 'Unknown error');
+            }
+        } catch (error) {
+            const message = (error as Error).message;
+            return rejectWithValue(message);
+        }
+    }
+);
+
+export const loadMoreTodos = createAsyncThunk<
+    void,
+    { offset: number; limit: number },
+    { rejectValue: string }
+>(
+    'todo/loadMoreTodos',
+    async ({ offset, limit }, { dispatch, rejectWithValue }) => {
+        try {
+            const todoRepository = new TodoRepository();
+            const response = await todoRepository.getAllTodo(limit, offset);
+            if (response.status === 'success' && response.todos) {
+                dispatch(setTodos({ type: 'onAdded', todos: response.todos }))
             } else {
                 return rejectWithValue(response.error ?? 'Unknown error');
             }
