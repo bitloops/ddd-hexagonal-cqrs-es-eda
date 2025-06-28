@@ -1,10 +1,8 @@
 import React, { type ReactNode } from 'react';
-import { IamViewModelProvider, type IamViewModelProviderProps } from '../view-models/IamViewModel';
-import { TodoViewModelProvider } from '../view-models/TodoViewModel';
+import { TodoViewModelProvider, type TodoViewModelProviderProps } from '../view-models/TodoViewModel';
 
 const ViewModelProviders: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const providers: React.ComponentType<IamViewModelProviderProps>[] = [
-    IamViewModelProvider,
+  const providers: React.ComponentType<TodoViewModelProviderProps>[] = [
     TodoViewModelProvider,
     // Add more View Model Providers here
   ];

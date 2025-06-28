@@ -1,19 +1,24 @@
 import { type FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { useIamViewModel } from '../../view-models/IamViewModel';
 import LoginPage from './page';
-import { useRecoilValue } from 'recoil';
-import { emailSelector, isProcessingState, isAuthenticatedSelector, passwordSelector } from '../../state/auth';
+import type { AppDispatch, RootState } from '../../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginWithEmailPassword, setEmail, setPassword } from '../../features/auth/authSlice';
+import { selectEmailValidation, selectPasswordValidation } from '../../features/auth/selector';
 
 const LoginController: FC = () => {
-  const { loginWithEmailPassword, updateEmail, updatePassword } =
-    useIamViewModel();
+  const dispatch = useDispatch<AppDispatch>()
+  const updatePassword = (password: string) => {
+    dispatch(setPassword(password))
+  }
+
+  const updateEmail = (email: string) => {
+    dispatch(setEmail(email))
+  }
   const navigate = useNavigate();
-  const email = useRecoilValue(emailSelector);
-  const password = useRecoilValue(passwordSelector);
-  const isProcessing = useRecoilValue(isProcessingState);
-  const isAuthenticated = useRecoilValue(isAuthenticatedSelector);
+  const { isProcessing, isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const password = useSelector(selectPasswordValidation);
+  const email = useSelector(selectEmailValidation);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -33,8 +38,9 @@ const LoginController: FC = () => {
       updateEmail={updateEmail}
       updatePassword={updatePassword}
       submit={() => {
-        if (email.isValid && password.isValid)
-          loginWithEmailPassword(email, password, clearEmailAndPassword);
+        if (email.isValid && password.isValid) {
+          dispatch(loginWithEmailPassword({ email: email.value, password: password.value, onSuccessCallback: clearEmailAndPassword }))
+        }
       }}
       isProcessing={isProcessing}
     />

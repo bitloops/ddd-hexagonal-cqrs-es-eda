@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate, useRoutes } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 
 import AuthLayout from '../layouts/Auth';
 import TodoLayout from '../layouts/todo';
@@ -9,10 +8,11 @@ import RegisterPage from '../pages/Register';
 import NotFoundPage from '../pages/NotFound';
 import ProtectedRoute from './protected-route';
 import HomePage from '../pages/Home';
-import { isAuthenticatedSelector } from '../state/auth';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../store/store';
 
 const Routes: React.FC = () => {
-  const isAuthenticated = useRecoilValue(isAuthenticatedSelector);
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated)
   const navigate = useNavigate();
   const location = useLocation();
 

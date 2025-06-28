@@ -5,39 +5,12 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './routes';
 import { todoIdsState, todosState } from './state/todos';
 import { useTodoViewModel } from './view-models/TodoViewModel';
-import { useIamViewModel } from './view-models/IamViewModel';
-import {
-  authMessageState,
-  emailSelector,
-  emailState,
-  isProcessingState,
-  passwordSelector,
-  passwordState,
-  userState,
-} from './state/auth';
 import { type Todo } from './models/Todo';
+import type { AppDispatch } from './store/store';
+import { useDispatch } from 'react-redux';
+import { init } from './features/auth/authSlice';
 
 function App(): JSX.Element {
-  // IamViewModel
-  const iamViewModel = useIamViewModel();
-  const setAuthMessage = useSetRecoilState(authMessageState);
-  const setUser = useSetRecoilState(userState);
-  const setEmail = useSetRecoilState(emailState);
-  const setPassword = useSetRecoilState(passwordState);
-  const setIsProcessing = useSetRecoilState(isProcessingState);
-  const getUser = useRecoilCallback(({ snapshot }) => () => {
-    const loadable = snapshot.getLoadable(userState);
-    return loadable.state === 'hasValue' ? loadable.contents : null;
-  });
-  const getEmail = useRecoilCallback(({ snapshot }) => () => {
-    const loadable = snapshot.getLoadable(emailSelector);
-    return loadable.state === 'hasValue' ? loadable.contents : null;
-  });
-  const getPassword = useRecoilCallback(({ snapshot }) => () => {
-    const loadable = snapshot.getLoadable(passwordSelector);
-    return loadable.state === 'hasValue' ? loadable.contents : null;
-  });
-
   // TodoViewModel
   const todoViewModel = useTodoViewModel();
   const setTodoIds = useSetRecoilState(todoIdsState);
@@ -53,19 +26,15 @@ function App(): JSX.Element {
     return loadable.state === 'hasValue' ? loadable.contents : null;
   });
   // TODO add useResetRecoilState() to reset a specific todo atom
-
+  const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
-    // IamViewModel
-    iamViewModel.setSetters(setAuthMessage, setUser, setEmail, setPassword, setIsProcessing);
-    iamViewModel.setGetters(getUser, getEmail, getPassword);
-
-    iamViewModel.init();
-
     // TodoViewModel
     todoViewModel.setSetters(setTodoItem, setTodoIds);
     todoViewModel.setGetters(getTodoItem, getTodoIds);
+    dispatch(init())
 
     todoViewModel.init();
+    todoViewModel.fetchAllTodo();
   }, []);
 
   function DebugObserver() {
