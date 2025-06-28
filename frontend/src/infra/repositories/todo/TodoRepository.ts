@@ -6,10 +6,7 @@ import {
   todoControllerUncompleteTodo,
   todoControllerDeleteTodo,
 } from '../../../api/sdk.gen';
-import { TODO_LOCAL_STORAGE_KEY } from '../../../constants';
-import { type Todo } from '../../../models/Todo';
 import { type User } from '../../../models/User';
-import LocalStorageRepository from '../../LocalStorage';
 import { EventBus, Events } from '../../../Events';
 import { type GetAllTodoResponse, type ITodoRepository } from '../../interfaces/ITodoRepository';
 
@@ -128,34 +125,25 @@ class TodoRepository implements ITodoRepository {
     }
   }
 
-  getAllTodo(callback: (asyncResponse: GetAllTodoResponse) => void): GetAllTodoResponse {
-    const localTodos =
-      LocalStorageRepository.getLocalStorageObject<Todo[]>(TODO_LOCAL_STORAGE_KEY) ?? [];
-    todoControllerGetAll()
-      .then((response) => {
-        callback({
-          status: 'success',
-          todos:
-            response.data?.todos?.map((todo) => ({
-              id: todo.id,
-              title: todo.title,
-              isCompleted: todo.completed,
-            })) ?? [],
-          error: undefined,
-        });
-      })
-      .catch((error) => {
-        callback({
-          status: 'error',
-          todos: undefined,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        });
-      });
-    return {
-      status: 'cached',
-      todos: localTodos,
-      error: undefined,
-    };
+  async getAllTodo(): Promise<GetAllTodoResponse> {
+    try {
+      const response = await todoControllerGetAll();
+      return {
+        status: 'success',
+        todos: response.data?.todos?.map((todo) => ({
+          id: todo.id,
+          title: todo.title,
+          isCompleted: todo.completed,
+        })) ?? [],
+        error: undefined,
+      };
+    } catch (error) {
+      return {
+        status: 'error',
+        todos: undefined,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
   }
 }
 

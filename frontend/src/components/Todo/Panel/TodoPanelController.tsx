@@ -1,22 +1,23 @@
 import { useState } from 'react';
 
 import TodoPanelComponent from './TodoPanelComponent';
-import { useTodoViewModel } from '../../../view-models/TodoViewModel';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../../store/store';
+import { addTodo } from '../../../features/todo/todoSlice';
 
 function TodoPanelController(): JSX.Element {
-  const todoViewModel = useTodoViewModel();
   const [newTodoTitle, setNewTodoTitle] = useState<string>('');
-  const { useTodoSelectors } = useTodoViewModel();
-  const { todoIds } = useTodoSelectors();
+  const { todoIdsState } = useSelector((state: RootState) => state.todo)
+  const dispatch = useDispatch<AppDispatch>()
 
   const addItem = () => {
-    if (newTodoTitle) todoViewModel.addTodo(newTodoTitle);
+    if (newTodoTitle) dispatch(addTodo(newTodoTitle))
     setNewTodoTitle('');
   };
 
   return (
     <TodoPanelComponent
-      data={todoIds}
+      data={todoIdsState}
       newTodoTitle={newTodoTitle}
       setNewTodoTitle={setNewTodoTitle}
       addItem={addItem}

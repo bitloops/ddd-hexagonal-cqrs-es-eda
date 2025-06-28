@@ -1,7 +1,9 @@
 import { type JSX, useState } from 'react';
 import TodoEntryComponent from './TodoEntryComponent';
-import { useTodoViewModel } from '../../../view-models/TodoViewModel';
 import { type Todo } from '../../../models/Todo';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../../store/store';
+import { completeTodo, deleteTodo, modifyTodoTitle, uncompleteTodo, updateTodoTitle } from '../../../features/todo/todoSlice';
 
 interface TodoEntityProps {
   id: string;
@@ -9,31 +11,27 @@ interface TodoEntityProps {
 
 function TodoEntryController(props: TodoEntityProps): JSX.Element {
   const { id } = props;
-  const { setTodo, useTodoSelectors } = useTodoViewModel();
-  const { useTodo } = useTodoSelectors();
   const [editable, setEditable] = useState<string | null>(null);
-  const todoViewModel = useTodoViewModel();
-  const oldTodo = useTodo(id);
-
+  const oldTodo = useSelector((state: RootState) => state.todo.todosState.filter((todo: Todo) => todo.id === id)[0])
+  const dispatch = useDispatch<AppDispatch>()
   const updateLocalItem = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('updateLocalItem', e);
     const { value } = e.target;
-    const newData: Todo = { ...oldTodo, title: value };
-    setTodo(newData);
+    dispatch(updateTodoTitle({ id, title: value }))
   };
 
   const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('handleCheckbox', id, e.target.checked);
     if (e.target.checked) {
-      todoViewModel.completeTodo(id);
+      dispatch(completeTodo(id))
     } else {
-      todoViewModel.uncompleteTodo(id);
+      dispatch(uncompleteTodo(id))
     }
   };
 
   const modifyTitle = (e: React.KeyboardEvent<HTMLInputElement>) => {
     console.log('modifyTitle', e);
-    todoViewModel.modifyTitle(id, (e.target as HTMLInputElement).value);
+    dispatch(modifyTodoTitle({ id, title: (e.target as HTMLInputElement).value }))
   };
 
   return (
@@ -45,7 +43,7 @@ function TodoEntryController(props: TodoEntityProps): JSX.Element {
       handleCheckbox={handleCheckbox}
       modifyTitle={modifyTitle}
       removeItem={() => {
-        todoViewModel.deleteTodo(id);
+        dispatch(deleteTodo(id))
       }}
     />
   );
