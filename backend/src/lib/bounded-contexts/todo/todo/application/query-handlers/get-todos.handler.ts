@@ -13,12 +13,11 @@ export type GetTodosQueryHandlerResponse = Either<
 >;
 
 export class GetTodosHandler
-  implements Application.IQueryHandler<GetTodosQuery, TTodoReadModelSnapshot[]>
-{
+  implements Application.IQueryHandler<GetTodosQuery, TTodoReadModelSnapshot[]> {
   constructor(
     @Inject(TodoReadRepoPortToken)
     private readonly todoRepo: TodoReadRepoPort,
-  ) {}
+  ) { }
 
   get query() {
     return GetTodosQuery;
@@ -37,7 +36,8 @@ export class GetTodosHandler
     },
   })
   async execute(query: GetTodosQuery): Promise<GetTodosQueryHandlerResponse> {
-    const results = await this.todoRepo.getAll();
+    const { limit, offset } = query;
+    const results = await this.todoRepo.getAll({ limit, offset });
     if (results.isFail()) return fail(results.value);
     if (results.value) return ok(results.value);
     return ok([]);

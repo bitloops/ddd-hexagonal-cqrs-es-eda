@@ -12,6 +12,7 @@ import {
   Param,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -81,9 +82,10 @@ export class TodoController {
   @Get()
   @ApiOperation({ summary: 'Get all todos' })
   @ApiResponse({ status: 200, type: GetAllTodosResponseDto, description: 'Returns all todos' })
-  async getAll() {
-    const results = await this.queryBus.request(new GetTodosQuery());
-
+  async getAll(@Query('limit') limit: number, @Query('offset') offset: number) {
+    const results = await this.queryBus.request(
+      new GetTodosQuery(limit, offset),
+    );
     if (results.isOk) {
       const data = results.data;
       const todos: TodoReadModel[] = data.map((todo) => TodoReadModel.fromPrimitives(todo));

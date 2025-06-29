@@ -1,0 +1,15 @@
+{
+  "default": {
+    "require": ["features/**/*.ts"],
+    "paths": ["features/**/*.feature"],
+    "format": ["progress-bar", "html:reports/cucumber-report.html"],
+    "publish": false,
+    "parallel": 1,
+    "retry": 0,
+    "retryTagFilter": "",
+    "tags": "",
+    "worldParameters": {
+      "tsConfigPath": "tsconfig.json"
+    }
+  }
+}

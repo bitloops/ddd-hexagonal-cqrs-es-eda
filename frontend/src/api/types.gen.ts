@@ -106,7 +106,7 @@ export type AuthControllerRegisterResponses = {
 export type TodoControllerGetAllData = {
   body?: never;
   path?: never;
-  query?: never;
+  query?: { limit: number, offset: number };
   url: '/todos';
 };
 

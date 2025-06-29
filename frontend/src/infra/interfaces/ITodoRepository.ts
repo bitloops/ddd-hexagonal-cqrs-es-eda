@@ -24,8 +24,7 @@ export type GetAllTodoResponse =
   | GetAllTodoErrorResponse;
 
 export interface ITodoRepository {
-  getAllTodo(callback: (asyncResponse: GetAllTodoResponse) => void): GetAllTodoResponse;
-  modifyTodoTitle(id: string, title: string): Promise<void>;
+  getAllTodo(limit: number, offset: number): Promise<GetAllTodoResponse>; modifyTodoTitle(id: string, title: string): Promise<void>;
   completeTodo(id: string): Promise<void>;
   uncompleteTodo(id: string): Promise<void>;
   deleteTodo(id: string): Promise<void>;
