@@ -12,7 +12,7 @@ function TodoPanelController(): JSX.Element {
 
 
   const loadTodos = async () => {
-    dispatch(loadMoreTodos({ offset: todoIdsState.length + 5, limit: 5 }));
+    dispatch(loadMoreTodos({ offset: todoIdsState.length, limit: 5 }));
   };
 
   const addItem = () => {
