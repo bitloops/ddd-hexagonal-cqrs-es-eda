@@ -3,7 +3,7 @@ import React from 'react';
 import TodoLayoutComponent from './TodoLayoutComponent';
 import type { AppDispatch, RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../features/auth/authSlice';
+import { logout } from '../../store/auth/authSlice';
 
 interface TodoControllerProps {
   children: React.ReactNode;

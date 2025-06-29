@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import LoginPage from './page';
 import type { AppDispatch, RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginWithEmailPassword, setEmail, setPassword } from '../../features/auth/authSlice';
-import { selectEmailValidation, selectPasswordValidation } from '../../features/auth/selector';
+import { loginWithEmailPassword, setEmail, setPassword } from '../../store/auth/authSlice';
+import { selectEmailValidation, selectPasswordValidation } from '../../store/auth/selector';
 
 const LoginController: FC = () => {
   const dispatch = useDispatch<AppDispatch>()

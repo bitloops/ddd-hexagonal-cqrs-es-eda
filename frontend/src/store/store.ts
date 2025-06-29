@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import authReducer from '../features/auth/authSlice'
-import todoReducer from '../features/todo/todoSlice'
+import authReducer from './auth/authSlice'
+import todoReducer from './todo/todoSlice'
 import { debugObserverMiddleware } from '../utils/debugObserverMiddleware'
 
 export const store = configureStore({

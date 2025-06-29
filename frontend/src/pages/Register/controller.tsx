@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import RegisterPage from './page';
-import { loginWithEmailPassword, registerWithEmailPassword, setEmail, setPassword } from '../../features/auth/authSlice';
+import { loginWithEmailPassword, registerWithEmailPassword, setEmail, setPassword } from '../../store/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../store/store';
-import { selectEmailValidation, selectPasswordValidation } from '../../features/auth/selector';
+import { selectEmailValidation, selectPasswordValidation } from '../../store/auth/selector';
 
 const LoginController: React.FC = () => {
 

@@ -4,8 +4,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './routes';
 import { store, type AppDispatch } from './store/store';
 import { useDispatch } from 'react-redux';
-import { init } from './features/auth/authSlice';
-import { initTodos } from './features/todo/todoSlice';
+import { init } from './store/auth/authSlice';
+import { initTodos } from './store/todo/todoSlice';
 
 function App(): JSX.Element {
   const dispatch = useDispatch<AppDispatch>()

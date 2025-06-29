@@ -3,7 +3,7 @@ import { useState } from 'react';
 import TodoPanelComponent from './TodoPanelComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../store/store';
-import { addTodo, loadMoreTodos } from '../../../features/todo/todoSlice';
+import { addTodo, loadMoreTodos } from '../../../store/todo/todoSlice';
 
 function TodoPanelController(): JSX.Element {
   const [newTodoTitle, setNewTodoTitle] = useState<string>('');

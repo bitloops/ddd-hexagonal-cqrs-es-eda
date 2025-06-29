@@ -3,7 +3,7 @@ import TodoEntryComponent from './TodoEntryComponent';
 import { type Todo } from '../../../models/Todo';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../store/store';
-import { completeTodo, deleteTodo, modifyTodoTitle, uncompleteTodo, updateTodoTitle } from '../../../features/todo/todoSlice';
+import { completeTodo, deleteTodo, modifyTodoTitle, uncompleteTodo, updateTodoTitle } from '../../../store/todo/todoSlice';
 
 interface TodoEntityProps {
   id: string;
