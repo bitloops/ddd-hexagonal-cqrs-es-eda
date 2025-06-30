@@ -1,19 +1,28 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useIamViewModel } from '../../view-models/IamViewModel';
 import RegisterPage from './page';
+import { loginWithEmailPassword, registerWithEmailPassword, setEmail, setPassword } from '../../store/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../store/store';
+import { selectEmailValidation, selectPasswordValidation } from '../../store/auth/selector';
 
 const LoginController: React.FC = () => {
-  const {
-    loginWithEmailPassword,
-    registerWithEmailPassword,
-    updateEmail,
-    updatePassword,
-    useIamSelectors,
-  } = useIamViewModel();
+
+  const updatePassword = (password: string) => {
+    dispatch(setPassword(password))
+  }
+
+  const updateEmail = (email: string) => {
+    dispatch(setEmail(email))
+  }
+
+  const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate();
-  const { email, password, isProcessing, isAuthenticated } = useIamSelectors();
+
+  const { isProcessing, isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const password = useSelector(selectPasswordValidation);
+  const email = useSelector(selectEmailValidation);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -33,10 +42,13 @@ const LoginController: React.FC = () => {
       updateEmail={updateEmail}
       updatePassword={updatePassword}
       submit={() => {
-        if (email.isValid && password.isValid)
-          registerWithEmailPassword(email, password, () => {
-            loginWithEmailPassword(email, password, clearEmailAndPassword);
-          });
+        if (email.isValid && password.isValid) {
+          dispatch(registerWithEmailPassword({
+            email: email.value, password: password.value, onSuccessCallback: () => {
+              dispatch(loginWithEmailPassword({ email: email.value, password: password.value, onSuccessCallback: clearEmailAndPassword }))
+            }
+          }))
+        }
       }}
       isProcessing={isProcessing}
     />

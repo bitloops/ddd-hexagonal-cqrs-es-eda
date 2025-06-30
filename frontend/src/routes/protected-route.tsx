@@ -1,12 +1,11 @@
 import { type ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { useRecoilValue } from 'recoil';
-import { userState } from '../state/auth';
+import type { RootState } from '../store/store';
+import { useSelector } from 'react-redux';
 
 function ProtectedRoute({ element }: { element: ReactNode }) {
   const navigate = useNavigate();
-  const user = useRecoilValue(userState);
+  const user = useSelector((state: RootState) => state.auth.user)
 
   useEffect(() => {
     if (user === null) {

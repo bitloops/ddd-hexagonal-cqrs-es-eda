@@ -12,6 +12,7 @@ interface TodoProps {
   newTodoTitle: string;
   setNewTodoTitle: React.Dispatch<React.SetStateAction<string>>;
   addItem: () => void;
+  onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
 }
 
 const vStackProps = {
@@ -25,7 +26,7 @@ const vStackProps = {
 };
 
 function TodoPanel(props: TodoProps): JSX.Element {
-  const { data, newTodoTitle, setNewTodoTitle, addItem } = props;
+  const { data, newTodoTitle, setNewTodoTitle, addItem, onScroll } = props;
 
   return (
     <div className="container">
@@ -58,8 +59,14 @@ function TodoPanel(props: TodoProps): JSX.Element {
             </Tooltip>
           </HStack>
         </form>
-        <div className="todo-list">
-          <ul>{data && data.map((id) => <TodoElement key={id} id={id} />)}</ul>
+        <div
+          className="todo-list"
+          style={{ height: 300, overflowY: 'auto' }}
+          onScroll={onScroll}
+        >
+          <ul>
+            {data && data.map((id) => <TodoElement key={id} id={id} />)}
+          </ul>
         </div>
       </VStack>
     </div>

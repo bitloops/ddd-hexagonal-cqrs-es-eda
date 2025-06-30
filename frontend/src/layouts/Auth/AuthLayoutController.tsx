@@ -1,8 +1,8 @@
 import { type JSX, type ReactNode } from 'react';
-import { useRecoilValue } from 'recoil';
 
 import AuthLayoutComponent from './AuthLayoutComponent';
-import { authMessageState } from '../../state/auth';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store/store';
 
 interface AuthControllerProps {
   children: ReactNode;
@@ -10,7 +10,7 @@ interface AuthControllerProps {
 
 function AuthLayoutController(props: AuthControllerProps): JSX.Element {
   const { children } = props;
-  const authMessage = useRecoilValue(authMessageState);
+  const authMessage = useSelector((state: RootState) => state.auth.authMessage);
 
   return <AuthLayoutComponent authMessage={authMessage}>{children}</AuthLayoutComponent>;
 }

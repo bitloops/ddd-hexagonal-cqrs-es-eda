@@ -1,0 +1,25 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "cwd": "../",
+  "all": true,
+  "include": ["src/store/slices/**/*.ts"],
+  "exclude": [
+    "**/*.d.ts",
+    "**/*.enum.ts",
+    "**/*.types.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "tests/**/*.ts",
+    "**/*.steps.ts",
+    "node_modules/**",
+    "coverage/**",
+    "out/**",
+    "dist/**"
+  ],
+  "require": ["ts-node/register", "./tests/register.js"],
+  "reporter": ["text", "lcov", "html"],
+  "report-dir": "./tests/reports/coverage",
+  "temp-dir": "./tests/reports/.nyc_output",
+  "sourceMap": true,
+  "instrument": true
+}

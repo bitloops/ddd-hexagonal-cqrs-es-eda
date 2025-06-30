@@ -47,7 +47,10 @@ export class TodoReadRepository implements TodoReadRepoPort {
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
-  async getAll(): Promise<
+  async getAll(params?: {
+    limit?: number;
+    offset?: number;
+  }): Promise<
     Either<TTodoReadModelSnapshot[], Application.Repo.Errors.Unexpected>
   > {
     const ctx = asyncLocalStorage.getStore()?.get('context');
@@ -62,9 +65,16 @@ export class TodoReadRepository implements TodoReadRepoPort {
     if (!userId) {
       throw new Error('Invalid userId');
     }
-    const todos = await this.collection
-      .find({ userId: { id: userId } })
-      .toArray();
+    let cursor = this.collection.find({ userId: { id: userId } });
+
+    if (params?.offset !== undefined) {
+      cursor = cursor.skip(+params.offset);
+    }
+    if (params?.limit !== undefined) {
+      cursor = cursor.limit(+params.limit);
+    }
+
+    const todos = await cursor.toArray();
     return ok(
       todos.map((todo) => {
         const res = {
