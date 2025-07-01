@@ -3,11 +3,23 @@ import { type Todo } from '../models/Todo';
 import { type User } from '../models/User';
 
 class LocalStorageRepository {
+  private static encryptionKey = 'your-secure-key'; // Replace with a securely managed key
+
+  private static encryptData(data: string): string {
+    // Implement encryption logic here
+    return btoa(data); // Example: Base64 encoding (replace with actual encryption)
+  }
+
+  private static decryptData(data: string): string {
+    // Implement decryption logic here
+    return atob(data); // Example: Base64 decoding (replace with actual decryption)
+  }
   static getLocalStorageObject<T>(key: string): T | null {
     const value = localStorage.getItem(key);
     if (value) {
       try {
-        return JSON.parse(value) as T;
+        const decryptedData = LocalStorageRepository.decryptData(value);
+        return JSON.parse(decryptedData) as T;
       } catch (e) {
         throw new Error('Could not parse local storage object');
       }
@@ -48,7 +60,8 @@ class LocalStorageRepository {
   }
 
   static setLocalStorageObject<T>(key: string, object: T): void {
-    localStorage.setItem(key, JSON.stringify(object));
+    const encryptedData = LocalStorageRepository.encryptData(JSON.stringify(object));
+    localStorage.setItem(key, encryptedData);
   }
 
   static clearAll(): void {
