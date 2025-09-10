@@ -10,7 +10,7 @@ import { PostgresModule } from '@lib/infra/postgres';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import authConfiguration from './config/auth.configuration';
-import { MongoModule } from '@lib/infra/mongo';
+// import { MongoModule } from '@lib/infra/mongo';
 import { TracingModule } from '@lib/infra/telemetry';
 
 @Module({
@@ -35,11 +35,11 @@ import { TracingModule } from '@lib/infra/telemetry';
       password: process.env.PG_IAM_PASSWORD ?? 'postgres',
       max: 20,
     }),
-    MongoModule.forRoot({
-      url: `mongodb://${process.env.MONGO_HOST || 'localhost'}:${
-        process.env.MONGO_PORT || 30001
-      }/?directConnection=true&replicaSet=my-replica-set`,
-    }),
+    // MongoModule.forRoot({
+    //   url: `mongodb://${process.env.MONGO_HOST || 'localhost'}:${
+    //     process.env.MONGO_PORT || 30001
+    //   }/?directConnection=true&replicaSet=my-replica-set`,
+    // }),
 
     TodoModule,
     MarketingModule,

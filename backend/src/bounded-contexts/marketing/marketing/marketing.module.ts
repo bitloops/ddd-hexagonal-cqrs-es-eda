@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
 import { MarketingModule as LibMarketingModule } from 'src/lib/bounded-contexts/marketing/marketing/marketing.module';
-import { UserWriteRepository } from './repository/user-write.repository';
-import { NotificationTemplateReadRepository } from './repository/notification-template.repository';
+import { MockUserWriteRepository } from './repository/mock-user-write.repository';
+import { MockNotificationTemplateReadRepository } from './repository/mock-notification-template.repository';
 import {
   EmailServicePortToken,
   NotificationTemplateReadRepoPortToken,
@@ -13,7 +13,7 @@ import {
   UserWriteRepoPortToken,
 } from '@src/lib/bounded-contexts/marketing/marketing/constants';
 import { MockEmailService } from './service';
-import { MongoModule } from '@lib/infra/mongo';
+// import { MongoModule } from '@lib/infra/mongo';
 import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers/integration';
 import { StreamingCommandHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers';
 import {
@@ -28,11 +28,11 @@ import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/marketin
 const RepoProviders = [
   {
     provide: UserWriteRepoPortToken,
-    useClass: UserWriteRepository,
+    useClass: MockUserWriteRepository,
   },
   {
     provide: NotificationTemplateReadRepoPortToken,
-    useClass: NotificationTemplateReadRepository,
+    useClass: MockNotificationTemplateReadRepository,
   },
   {
     provide: EmailServicePortToken,
@@ -59,7 +59,7 @@ const RepoProviders = [
   imports: [
     LibMarketingModule.register({
       inject: [...RepoProviders],
-      imports: [MongoModule],
+      imports: [/* MongoModule */],
     }),
     JetstreamModule.forFeature({
       moduleOfHandlers: MarketingModule,

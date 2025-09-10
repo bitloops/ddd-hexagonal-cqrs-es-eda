@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TodoWriteRepository } from './repository/todo-write.repository';
-import { TodoReadRepository } from './repository/todo-read.repository';
+import { MockTodoWriteRepository } from './repository/mock-todo-write.repository';
+import { MockTodoReadRepository } from './repository/mock-todo-read.repository';
 import { TodoModule as LibTodoModule } from 'src/lib/bounded-contexts/todo/todo/todo.module';
-import { MongoModule } from '@lib/infra/mongo';
+// import { MongoModule } from '@lib/infra/mongo';
 import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers';
 import { QueryHandlers } from '@src/lib/bounded-contexts/todo/todo/application/query-handlers';
 import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/todo/todo/application/event-handlers/integration';
@@ -26,11 +26,11 @@ import {
 const providers = [
   {
     provide: TodoWriteRepoPortToken,
-    useClass: TodoWriteRepository,
+    useClass: MockTodoWriteRepository,
   },
   {
     provide: TodoReadRepoPortToken,
-    useClass: TodoReadRepository,
+    useClass: MockTodoReadRepository,
   },
   {
     provide: StreamingIntegrationEventBusToken,
@@ -53,7 +53,7 @@ const providers = [
   imports: [
     LibTodoModule.register({
       imports: [
-        MongoModule,
+        // MongoModule,
         JetstreamModule.forFeature({
           moduleOfHandlers: TodoModule,
           pubSubCommandHandlers: [...PubSubCommandHandlers],
