@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { UserEmailChangedIntegrationEvent } from '@src/lib/bounded-contexts/iam/authentication/contracts/integration-events/user-email-changed.integration-event';
 import { UserEmailChangedIntegrationEventHandler } from '../../../application/event-handlers/integration/user-email-changed.integration-handler';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';

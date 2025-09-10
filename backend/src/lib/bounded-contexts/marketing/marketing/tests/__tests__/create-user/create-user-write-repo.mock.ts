@@ -5,6 +5,7 @@ import {
   fail,
   Domain,
 } from '@bitloops/bl-boilerplate-core';
+import { vi } from 'vitest';
 import {
   CREATE_USER_REPO_ERROR_CASE,
   CREATE_USER_SUCCESS_CASE,
@@ -13,16 +14,16 @@ import { UserWriteRepoPort } from '../../../ports/user-write.repo-port';
 import { UserEntity } from '../../../domain/user.entity';
 
 export class MockCreateUserWriteRepo {
-  public readonly mockSaveMethod: jest.Mock;
+  public readonly mockSaveMethod: any;
   private mockUserWriteRepo: UserWriteRepoPort;
 
   constructor() {
     this.mockSaveMethod = this.getMockSaveMethod();
     this.mockUserWriteRepo = {
-      update: jest.fn(),
-      getById: jest.fn(),
+      update: vi.fn(),
+      getById: vi.fn(),
       save: this.mockSaveMethod,
-      delete: jest.fn(),
+      delete: vi.fn(),
     };
   }
 
@@ -30,8 +31,8 @@ export class MockCreateUserWriteRepo {
     return this.mockUserWriteRepo;
   }
 
-  private getMockSaveMethod(): jest.Mock {
-    return jest.fn(
+  private getMockSaveMethod(): any {
+    return vi.fn(
       (
         user: UserEntity,
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {

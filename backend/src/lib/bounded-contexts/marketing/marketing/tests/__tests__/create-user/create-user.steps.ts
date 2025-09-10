@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import {
   CREATE_USER_REPO_ERROR_CASE,
   CREATE_USER_SUCCESS_CASE,

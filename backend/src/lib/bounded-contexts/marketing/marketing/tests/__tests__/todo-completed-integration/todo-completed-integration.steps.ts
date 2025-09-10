@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { TodoCompletedIntegrationEvent } from '@src/lib/bounded-contexts/todo/todo/contracts/integration-events/todo-completed.integration-event';
 import { TodoCompletedIntegrationEventHandler } from '../../../application/event-handlers/integration/todo-completed.integration-handler';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';

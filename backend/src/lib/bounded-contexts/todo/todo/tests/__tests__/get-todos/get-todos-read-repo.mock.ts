@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   Application,
   Either,
@@ -14,13 +15,13 @@ import {
 
 export class MockGetTodosReadRepo {
   private mockTodoReadRepo: TodoReadRepoPort;
-  public readonly mockGetAllMethod: jest.Mock;
+  public readonly mockGetAllMethod: ReturnType<typeof vi.fn>;
 
   constructor() {
     this.mockGetAllMethod = this.getMockGetAllMethod();
     this.mockTodoReadRepo = {
       getAll: this.mockGetAllMethod,
-      getById: jest.fn(),
+      getById: vi.fn(),
     };
   }
 
@@ -28,8 +29,8 @@ export class MockGetTodosReadRepo {
     return this.mockTodoReadRepo;
   }
 
-  private getMockGetAllMethod(): jest.Mock {
-    return jest.fn(
+  private getMockGetAllMethod(): ReturnType<typeof vi.fn> {
+    return vi.fn(
       (): Promise<
         Either<TodoReadModel[] | null, Application.Repo.Errors.Unexpected>
       > => {

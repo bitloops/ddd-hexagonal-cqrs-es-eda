@@ -25,6 +25,6 @@
       "@tests/*": ["tests/*"]
     }
   },
-  "exclude": ["node_modules", "dist", "build"],
+  "exclude": ["node_modules", "dist", "build", "**/*tests/**", "**/__tests__/**/*steps.ts", "**/__tests__/**/*mock.ts"],
   "include": ["src/**/*.ts", "test/**/*.ts"]
 }

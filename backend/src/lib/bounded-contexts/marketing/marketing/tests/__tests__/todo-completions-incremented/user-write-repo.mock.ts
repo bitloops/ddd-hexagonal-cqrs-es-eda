@@ -5,6 +5,7 @@ import {
   ok,
   fail,
 } from '@bitloops/bl-boilerplate-core';
+import { vi } from 'vitest';
 import { UserEntity } from '../../../domain/user.entity';
 import { UserWriteRepoPort } from '../../../ports/user-write.repo-port';
 import { UserEntityBuilder } from '../../builders/user-entity.builder';
@@ -16,16 +17,16 @@ import {
 } from './todo-completions-incremented.mock';
 
 export class MockUserWriteRepo {
-  public readonly mockGetByIdMethod: jest.Mock;
+  public readonly mockGetByIdMethod: any;
   private mockUserWriteRepo: UserWriteRepoPort;
 
   constructor() {
     this.mockGetByIdMethod = this.getMockGetByIdMethod();
     this.mockUserWriteRepo = {
-      update: jest.fn(),
-      save: jest.fn(),
+      update: vi.fn(),
+      save: vi.fn(),
       getById: this.mockGetByIdMethod,
-      delete: jest.fn(),
+      delete: vi.fn(),
     };
   }
 
@@ -33,8 +34,8 @@ export class MockUserWriteRepo {
     return this.mockUserWriteRepo;
   }
 
-  private getMockGetByIdMethod(): jest.Mock {
-    return jest.fn(
+  private getMockGetByIdMethod(): any {
+    return vi.fn(
       (
         userid: Domain.UUIDv4,
       ): Promise<

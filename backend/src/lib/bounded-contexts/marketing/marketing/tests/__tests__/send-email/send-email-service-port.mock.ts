@@ -1,9 +1,10 @@
 import { Application, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
+import { vi } from 'vitest';
 import { EmailServicePort } from '@src/lib/bounded-contexts/marketing/marketing/ports/email.service-port';
 import { SendEmailRequest } from '../../../structs/send-email-request.struct';
 
 export class MockEmailService {
-  public readonly mockSendMethod: jest.Mock;
+  public readonly mockSendMethod: any;
   private mockEmailServicePort: EmailServicePort;
 
   constructor() {
@@ -17,8 +18,8 @@ export class MockEmailService {
     return this.mockEmailServicePort;
   }
 
-  private getMockSendMethod(): jest.Mock {
-    return jest.fn(
+  private getMockSendMethod(): any {
+    return vi.fn(
       (
         emailRequest: SendEmailRequest,
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {

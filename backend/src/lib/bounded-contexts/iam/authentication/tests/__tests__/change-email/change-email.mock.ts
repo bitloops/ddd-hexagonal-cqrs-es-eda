@@ -15,6 +15,7 @@ export const USER_REPO_ERROR_GETBYID_CASE = {
   email: 'newUser@bitloops.com',
   password: 'test',
 };
+
 export const USER_NOT_FOUND_CASE = {
   id: '12345',
   email: 'newUser@bitloops.com',

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { UserRegisteredIntegrationEvent } from '@lib/infra/nest-auth-passport';
 import { UserRegisteredIntegrationEventHandler } from '../../../application/event-handlers/integration/user-registered.integration-handler';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';

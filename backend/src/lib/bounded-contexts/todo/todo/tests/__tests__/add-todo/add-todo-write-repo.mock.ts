@@ -5,21 +5,22 @@ import {
   fail,
   ok,
 } from '@bitloops/bl-boilerplate-core';
+import { vi } from 'vitest';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
 import { ADD_TODO_REPO_ERROR_CASE } from './add-todo.mock';
 
 export class MockAddTodoWriteRepo {
   private mockTodoWriteRepo: TodoWriteRepoPort;
-  public readonly mockSaveMethod: jest.Mock;
+  public readonly mockSaveMethod: any;
 
   constructor() {
     this.mockSaveMethod = this.getMockSaveMethod();
     this.mockTodoWriteRepo = {
       save: this.mockSaveMethod,
-      getById: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
+      getById: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
     };
   }
 
@@ -27,8 +28,8 @@ export class MockAddTodoWriteRepo {
     return this.mockTodoWriteRepo;
   }
 
-  private getMockSaveMethod(): jest.Mock {
-    return jest.fn(
+  private getMockSaveMethod(): any {
+    return vi.fn(
       (
         todo: TodoEntity,
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {

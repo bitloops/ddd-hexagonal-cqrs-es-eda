@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   Application,
   Either,
@@ -14,8 +15,8 @@ import {
 } from './change-email.mock';
 
 export class MockUserWriteRepo {
-  public readonly mockUpdateMethod: jest.Mock;
-  public readonly mockGetByIdMethod: jest.Mock;
+  public readonly mockUpdateMethod: ReturnType<typeof vi.fn>;
+  public readonly mockGetByIdMethod: ReturnType<typeof vi.fn>;
   private mockUserWriteRepo: UserWriteRepoPort;
 
   constructor() {
@@ -23,10 +24,10 @@ export class MockUserWriteRepo {
     this.mockGetByIdMethod = this.getMockGetByIdMethod();
     this.mockUserWriteRepo = {
       getById: this.mockGetByIdMethod,
-      getByEmail: jest.fn(),
+      getByEmail: vi.fn(),
       update: this.mockUpdateMethod,
-      delete: jest.fn(),
-      save: jest.fn(),
+      delete: vi.fn(),
+      save: vi.fn(),
     };
   }
 
@@ -34,8 +35,8 @@ export class MockUserWriteRepo {
     return this.mockUserWriteRepo;
   }
 
-  private getMockUpdateMethod(): jest.Mock {
-    return jest.fn(
+  private getMockUpdateMethod(): ReturnType<typeof vi.fn> {
+    return vi.fn(
       (
         user: UserEntity,
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {
@@ -52,8 +53,8 @@ export class MockUserWriteRepo {
     );
   }
 
-  private getMockGetByIdMethod(): jest.Mock {
-    return jest.fn(
+  private getMockGetByIdMethod(): ReturnType<typeof vi.fn> {
+    return vi.fn(
       (
         id: Domain.UUIDv4,
       ): Promise<

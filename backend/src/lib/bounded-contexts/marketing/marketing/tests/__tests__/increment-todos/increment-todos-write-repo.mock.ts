@@ -5,6 +5,7 @@ import {
   ok,
   fail,
 } from '@bitloops/bl-boilerplate-core';
+import { vi } from 'vitest';
 import { UserEntity } from '@src/lib/bounded-contexts/marketing/marketing/domain/user.entity';
 import { UserWriteRepoPort } from '@src/lib/bounded-contexts/marketing/marketing/ports/user-write.repo-port';
 import {
@@ -17,9 +18,9 @@ import {
 import { DomainErrors } from '@src/lib/bounded-contexts/marketing/marketing/domain/errors';
 
 export class MockIncrementCompletedTodosWriteRepo {
-  public readonly mockUpdateMethod: jest.Mock;
-  public readonly mockGetByIdMethod: jest.Mock;
-  public readonly mockSaveMethod: jest.Mock;
+  public readonly mockUpdateMethod: any;
+  public readonly mockGetByIdMethod: any;
+  public readonly mockSaveMethod: any;
   private mockUserWriteRepo: UserWriteRepoPort;
 
   constructor() {
@@ -30,7 +31,7 @@ export class MockIncrementCompletedTodosWriteRepo {
       save: this.mockSaveMethod,
       getById: this.mockGetByIdMethod,
       update: this.mockUpdateMethod,
-      delete: jest.fn(),
+      delete: vi.fn(),
     };
   }
 
@@ -38,8 +39,8 @@ export class MockIncrementCompletedTodosWriteRepo {
     return this.mockUserWriteRepo;
   }
 
-  private getMockUpdateMethod(): jest.Mock {
-    return jest.fn(
+  private getMockUpdateMethod(): any {
+    return vi.fn(
       (
         user: UserEntity,
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {
@@ -57,8 +58,8 @@ export class MockIncrementCompletedTodosWriteRepo {
     );
   }
 
-  private getMockSaveMethod(): jest.Mock {
-    return jest.fn(
+  private getMockSaveMethod(): any {
+    return vi.fn(
       (
         user: UserEntity,
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {
@@ -68,7 +69,7 @@ export class MockIncrementCompletedTodosWriteRepo {
   }
 
   private getMockGetByIdMethod() {
-    return jest.fn(
+    return vi.fn(
       (
         id: Domain.UUIDv4,
       ): Promise<

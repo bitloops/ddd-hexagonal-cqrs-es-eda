@@ -1,14 +1,15 @@
 import { Infra, ok, Application } from '@bitloops/bl-boilerplate-core';
+import { vi } from 'vitest';
 
 export class MockStreamCommandBus {
-  public readonly mockPublish: jest.Mock;
+  public readonly mockPublish: any;
   private mockStreamCommandBus: Infra.CommandBus.IStreamCommandBus;
 
   constructor() {
     this.mockPublish = this.getMockPublishMethod();
     this.mockStreamCommandBus = {
       publish: this.mockPublish,
-      subscribe: jest.fn(),
+      subscribe: vi.fn(),
     };
   }
 
@@ -16,8 +17,8 @@ export class MockStreamCommandBus {
     return this.mockStreamCommandBus;
   }
 
-  private getMockPublishMethod(): jest.Mock {
-    return jest.fn((command: Application.Command) => {
+  private getMockPublishMethod(): any {
+    return vi.fn((command: Application.Command) => {
       console.log('Publishing...', command);
       return Promise.resolve(ok());
     });

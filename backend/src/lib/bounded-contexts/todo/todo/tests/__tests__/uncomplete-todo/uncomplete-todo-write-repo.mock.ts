@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   Application,
   Domain,
@@ -17,18 +18,18 @@ import {
 } from './uncomplete-todo.mock';
 
 export class MockUncompleteTodoWriteRepo {
-  public readonly mockUpdateMethod: jest.Mock;
-  public readonly mockGetByIdMethod: jest.Mock;
+  public readonly mockUpdateMethod: ReturnType<typeof vi.fn>;
+  public readonly mockGetByIdMethod: ReturnType<typeof vi.fn>;
   private mockTodoWriteRepo: TodoWriteRepoPort;
 
   constructor() {
     this.mockUpdateMethod = this.getMockUpdateMethod();
     this.mockGetByIdMethod = this.getMockGetByIdMethod();
     this.mockTodoWriteRepo = {
-      save: jest.fn(),
+      save: vi.fn(),
       getById: this.mockGetByIdMethod,
       update: this.mockUpdateMethod,
-      delete: jest.fn(),
+      delete: vi.fn(),
     };
   }
 
@@ -36,8 +37,8 @@ export class MockUncompleteTodoWriteRepo {
     return this.mockTodoWriteRepo;
   }
 
-  private getMockUpdateMethod(): jest.Mock {
-    return jest.fn(
+  private getMockUpdateMethod(): ReturnType<typeof vi.fn> {
+    return vi.fn(
       (
         todo: TodoEntity,
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {
@@ -56,7 +57,7 @@ export class MockUncompleteTodoWriteRepo {
   }
 
   private getMockGetByIdMethod() {
-    return jest.fn(
+    return vi.fn(
       (
         id: Domain.UUIDv4,
       ): Promise<

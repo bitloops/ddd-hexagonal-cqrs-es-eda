@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { TodoCompletionsIncrementedDomainEvent } from '@src/lib/bounded-contexts/marketing/marketing/domain/events/todo-completions-incremented.event';
 import { MockUserWriteRepo } from './user-write-repo.mock';
 import { TodoCompletionsIncrementedHandler } from '../../../application/event-handlers/domain/todo-completions-incremented.handler';

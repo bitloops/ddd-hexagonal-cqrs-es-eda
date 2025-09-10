@@ -5,6 +5,7 @@ import {
   fail,
   Domain,
 } from '@bitloops/bl-boilerplate-core';
+import { vi } from 'vitest';
 import {
   UPDATE_USER_REPO_ERROR_CASE,
   UPDATE_USER_SUCCESS_CASE,
@@ -14,8 +15,8 @@ import { UserEntity } from '../../../domain/user.entity';
 import { UserEntityBuilder } from '../../builders/user-entity.builder';
 
 export class MockUserWriteRepo {
-  public readonly mockUpdateMethod: jest.Mock;
-  public readonly mockGetByIdMethod: jest.Mock;
+  public readonly mockUpdateMethod: any;
+  public readonly mockGetByIdMethod: any;
   private mockUserWriteRepo: UserWriteRepoPort;
 
   constructor() {
@@ -23,8 +24,8 @@ export class MockUserWriteRepo {
     this.mockGetByIdMethod = this.getMockByIdMethod();
     this.mockUserWriteRepo = {
       getById: this.mockGetByIdMethod,
-      save: jest.fn(),
-      delete: jest.fn(),
+      save: vi.fn(),
+      delete: vi.fn(),
       update: this.mockUpdateMethod,
     };
   }
@@ -33,8 +34,8 @@ export class MockUserWriteRepo {
     return this.mockUserWriteRepo;
   }
 
-  private getMockByIdMethod(): jest.Mock {
-    return jest.fn(
+  private getMockByIdMethod(): any {
+    return vi.fn(
       (
         userId: Domain.UUIDv4,
       ): Promise<
@@ -62,8 +63,8 @@ export class MockUserWriteRepo {
     );
   }
 
-  private getMockUpdateMethod(): jest.Mock {
-    return jest.fn(
+  private getMockUpdateMethod(): any {
+    return vi.fn(
       (
         user: UserEntity,
       ): Promise<Either<void, Application.Repo.Errors.Unexpected>> => {

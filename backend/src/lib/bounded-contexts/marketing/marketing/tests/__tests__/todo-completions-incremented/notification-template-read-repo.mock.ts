@@ -5,6 +5,7 @@ import {
   fail,
   asyncLocalStorage,
 } from '@bitloops/bl-boilerplate-core';
+import { vi } from 'vitest';
 import { NotificationTemplateReadModel } from '../../../domain/notification-template.read-model';
 import { NotificationTemplateReadRepoPort } from '../../../ports/notification-template-read.repo-port';
 import {
@@ -13,15 +14,15 @@ import {
 } from './todo-completions-incremented.mock';
 
 export class MockNotificationTemplateReadRepo {
-  public readonly mockGetByTypeMethod: jest.Mock;
+  public readonly mockGetByTypeMethod: any;
   private mockNotificationTemplateReadRepo: NotificationTemplateReadRepoPort;
 
   constructor() {
     this.mockGetByTypeMethod = this.getMockGetByTypeMethod();
     this.mockNotificationTemplateReadRepo = {
       getByType: this.mockGetByTypeMethod,
-      getAll: jest.fn(),
-      getById: jest.fn(),
+      getAll: vi.fn(),
+      getById: vi.fn(),
     };
   }
 
@@ -29,8 +30,8 @@ export class MockNotificationTemplateReadRepo {
     return this.mockNotificationTemplateReadRepo;
   }
 
-  private getMockGetByTypeMethod(): jest.Mock {
-    return jest.fn(
+  private getMockGetByTypeMethod(): any {
+    return vi.fn(
       (
         type: string,
       ): Promise<

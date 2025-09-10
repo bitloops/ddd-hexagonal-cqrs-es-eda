@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import {
   SEND_EMAIL_REPO_ERROR_CASE,
   SEND_EMAIL_SUCCESS_CASE,
