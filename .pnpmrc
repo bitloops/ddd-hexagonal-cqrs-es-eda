@@ -1,0 +1,43 @@
+# pnpm configuration for DDD/CQRS project
+
+# Use symlinks for dependencies (default: true)
+symlink=true
+
+# Auto install peers (helpful for React ecosystem)
+auto-install-peers=true
+
+# Strict peer dependencies (good for enterprise projects)
+strict-peer-dependencies=false
+
+# Enable dedupe-peer-dependents (saves space)
+dedupe-peer-dependents=true
+
+# Shamefully flatten for compatibility if needed
+# shamefully-hoist=false
+
+# Store directory (can be customized)
+# store-dir=~/.pnpm-store
+
+# Node modules directory structure 
+node-linker=isolated
+
+# Registry configuration
+registry=https://registry.npmjs.org/
+
+# Resolution mode for better monorepo support
+resolution-mode=highest
+
+# Enable workspace protocol
+link-workspace-packages=true
+
+# Save workspace protocol
+save-workspace-protocol=true
+
+# Public hoist pattern (for tools that need global access)
+public-hoist-pattern[]=*eslint*
+public-hoist-pattern[]=*prettier*
+public-hoist-pattern[]=*typescript*
+public-hoist-pattern[]=@types/*
+
+# Prefer workspace packages
+prefer-workspace-packages=true

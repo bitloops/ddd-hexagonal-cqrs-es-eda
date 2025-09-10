@@ -1,0 +1,67 @@
+{
+  "name": "ddd-hexagonal-cqrs-es-eda-monorepo",
+  "version": "1.0.0",
+  "description": "Domain Driven Design, Hexagonal Architecture, CQRS, Event Sourcing, Event Driven Architecture - Educational Reference Implementation",
+  "private": true,
+  "engines": {
+    "node": ">=20.11.1",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm run --parallel dev",
+    "dev:backend": "pnpm --filter=backend run start:dev",
+    "dev:frontend": "pnpm --filter=frontend run dev",
+    "build": "pnpm run --recursive build",
+    "build:backend": "pnpm --filter=backend run build",
+    "build:frontend": "pnpm --filter=frontend run build",
+    "test": "pnpm run --recursive test",
+    "test:backend": "pnpm --filter=backend run test",
+    "test:frontend": "pnpm --filter=frontend run test",
+    "test:e2e": "pnpm --filter=frontend-tests run test",
+    "test:watch": "pnpm run --parallel test:watch",
+    "test:cov": "pnpm run --recursive test:cov",
+    "test:ui": "pnpm --filter=backend run test:ui",
+    "lint": "pnpm run --recursive lint",
+    "lint:fix": "pnpm run --recursive lint --fix",
+    "format": "pnpm run --recursive format",
+    "clean": "pnpm run --recursive clean && pnpm store prune",
+    "reset": "pnpm run clean && rm -rf node_modules && rm -rf */node_modules && rm -rf pnpm-lock.yaml",
+    "docker:up": "docker compose -p bitloops-todo-app up -d",
+    "docker:down": "docker compose -p bitloops-todo-app down",
+    "docker:dev:backend": "docker compose -p bitloops-todo-app -f backend/server-development.docker-compose.yml up -d",
+    "docker:dev:frontend": "docker compose -p bitloops-todo-app -f backend/frontend-development.docker-compose.yml up -d",
+    "prisma:generate": "pnpm --filter=backend run prisma:generate",
+    "prisma:migrate": "pnpm --filter=backend run prisma:migrate",
+    "prisma:studio": "pnpm --filter=backend run prisma:studio",
+    "prisma:seed": "pnpm --filter=backend run prisma:seed"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.9",
+    "turbo": "^2.3.0"
+  },
+  "keywords": [
+    "domain-driven-design",
+    "hexagonal-architecture", 
+    "cqrs",
+    "event-sourcing",
+    "event-driven-architecture",
+    "ddd",
+    "typescript",
+    "nestjs",
+    "react",
+    "vitest",
+    "prisma",
+    "uuid-v7",
+    "monorepo",
+    "pnpm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda.git"
+  },
+  "license": "MIT",
+  "author": "Bitloops",
+  "contributors": [
+    "Claude Code Assistant"
+  ]
+}

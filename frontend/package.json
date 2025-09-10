@@ -1,14 +1,17 @@
 {
-  "name": "todo-frontend",
+  "name": "frontend",
   "private": true,
   "version": "0.4.0",
   "type": "module",
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "openapi-ts": "openapi-ts"
+    "openapi-ts": "openapi-ts",
+    "test": "echo 'No tests configured yet'",
+    "clean": "rm -rf dist node_modules .cache"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.21.0",

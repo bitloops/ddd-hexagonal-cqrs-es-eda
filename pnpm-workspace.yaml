@@ -1,0 +1,39 @@
+# pnpm workspace configuration for DDD/Hexagonal/CQRS/ES/EDA project
+packages:
+  # Backend - NestJS application with DDD architecture
+  - 'backend'
+  
+  # Frontend - React application with Redux
+  - 'frontend' 
+  
+  # Frontend tests - Cucumber BDD tests
+  - 'frontend/tests'
+  
+  # Note: telemetry-consumer is Go-based and managed separately
+
+# Workspace catalog for shared dependencies
+catalog:
+  # Shared TypeScript tooling
+  typescript: ^5.8.3
+  '@types/node': ^18.15.11
+  
+  # Testing dependencies
+  vitest: ^2.1.8
+  '@vitest/ui': ^2.1.8
+  '@vitest/coverage-v8': ^2.1.8
+  
+  # Linting and formatting
+  eslint: ^8.0.1
+  prettier: ^2.3.2
+  
+  # UUID libraries
+  uuid: ^9.0.0
+  uuidv7: ^1.0.2
+  
+  # NestJS core (backend specific)
+  '@nestjs/core': ^10.0.0
+  '@nestjs/common': ^10.0.0
+  
+  # React core (frontend specific) 
+  react: ^18.3.1
+  'react-dom': ^18.3.1

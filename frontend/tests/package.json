@@ -1,11 +1,14 @@
 {
-  "name": "@cucumber/typescript-example",
+  "name": "frontend-tests",
   "version": "1.0.0",
-  "description": "A simple example of a TypeScript Cucumber-JS project",
+  "description": "BDD E2E tests for the DDD/CQRS frontend application",
   "main": "src/index.ts",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "test": "NODE_OPTIONS=\"--require ts-node/register --require ./register.js\" cucumber-js --config cucumber.json",
-    "test:coverage": "nyc cucumber-js --config cucumber.json"
+    "test:coverage": "nyc cucumber-js --config cucumber.json",
+    "clean": "rm -rf node_modules coverage .nyc_output"
   },
   "repository": {
     "type": "git",
