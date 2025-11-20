@@ -1,6 +1,6 @@
 module bitloops/telemetry/consumer
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/joho/godotenv v1.5.1
@@ -25,7 +25,7 @@ require (
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
-	golang.org/x/crypto v0.35.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/crypto v0.45.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 )
