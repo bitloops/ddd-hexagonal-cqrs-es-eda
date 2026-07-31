@@ -9,6 +9,10 @@ import {
 import { type User } from '../../../models/User';
 import { EventBus, Events } from '../../../Events';
 import { type GetAllTodoResponse, type ITodoRepository } from '../../interfaces/ITodoRepository';
+import {
+  mapExternalTodo,
+  mapExternalTodoLifecycleEvent,
+} from '../../mappers/TodoMapper';
 
 import { client } from '../../../api/client.gen';
 import { TODO_URL } from '../../../config';
@@ -58,25 +62,12 @@ class TodoRepository implements ITodoRepository {
       },
       onMessage: (event) => {
         try {
-          const data = JSON.parse(event.data);
-          console.log('SSE event received:', event, data);
+          const externalEvent: unknown = JSON.parse(event.data);
+          console.log('SSE event received:', event, externalEvent);
 
-          if (data.event) {
-            // Map SSE events to the same format as before for compatibility
-            const eventMap: Record<string, string> = {
-              'todo.added': 'onAdded',
-              'todo.deleted': 'onDeleted',
-              'todo.modified_title': 'onModifiedTitle',
-              'todo.completed': 'onCompleted',
-              'todo.uncompleted': 'onUncompleted',
-            };
-
-            if (eventMap[data.event]) {
-              EventBus.emit(Events.TODO_EVENT, {
-                eventName: eventMap[data.event],
-                payload: data.data,
-              });
-            }
+          const todoEvent = mapExternalTodoLifecycleEvent(externalEvent);
+          if (todoEvent) {
+            EventBus.emit(Events.TODO_EVENT, todoEvent);
           }
         } catch (error) {
           console.error('Error processing SSE message:', error, event.data);
@@ -130,11 +121,7 @@ class TodoRepository implements ITodoRepository {
       const response = await todoControllerGetAll({ query: { limit, offset } });
       return {
         status: 'success',
-        todos: response.data?.todos?.map((todo) => ({
-          id: todo.id,
-          title: todo.title,
-          isCompleted: todo.completed,
-        })) ?? [],
+        todos: response.data?.todos?.map(mapExternalTodo) ?? [],
         error: undefined,
       };
     } catch (error) {

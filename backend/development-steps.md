@@ -8,7 +8,7 @@ Remove strict and strictNullChecks from your tsconfig if present.
 
 ```bash
 # install bitloops plugins
-yarn add @bitloops/bl-boilerplate-core \
+pnpm --dir backend add @bitloops/bl-boilerplate-core \
       @bitloops/bl-boilerplate-infra-mongo \
       @bitloops/bl-boilerplate-infra-nest-auth-passport \
       @bitloops/bl-boilerplate-infra-nest-jetstream \

@@ -2,15 +2,29 @@ services:
 
   todo-frontend:
     build:
-      context: frontend/
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080}
     ports:
-      - '4173:4173'
+      - '4173:8080'
     networks:
       - bitloops
 
   todo-backend:
     build:
-      context: backend/
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-local-development-only-secret-change-me}
+      JWT_LIFETIME_SECONDS: 3600
+      HTTP_IP: 0.0.0.0
+      PG_HOST: bl-postgres
+      PG_IAM_HOST: bl-postgres
+      MONGO_HOST: bl-mongo
+      TODO_DATABASE_HOST: bl-mongo
+      MARKETING_DATABASE_HOST: bl-mongo
+      NATS_HOST: bl-nats
     ports:
       - '8080:8080'
     networks:

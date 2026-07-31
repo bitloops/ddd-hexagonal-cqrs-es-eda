@@ -24,7 +24,7 @@ const LoginController: FC = () => {
     if (isAuthenticated) {
       navigate('/');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   const clearEmailAndPassword = () => {
     updateEmail('');

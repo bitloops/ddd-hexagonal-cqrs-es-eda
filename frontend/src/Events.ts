@@ -1,5 +1,6 @@
 import { EventEmitter } from 'eventemitter3';
 import { type User } from './models/User';
+import type { TodoLifecycleEvent } from './infra/mappers/TodoMapper';
 
 export const Events = {
   // Auth events
@@ -24,7 +25,7 @@ type EventMap = {
   [Events.AUTH_CHANGED]: User | null;
   [Events.LOGIN_SUCCESS]: User;
   [Events.LOGOUT]: null;
-  [Events.TODO_EVENT]: { eventName: string; payload: unknown };
+  [Events.TODO_EVENT]: TodoLifecycleEvent;
   [Events.SSE_CONNECTION_ESTABLISHED]: null;
   [Events.SSE_CONNECTION_ERROR]: { message: string };
   [Events.SSE_CONNECTION_CLOSED]: null;
@@ -33,7 +34,6 @@ type EventMap = {
 };
 
 class EventBus {
-  // eslint-disable-next-line no-use-before-define
   private static _instance: EventBus;
 
   private emitter: EventEmitter;

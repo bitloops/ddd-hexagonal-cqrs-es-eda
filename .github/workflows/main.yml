@@ -1,43 +1,36 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   contents: read
 
 jobs:
-  build:
-
+  node:
+    name: Node workspace
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.11.1]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-        cache-dependency-path: backend/yarn.lock
-    - name: Install Yarn
-      run: npm install -g yarn
-    - run: yarn install --frozen-lockfile
-      working-directory: backend
-    - name: Run build script if present
-      run: |
-        if grep -q "\"build\":" backend/package.json; then
-          yarn run build
-        else
-          echo "Build script not found. Skipping."
-        fi
-      working-directory: backend
-    - run: yarn test
-      working-directory: backend
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build backend
+        run: pnpm --dir backend run build
+      - name: Test backend
+        run: pnpm --dir backend run test
+      - name: Lint frontend
+        run: pnpm --dir frontend run lint
+      - name: Build frontend
+        run: pnpm --dir frontend run build
+      - name: Test frontend behaviour
+        run: pnpm --dir frontend/tests run test

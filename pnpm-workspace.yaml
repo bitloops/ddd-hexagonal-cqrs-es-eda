@@ -1,0 +1,10 @@
+packages:
+  - backend
+  - frontend
+  - frontend/tests
+allowBuilds:
+  '@scarf/scarf': false
+  bcrypt: true
+  esbuild: true
+  grpc-tools: false
+  protobufjs: false

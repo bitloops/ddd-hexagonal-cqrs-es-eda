@@ -11,7 +11,7 @@ function ProtectedRoute({ element }: { element: ReactNode }) {
     if (user === null) {
       navigate('/login');
     }
-  }, [user]);
+  }, [navigate, user]);
 
   return user !== null ? element : null;
 }

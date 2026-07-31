@@ -23,7 +23,7 @@
     "docker:backend": "docker compose -p bitloops-todo-app stop && docker compose -p bitloops-todo-app -f server-development.docker-compose.yml up -d"
   },
   "engines": {
-    "node": ">=20.11.1"
+    "node": ">=24 <25"
   },
   "dependencies": {
     "@bitloops/bl-boilerplate-core": "^0.3.6",

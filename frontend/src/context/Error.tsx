@@ -1,29 +1,16 @@
-import React, { createContext, useState, useContext, useMemo } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 
-export interface ErrorContextProps {
-  error: string | null;
-  setError: React.Dispatch<React.SetStateAction<string | null>>;
-}
-
-const ErrorContext = createContext<ErrorContextProps | undefined>(undefined);
+import ErrorContext from './ErrorContext';
 
 interface ErrorProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const ErrorProvider: React.FC<ErrorProviderProps> = ({ children }) => {
+export function ErrorProvider({ children }: ErrorProviderProps) {
   const [error, setError] = useState<string | null>(null);
-  const errorState = useMemo(() => ({ error, setError }), []);
-  return <ErrorContext.Provider value={errorState}>{children}</ErrorContext.Provider>;
-};
+  const errorState = useMemo(() => ({ error, setError }), [error]);
 
-function useErrorContext() {
-  const context = useContext(ErrorContext);
-  if (!context) {
-    throw new Error('useErrorContext must be used within an ErrorProvider');
-  }
-  return context;
+  return <ErrorContext.Provider value={errorState}>{children}</ErrorContext.Provider>;
 }
 
-export { ErrorProvider, useErrorContext };
-export default ErrorContext;
+export default ErrorProvider;

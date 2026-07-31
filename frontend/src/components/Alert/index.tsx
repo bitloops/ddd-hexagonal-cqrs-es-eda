@@ -16,7 +16,7 @@ function BitloopsAlert(props: HeaderProps) {
       setShow(false);
     }, duration);
     return () => clearTimeout(timer);
-  }, []);
+  }, [duration]);
 
   if (show)
     return (

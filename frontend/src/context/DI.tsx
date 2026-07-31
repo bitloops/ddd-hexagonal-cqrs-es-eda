@@ -1,49 +1,13 @@
-import React, { type ReactNode, createContext, useContext } from 'react';
-import IamService from '../infra/services/IamService';
-import { type IIamRepository } from '../infra/interfaces/IIamRepository';
-import { type ITodoRepository } from '../infra/interfaces/ITodoRepository';
-import IamRepository from '../infra/repositories/iam';
-import TodoRepository from '../infra/repositories/todo';
+import type { ReactNode } from 'react';
 
-export interface AppContext {
-  iamRepository: IIamRepository;
-  todoRepository: ITodoRepository;
-}
-
-const iamService = new IamService();
-const iamRepository = new IamRepository(iamService);
-const todoRepository = new TodoRepository();
-
-export const initialContext: AppContext = {
-  iamRepository,
-  todoRepository,
-};
+import { DIContext, initialContext } from './DIContext';
 
 interface DIProviderProps {
   children: ReactNode;
 }
 
-export const DIContext = createContext<AppContext>(initialContext);
-
-const DIProvider: React.FC<DIProviderProps> = ({ children }) => (
-  <DIContext.Provider value={initialContext}>{children}</DIContext.Provider>
-);
-
-function useDIContext() {
-  const context = useContext(DIContext);
-  if (!context) {
-    throw new Error('useDIContext must be used within an DIProvider');
-  }
-  return context;
+export function DIProvider({ children }: DIProviderProps) {
+  return <DIContext.Provider value={initialContext}>{children}</DIContext.Provider>;
 }
 
-function useIamRepository() {
-  return useDIContext().iamRepository;
-}
-
-function useTodoRepository() {
-  return useDIContext().todoRepository;
-}
-
-export { useDIContext, DIProvider, useIamRepository, useTodoRepository };
-export default DIContext;
+export default DIProvider;

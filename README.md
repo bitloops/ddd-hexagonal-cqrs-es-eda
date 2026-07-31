@@ -187,10 +187,10 @@ In this project the decision was to keep a local repository in the Marketing bou
 
 In order to run the application the following should have been installed on your local machine:
 
-- **NodeJS** should be installed ([link](https://nodejs.dev/en/learn/how-to-install-nodejs/))
+- **Node.js 24 LTS** should be installed ([link](https://nodejs.org/en/download))
 - **Docker** should be installed ([link](https://docs.docker.com/engine/install/))
-- **docker-compose** should be installed, if your docker installation does not install it automatically ([link](https://docs.docker.com/compose/install/))
-- **npm** and or **yarn** should be installed ([npm link](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), [yarn link](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable))
+- **Docker Compose** should be installed, if your Docker installation does not include it ([link](https://docs.docker.com/compose/install/))
+- **Corepack** should be enabled so the repository can use its pinned pnpm version
 
 ### Running the app
 
@@ -205,38 +205,30 @@ After all the necessary have been installed on your local machine, you should fo
 - Navigate to the folder:
 
 ```bash
-cd ddd-hexagonal-cqrs-es-eda/backend
+cd ddd-hexagonal-cqrs-es-eda
 ```
 
-- Run:
+- Install the workspace dependencies:
 
   ```bash
-  yarn install
+  corepack enable
+  pnpm install --frozen-lockfile
   ```
 
-  if you are using **yarn**  
-   or:
-
-  ```bash
-  npm install
-  ```
-
-  if you are using **npm**, from the terminal inside the project **to install the necessary packages**.
-
-- **Start docker on your machine**.
-- Run
+- **Start Docker on your machine**.
+- To run the complete application, run:
   ```bash
   docker compose -p bitloops-todo-app up -d
   ```
-  from the terminal inside the project **in order to download and run the necessary containers**.
-- Create a `.development.env` file inside the root project and copy and paste the contents of the `.template-env`, which is located in the root of the project inside it.
+  The frontend is then available at `http://localhost:4173` and the backend at `http://localhost:8080`.
+- For local backend development, start only its infrastructure dependencies:
+  ```bash
+  docker compose -p bitloops-todo-app up -d bl-mongo bl-nats bl-postgres
+  ```
+- For local backend development, copy `backend/.template-env` to `backend/.development.env` and replace the development-only values.
 - Run:
   ```bash
-  yarn start:dev
-  ```
-  or
-  ```bash
-  npm start:dev
+  pnpm --dir backend start:dev
   ```
   to start the server.
 
@@ -245,18 +237,13 @@ cd ddd-hexagonal-cqrs-es-eda/backend
 ### Test the application is running
 
 In order to test the application is running we could use a client  
-The application is using **REST** for the authentication part and **gRPC** for the Todo part.
+The application uses **REST** for authentication and todo operations, with **server-sent events (SSE)** for realtime client updates.
 
 Those tools could be helpful in the development process as well.
 
 #### Postman
 
-So we recommend to test the application with a client tool that supports both. Such tool could be [Postman](https://www.postman.com/product/what-is-postman/).
-
-You may find tutorials on how to use **Postman** for REST and gRPC requests below:
-
-- REST ([link](https://hevodata.com/learn/postman-rest-client/))
-- gRPC ([link](https://learning.postman.com/docs/sending-requests/grpc/first-grpc-request/))
+You can exercise the REST API with a client such as [Postman](https://www.postman.com/product/what-is-postman/) or with cURL.
 
 To just test the app is app and running you can just invoke `http://localhost:8080` URI with Post request as shown in the picture below:
 
@@ -283,7 +270,9 @@ The server should respond (in the terminal) with:
 
 In order to run the tests of the application run the following on the terminal:
 
-`yarn test` or `npm test`.
+`pnpm --dir backend test`.
+
+To run the complete frontend quality gate, use `pnpm check:frontend` from the repository root.
 
 ## C. Understanding the project structure
 

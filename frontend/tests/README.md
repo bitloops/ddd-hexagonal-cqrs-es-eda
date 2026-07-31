@@ -1,60 +1,29 @@
-# BDD Tests Readme
+# Frontend tests
 
-## How do I run the tests?
+These Cucumber scenarios exercise the todo Redux reducer through the same events
+that arrive from the backend event stream. The Node unit-test lane protects
+transport-to-UI mappings such as `completed` to `isCompleted`.
 
-`cd tests`
-`npx cucumber-js` or `npm run test`
+## Run the tests
 
-## Why outside src? Why its own package.json?
-
-Getting cucumber-js to work with TypeScript and with our existing project setup seems like a big pain in the ass. As an alternative, everything runs autonomously and just imports files from the project. If needed, we can fix this in the future.
-
-## Why use the cucumber-js package when other Gherkin packages can work with our setup with less effort?
-
-This `cucumber-js` package is amazing. You only define a step function once and can be reused multiple times. More time writing Gherkin than writing step functions. For example, the counter requires about 40 lines for its tests using `cucumber-js` while over 400 with other packages.
-
-## How do I create new tests?
-
-For each feature you need to create two files:
-
-1. Your `.feature` file that contains Gherkin Given, When, Then statements to be placed in the `tests/features` folder
-2. Your `steps.ts` file to be placed under `tests/features/step_definitions`
-3. Check the _counter_ example and enjoy testing!
-
-## Code Coverage for Redux Actions
-
-To check code coverage specifically for your Redux actions:
+From the repository root:
 
 ```bash
-npm run test:coverage
+pnpm --filter @bitloops/todo-frontend-behaviour-tests test
+pnpm --filter @bitloops/todo-frontend-behaviour-tests typecheck
 ```
 
-This will:
+The default test command runs the typecheck, unit tests and Cucumber scenarios.
+The package uses native ESM and `tsx`; there is no CommonJS, Babel or `ts-node`
+registration layer.
 
-- Run all your existing Cucumber tests
-- Generate coverage reports specifically for Redux actions
-- Output a summary in the terminal
-- Create detailed HTML reports in the `./coverage` directory
+## Add a behaviour
 
-### What's Being Measured
+Each feature normally needs:
 
-The coverage configuration focuses specifically on:
+1. A `.feature` file containing the Gherkin scenarios under `features`.
+2. TypeScript step definitions under `features/step_definitions`.
 
-- All TypeScript files in `src/store/slices/**/*.ts`
-- Excludes enum files, type definitions, and declaration files
-
-This ensures you're measuring coverage of the actual action creators and reducers, not just type definitions.
-
-### Viewing Reports
-
-After running the tests, you can:
-
-- See a text summary in the terminal
-- Open `./coverage/index.html` in a browser for a detailed visual report
-- Check which actions are well-tested and which need more coverage
-
-### Coverage Thresholds
-
-The configuration sets the default thresholds.
-
-You can adjust these in the `.nycrc` file if needed.
+Keep these scenarios focused on externally meaningful state transitions. Code
+coverage belongs to the faster frontend unit-test lane rather than this behaviour
+suite.
