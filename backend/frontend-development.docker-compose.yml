@@ -4,12 +4,15 @@ services:
       context: ..
       dockerfile: backend/Dockerfile
     environment:
-      JWT_SECRET: ${JWT_SECRET:-local-development-only-secret-change-me}
-      JWT_LIFETIME_SECONDS: 3600
       HTTP_IP: 0.0.0.0
       PG_HOST: bl-postgres
       PG_DATABASE: bitloops
       NATS_HOST: bl-nats
+      OIDC_ISSUER: ${OIDC_ISSUER:-http://localhost:8090/realms/bitloops}
+      OIDC_AUDIENCE: ${OIDC_AUDIENCE:-todo-api}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-todo-frontend}
+      OIDC_JWKS_URI: ${OIDC_JWKS_URI:-http://bl-keycloak:8080/realms/bitloops/protocol/openid-connect/certs}
+      OIDC_REQUIRE_VERIFIED_EMAIL: ${OIDC_REQUIRE_VERIFIED_EMAIL:-false}
     ports:
       - '8080:8080'
     depends_on:
@@ -17,6 +20,8 @@ services:
         condition: service_healthy
       bl-nats:
         condition: service_started
+      bl-keycloak:
+        condition: service_healthy
     networks:
       - bitloops
 
@@ -45,12 +50,62 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - bl-postgres_data:/var/lib/postgresql/data
+      - bl-postgres_data:/var/lib/postgresql
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U user -d bitloops']
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - bitloops
+
+  bl-keycloak-postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak-development-only}
+    volumes:
+      - bl-keycloak-postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U keycloak -d keycloak']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - bitloops
+
+  bl-keycloak:
+    image: quay.io/keycloak/keycloak:26.7.0
+    command: ['start-dev', '--import-realm']
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://bl-keycloak-postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak-development-only}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin-development-only}
+      KC_HOSTNAME: ${KEYCLOAK_PUBLIC_URL:-http://localhost:8090}
+      KC_HEALTH_ENABLED: 'true'
+      KC_METRICS_ENABLED: 'true'
+    ports:
+      - '8090:8080'
+      - '9000:9000'
+    volumes:
+      - ../keycloak/bitloops-realm.json:/opt/keycloak/data/import/bitloops-realm.json:ro
+    depends_on:
+      bl-keycloak-postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "exec 3<>/dev/tcp/127.0.0.1/9000; printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep -q '200 OK' <&3",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
     networks:
       - bitloops
 
@@ -146,6 +201,7 @@ services:
 volumes:
   bl-nats_data:
   bl-postgres_data:
+  bl-keycloak-postgres_data:
   bl-prometheus_data:
   bl-grafana_data:
 

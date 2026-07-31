@@ -1,6 +1,10 @@
-# copy and rename this to .development.env to add your configurations
-JWT_SECRET=p2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B # !!! replace this with your own secret
-JWT_LIFETIME_SECONDS=3600
+# Copy and rename this file to .development.env for local backend development.
+OIDC_ISSUER=http://localhost:8090/realms/bitloops
+OIDC_AUDIENCE=todo-api
+OIDC_CLIENT_ID=todo-frontend
+OIDC_JWKS_URI=http://localhost:8090/realms/bitloops/protocol/openid-connect/certs
+OIDC_REQUIRE_VERIFIED_EMAIL=false
+OIDC_CLOCK_TOLERANCE_SECONDS=5
 HTTP_IP=localhost
 PG_HOST=localhost
 PG_PORT=5432

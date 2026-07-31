@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type JSX, type UIEvent } from 'react';
 
 import TodoPanelComponent from './TodoPanelComponent';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ function TodoPanelController(): JSX.Element {
     setNewTodoTitle('');
   };
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+  const handleScroll = (e: UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
     if (scrollHeight - scrollTop - clientHeight < 50) {
       loadTodos();

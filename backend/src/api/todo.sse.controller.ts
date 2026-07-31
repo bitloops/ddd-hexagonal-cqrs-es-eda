@@ -15,7 +15,8 @@ import {
 import { Observable, Subscriber } from 'rxjs';
 
 import { Infra } from '@bitloops/bl-boilerplate-core';
-import { JwtAuthGuard } from '@lib/infra/nest-auth-passport';
+import { OidcAuthGuard } from '@src/bounded-contexts/iam/iam/oidc/oidc-auth.guard';
+import { TodoSubscriptionDto } from './dto/todo-subscription.dto';
 import {
   BUSES_TOKENS,
   NatsPubSubIntegrationEventsBus,
@@ -65,7 +66,7 @@ const subscriptionHandlers = {
 type TodoSubscriptionName = keyof typeof subscriptionHandlers;
 
 @Controller('sse/todos')
-@UseGuards(JwtAuthGuard)
+@UseGuards(OidcAuthGuard)
 export class TodoSSEController implements OnModuleInit, OnModuleDestroy {
   private readonly clients = new Map<string, SSEClient>();
   private readonly heartbeatIntervalMs = 10_000;
@@ -89,14 +90,14 @@ export class TodoSSEController implements OnModuleInit, OnModuleDestroy {
 
   @Get('stream')
   @Sse()
-  stream(@Request() request: { headers: Record<string, string | string[]>; user: { id: string } }) {
+  stream(@Request() request: { headers: Record<string, string | string[]>; user: { userId: string } }) {
     const headerValue = request.headers['x-request-id'];
     const clientId = Array.isArray(headerValue) ? headerValue[0] : headerValue;
     if (!clientId) throw new BadRequestException('x-request-id is required');
 
     const client: SSEClient = {
       id: clientId,
-      userId: request.user.id,
+      userId: request.user.userId,
       lastActivity: Date.now(),
       response: null,
     };
@@ -120,19 +121,19 @@ export class TodoSSEController implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  @Post(['subscriptions', 'On'])
+  @Post('subscriptions')
   subscribe(
-    @Request() request: { user: { id: string } },
-    @Body() body: { subscriberId: string; events: string[] },
+    @Request() request: { user: { userId: string } },
+    @Body() body: TodoSubscriptionDto,
   ): void {
     const client = this.clients.get(body.subscriberId);
-    if (!client || client.userId !== request.user.id) {
+    if (!client || client.userId !== request.user.userId) {
       throw new BadRequestException('Unknown SSE subscriber');
     }
 
     this.removeSubscriptions(body.subscriberId);
     subscribers[body.subscriberId] = {
-      userId: request.user.id,
+      userId: request.user.userId,
       send: (event, data, userId) => this.broadcast(event, data, userId),
     };
 

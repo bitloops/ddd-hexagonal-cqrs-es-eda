@@ -1,7 +1,7 @@
 {
   "name": "todo-frontend",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,19 +15,19 @@
     "@reduxjs/toolkit": "^2.12.0",
     "event-source-polyfill": "^1.0.31",
     "eventemitter3": "^5.0.4",
-    "jwt-decode": "^4.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "oidc-client-ts": "3.5.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-icons": "^5.7.0",
     "react-redux": "^9.3.0",
-    "react-router-dom": "^7.18.2"
+    "react-router": "^8.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
     "@hey-api/openapi-ts": "^0.77.0",
     "@types/event-source-polyfill": "^1.0.5",
-    "@types/react": "^18.3.31",
-    "@types/react-dom": "^18.3.7",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^9.39.5",
     "eslint-plugin-react-hooks": "^5.2.0",

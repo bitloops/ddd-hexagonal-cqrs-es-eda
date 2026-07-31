@@ -2,12 +2,6 @@ import { Application } from '@bitloops/bl-boilerplate-core';
 
 export class ContextBuilder {
   private userId: string;
-  private jwt: string;
-
-  withJWT(jwt: string): ContextBuilder {
-    this.jwt = jwt;
-    return this;
-  }
 
   withUserId(userId: string): ContextBuilder {
     this.userId = userId;
@@ -15,10 +9,11 @@ export class ContextBuilder {
   }
 
   build(): Application.TContext {
-    const context: Application.TContext = {
+    // The shared boilerplate type still requires its retired `jwt` field.
+    // Application request context deliberately contains only the internal ID.
+    const context = {
       userId: this.userId,
-      jwt: this.jwt,
-    };
+    } as unknown as Application.TContext;
     return context;
   }
 }

@@ -1,6 +1,6 @@
 import { asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
 import { ContextBuilder } from '../builders/context.builder';
-export function mockAsyncLocalStorageGet(userId: string, jwt = 'jwt') {
+export function mockAsyncLocalStorageGet(userId: string) {
   jest
     .mocked(asyncLocalStorage.getStore()?.get)
     ?.mockImplementation((arg: string) => {
@@ -8,7 +8,7 @@ export function mockAsyncLocalStorageGet(userId: string, jwt = 'jwt') {
         return 'testing...';
       }
       if (arg === 'context') {
-        return new ContextBuilder().withJWT(jwt).withUserId(userId).build();
+        return new ContextBuilder().withUserId(userId).build();
       }
     });
 }

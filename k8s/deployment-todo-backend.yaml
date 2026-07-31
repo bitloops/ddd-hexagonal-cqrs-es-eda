@@ -29,17 +29,22 @@ spec:
             - name: PG_USER
               valueFrom:
                 secretKeyRef:
-                  name: secret-bl-postgres-secret
+                  name: bl-postgres-secret
                   key: POSTGRES_USER
             - name: PG_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: secret-bl-postgres-secret
+                  name: bl-postgres-secret
                   key: POSTGRES_PASSWORD
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: secret-bl-postgres-secret
-                  key: JWT_SECRET
+            - name: OIDC_ISSUER
+              value: http://localhost:8090/realms/bitloops
+            - name: OIDC_AUDIENCE
+              value: todo-api
+            - name: OIDC_CLIENT_ID
+              value: todo-frontend
+            - name: OIDC_JWKS_URI
+              value: http://bl-keycloak:8090/realms/bitloops/protocol/openid-connect/certs
+            - name: OIDC_REQUIRE_VERIFIED_EMAIL
+              value: "false"
           ports:
             - containerPort: 8080

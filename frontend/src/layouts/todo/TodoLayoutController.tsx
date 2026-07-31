@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import TodoLayoutComponent from './TodoLayoutComponent';
 import type { AppDispatch, RootState } from '../../store/store';
@@ -19,7 +19,7 @@ function TodoLayoutController(props: TodoControllerProps): JSX.Element {
     <TodoLayoutComponent
       errorMessage={authMessage?.type === 'error' ? authMessage?.message : ''}
       user={user}
-      logout={() => dispatch(logout())}
+      logout={() => void dispatch(logout())}
     >
       {children}
     </TodoLayoutComponent>

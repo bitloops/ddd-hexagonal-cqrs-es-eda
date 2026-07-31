@@ -4,9 +4,9 @@
 
 Complete working example of using Domain Driven Design (DDD), Hexagonal Architecture, CQRS, Event Sourcing (ES), Event Driven Architecture (EDA), Behaviour Driven Development (BDD) using TypeScript and NestJS.
 
-Current release: **1.0.0**. See the [changelog](./CHANGELOG.md), the
-[backend architecture](./docs/backend-architecture.md), and the proposed
-[Keycloak IAM roadmap](./docs/keycloak-iam-roadmap.md).
+Current release: **1.0.1**. See the [changelog](./CHANGELOG.md), the
+[backend architecture](./docs/backend-architecture.md), and the
+[Keycloak IAM architecture](./docs/keycloak-iam-roadmap.md).
 
 ![ddd-hexagonal-cqrs-es-eda](https://storage.googleapis.com/bitloops-github-assets/ddd-hexagonal-cqrs-es-eda-2.gif)
 
@@ -79,7 +79,7 @@ When a todo is completed, if this is the first completed todo, an email should b
 - **Easy switching between modular monolith and microservices**
 - **Authentication**
 - **Authorization** (Even at the repository level)
-- **Automatic JWT renewal**
+- **OpenID Connect session renewal**
 - **Automatic client code generation using OpenAPI**
 - **Event-sourced Todo aggregate with a transactional outbox**
 
@@ -87,7 +87,7 @@ When a todo is completed, if this is the first completed todo, an email should b
 
 Here are listed some of the specific technologies used for the implementation of the project:
 
-- **Authentication**: Application-issued JWTs in 1.0.0, with a documented migration path to [Keycloak](./docs/keycloak-iam-roadmap.md)
+- **Authentication**: [Keycloak](https://www.keycloak.org/) through OpenID Connect Authorization Code Flow with PKCE
 - **Database - Persistence**: [PostgreSQL](https://www.postgresql.org/)
 - **Testing**: [JEST](https://jestjs.io/)
 - **External Communication Protocols**: [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) and server-sent events
@@ -143,6 +143,11 @@ from the terminal inside the project **in order to download and run the necessar
 
 Then the ReactJS front-end application will be visible at: `http://localhost:4173`.
 
+The development realm includes `demo@example.com` with password
+`Todo-Demo-2026!`. Keycloak runs at `http://localhost:8090`; its development
+admin credentials are `admin` / `admin-development-only`. These credentials
+must never be used outside local development.
+
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="400" alt="image" src="https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda/assets/1571105/4570473b-4e67-4050-9935-967acfe0b7c6" alt="Frontend application" align="center">  
 </p>
@@ -192,12 +197,12 @@ The problem in this case is that the email information belongs to the IAM bounde
 
 In this project the decision was to keep a local repository in the Marketing bounded context, of the users and their emails, updated by listening to integration events from the IAM bounded contexts (**user registered** and **user email changed**).
 
-Authentication is currently implemented inside the application for continuity
-with the original example. It is now treated as a transitional adapter rather
-than the intended long-term identity system. The next IAM tranche will move
-credential and session ownership to Keycloak while retaining the IAM bounded
-context and translating OIDC claims through an anti-corruption layer. See the
-[Keycloak IAM roadmap](./docs/keycloak-iam-roadmap.md).
+Keycloak owns credentials and browser sessions, while the IAM bounded context
+owns the application's user identity. An anti-corruption layer validates OIDC
+claims and maps Keycloak's issuer/subject pair to an internal UUID. IAM
+registration and email changes reach Marketing through an application-owned
+transactional outbox, so downstream contexts do not depend on Keycloak. See
+the [Keycloak IAM architecture](./docs/keycloak-iam-roadmap.md).
 
 # V. Running in development mode
 
@@ -243,7 +248,8 @@ cd ddd-hexagonal-cqrs-es-eda
   The frontend is then available at `http://localhost:4173` and the backend at `http://localhost:8080`.
 - For local backend development, start only its infrastructure dependencies:
   ```bash
-  docker compose -p bitloops-todo-app up -d bl-nats bl-postgres
+  docker compose -p bitloops-todo-app up -d \
+    bl-nats bl-postgres bl-keycloak-postgres bl-keycloak
   ```
 - For local backend development, copy `backend/.template-env` to `backend/.development.env` and replace the development-only values.
 - Run:
@@ -257,7 +263,9 @@ cd ddd-hexagonal-cqrs-es-eda
 ### Test the application is running
 
 In order to test the application is running we could use a client  
-The application uses **REST** for authentication and todo operations, with **server-sent events (SSE)** for realtime client updates.
+The application uses **OpenID Connect** with Keycloak for authentication,
+**REST** for Todo operations, and **server-sent events (SSE)** for realtime
+client updates.
 
 Those tools could be helpful in the development process as well.
 

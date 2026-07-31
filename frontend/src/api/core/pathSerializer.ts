@@ -1,4 +1,6 @@
-interface SerializeOptions<T> extends SerializePrimitiveOptions, SerializerOptions<T> {}
+interface SerializeOptions<T>
+  extends SerializePrimitiveOptions,
+    SerializerOptions<T> {}
 
 interface SerializePrimitiveOptions {
   allowReserved?: boolean;
@@ -101,7 +103,9 @@ export const serializeArrayParam = ({
       });
     })
     .join(separator);
-  return style === 'label' || style === 'matrix' ? separator + joinedValues : joinedValues;
+  return style === 'label' || style === 'matrix'
+    ? separator + joinedValues
+    : joinedValues;
 };
 
 export const serializePrimitiveParam = ({
@@ -115,7 +119,7 @@ export const serializePrimitiveParam = ({
 
   if (typeof value === 'object') {
     throw new Error(
-      'Deeply-nested arrays/objects aren’t supported. Provide your own `querySerializer()` to handle these.'
+      'Deeply-nested arrays/objects aren’t supported. Provide your own `querySerializer()` to handle these.',
     );
   }
 
@@ -140,7 +144,11 @@ export const serializeObjectParam = ({
   if (style !== 'deepObject' && !explode) {
     let values: string[] = [];
     Object.entries(value).forEach(([key, v]) => {
-      values = [...values, key, allowReserved ? (v as string) : encodeURIComponent(v as string)];
+      values = [
+        ...values,
+        key,
+        allowReserved ? (v as string) : encodeURIComponent(v as string),
+      ];
     });
     const joinedValues = values.join(',');
     switch (style) {
@@ -162,8 +170,10 @@ export const serializeObjectParam = ({
         allowReserved,
         name: style === 'deepObject' ? `${name}[${key}]` : key,
         value: v as string,
-      })
+      }),
     )
     .join(separator);
-  return style === 'label' || style === 'matrix' ? separator + joinedValues : joinedValues;
+  return style === 'label' || style === 'matrix'
+    ? separator + joinedValues
+    : joinedValues;
 };

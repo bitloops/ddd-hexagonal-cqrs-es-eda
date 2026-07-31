@@ -1,171 +1,74 @@
-# Getting Started with the Bitloops Todo App
+# Todo frontend
 
-<img width="488" alt="image" src="https://github.com/bitloops/ddd-hexagonal-cqrs-es-eda/assets/1571105/4570473b-4e67-4050-9935-967acfe0b7c6">
+The React application uses Vite, Redux Toolkit, a generated OpenAPI client,
+and server-sent events. Its UI follows a lightweight MVVM arrangement:
 
-This project was bootstrapped with [Vite](https://vite.dev/).
+- presentational components render props;
+- controllers connect components to Redux state and actions;
+- repositories coordinate application operations;
+- services contain OIDC, REST, and SSE transport details.
 
-You should not need to run it directly from this folder as it is part of the docker build file but if you want to run it locally for development you can follow the instructions below at "Available Scripts".
+The Todo mapper is an anti-corruption layer. Backend payloads use `completed`,
+whereas the UI model uses `isCompleted`; REST responses and SSE lifecycle
+events use the same mapping and validation before entering Redux.
 
-## Web App Design
+## Keycloak authentication
 
-The web app is using a flavour of the MVVM (Model-View-View Model) pattern. You should be aware of the following ideas:
+`oidc-client-ts` implements OpenID Connect Authorization Code Flow with PKCE.
+Login and registration redirect to Keycloak. The callback obtains a
+short-lived access token, then the IAM repository calls `/auth/me` to reconcile
+the external identity to the internal application user. Access tokens remain
+in memory and transient PKCE state uses session storage. A newly opened window
+uses a top-level, non-interactive OIDC `prompt=none` request to join an existing
+Keycloak SSO session; when no SSO session exists it falls back to the login
+screen after one attempt.
 
-### Components
+Configure these Vite variables before building:
 
-Here we have simple React code combined with imports of CSS files for the formatting. These components do not have state and you could inject anything you like through the props to test them.
+```text
+VITE_API_BASE_URL=http://localhost:8080
+VITE_OIDC_AUTHORITY=http://localhost:8090/realms/bitloops
+VITE_OIDC_CLIENT_ID=todo-frontend
+```
 
-### Controllers
+The authority is a browser-visible URL, so an internal container hostname will
+not work. Production values must use the public HTTPS issuer and exact redirect
+origins configured in Keycloak.
 
-A controller wraps a Component and maps the functions and values coming from a View Model (see below). You might have the occasional useState for maybe an [open, setOpen] value but nothing more.
+## Development
 
-### State
-
-Redux Toolkit owns the application state. Controllers select state and dispatch actions while presentational components remain focused on rendering and user interaction.
-
-### View models
-
-Selectors provide the query side of the UI model, while Redux actions and async thunks handle state changes and side effects.
-
-### Repositories
-
-Repositories are used to interact with the app state (e.g. localStorage) and the Services (see below). For example, a service expects some authentication metadata (JWT) with the requests and instead of complicating the ViewModel with these details, a Repository provides a cleaner interface to the ViewModel for using the Services by taking care of the JWT injection etc. You can also use Repositories to deal with local caching etc.
-
-### Services
-
-Services wrap the generated REST client and SSE connection so transport details do not leak into UI components.
-
-The mapper at this boundary is also an anti-corruption layer: backend payloads
-use `completed`, while the UI model uses `isCompleted`. REST responses and SSE
-events pass through the same translation and validation before they reach
-Redux.
-
-## Technologies Used
-
-The frontend communicates with the backend over REST. `@hey-api/openapi-ts` generates the typed API client from the backend OpenAPI document; after the contract changes, run `pnpm --dir frontend openapi-ts` from the repository root.
-
-To receive realtime notifications from the backend, SSE (Server Sent Events) are being used.
-
-The SSE client reconnects after transient failures and sends a heartbeat so the backend can clean up abandoned subscriptions.
-
-Authentication still uses the backend's transitional JWT endpoints in 1.0.0.
-The proposed Keycloak migration retains the frontend IAM repository boundary
-and replaces its implementation with OpenID Connect Authorization Code Flow
-with PKCE. See the [Keycloak IAM roadmap](../docs/keycloak-iam-roadmap.md).
-
-## Launch the app using the Dockerfile
-
-To build the image:
+Install from the repository root and start Keycloak, its database, the
+application database, NATS, and the backend:
 
 ```bash
-docker build -f frontend/Dockerfile -t todo-frontend .
+corepack enable
+pnpm install --frozen-lockfile
+docker compose -p bitloops-todo-app up -d \
+  bl-keycloak-postgres bl-keycloak bl-postgres bl-nats todo-backend
+pnpm --dir frontend dev
 ```
 
-To run the container:
+Open `http://localhost:5173`. The development realm includes
+`demo@example.com` with password `Todo-Demo-2026!`.
+
+## Commands
 
 ```bash
-docker run -dp 4173:8080 todo-frontend
+pnpm --dir frontend build
+pnpm --dir frontend lint
+pnpm --dir frontend/tests test
+pnpm --dir frontend openapi-ts
 ```
 
-## Available Scripts
+The OpenAPI generator reads `http://localhost:8080/api-json`, so run the
+backend before regenerating `src/api`.
 
-In the project directory, you can run:
-
-### `pnpm install --frozen-lockfile`
-
-Installs all the dependencies. This is needed before you run the start script.
-
-### `pnpm --dir frontend dev`
-
-Runs the app in the development mode.\
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `pnpm --dir frontend build`
-
-Builds the app for production to the `dist` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-To preview the production build, run:
+Build the production container from the repository root:
 
 ```bash
-pnpm --dir frontend preview
-```
-
-### `pnpm --dir frontend openapi-ts`
-
-Regenerates the `api` folder files based on Swagger and Open API definitions coming from the backend.
-
-# React + TypeScript + Vite + Redux Toolkit
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+docker build -f frontend/Dockerfile \
+  --build-arg VITE_API_BASE_URL=http://localhost:8080 \
+  --build-arg VITE_OIDC_AUTHORITY=http://localhost:8090/realms/bitloops \
+  --build-arg VITE_OIDC_CLIENT_ID=todo-frontend \
+  -t todo-frontend .
 ```

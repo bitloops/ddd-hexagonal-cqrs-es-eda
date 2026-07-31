@@ -24,7 +24,7 @@ import {
 import { AddTodoRequestDto } from './dto/add-todo.dto';
 import { ModifyTodoTitleRequestDto } from './dto/modify-todo-title.dto';
 import { BUSES_TOKENS } from '../lib/infra/nest-jetstream';
-import { JwtAuthGuard } from '../lib/infra/nest-auth-passport';
+import { OidcAuthGuard } from '@src/bounded-contexts/iam/iam/oidc/oidc-auth.guard';
 import { Infra } from '@bitloops/bl-boilerplate-core';
 import { GetAllTodosResponseDto } from './dto/get-all-todos.dto';
 import { CompleteTodoCommand } from '@src/lib/bounded-contexts/todo/todo/commands/complete-todo.command';
@@ -38,7 +38,7 @@ import { ModifyTodoTitleCommand } from '@src/lib/bounded-contexts/todo/todo/comm
 @ApiTags('todos')
 @ApiBearerAuth()
 @Controller('todos')
-@UseGuards(JwtAuthGuard)
+@UseGuards(OidcAuthGuard)
 @Injectable()
 export class TodoController {
   constructor(

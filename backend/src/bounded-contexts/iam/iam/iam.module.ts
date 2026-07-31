@@ -1,47 +1,43 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 
-import { AuthenticationModule as LibIamModule } from '@src/lib/bounded-contexts/iam/authentication/authentication.module';
-import { PostgresModule } from '@lib/infra/postgres';
-import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/iam/authentication/application/command-handlers';
 import {
-  JetstreamModule,
-  NatsStreamingDomainEventBus,
-  NatsStreamingIntegrationEventBus,
-} from '@lib/infra/nest-jetstream';
-import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/iam/authentication/application/event-handlers/domain';
-import {
-  StreamingDomainEventBusToken,
-  StreamingIntegrationEventBusToken,
-  UserWriteRepoPortToken,
-} from '@src/lib/bounded-contexts/iam/authentication/constants';
-import { UserWritePostgresRepository } from './repository/user-write.pg.repository';
+  PostgresModule,
+  PostgresModuleAsyncOptions,
+} from '@lib/infra/postgres';
+import { IdentityProviderPortToken } from '@src/lib/bounded-contexts/iam/authentication/ports/identity-provider.port';
+import { UserIdentityRepoPortToken } from '@src/lib/bounded-contexts/iam/authentication/ports/user-identity.repo-port';
+import { KeycloakIdentityProvider } from './oidc/keycloak-identity-provider';
+import { OidcAuthGuard } from './oidc/oidc-auth.guard';
+import { IAM_POSTGRES_SCHEMA } from './repository/iam-postgres.schema';
+import { IamOutboxRelay } from './repository/iam-outbox.relay';
+import { UserIdentityPostgresRepository } from './repository/user-identity.pg.repository';
 
-const providers = [
-  {
-    provide: UserWriteRepoPortToken,
-    useClass: UserWritePostgresRepository,
-  },
-  {
-    provide: StreamingIntegrationEventBusToken,
-    useClass: NatsStreamingIntegrationEventBus,
-  },
-  {
-    provide: StreamingDomainEventBusToken,
-    useClass: NatsStreamingDomainEventBus,
-  },
-];
-@Module({
-  imports: [
-    LibIamModule.register({
-      inject: [...providers],
-      imports: [PostgresModule],
-    }),
-    JetstreamModule.forFeature({
-      moduleOfHandlers: IamModule,
-      pubSubCommandHandlers: [...PubSubCommandHandlers],
-      streamingDomainEventHandlers: [...StreamingDomainEventHandlers],
-    }),
-  ],
-  exports: [LibIamModule],
-})
-export class IamModule {}
+@Module({})
+export class IamModule {
+  static forRootAsync(postgresOptions: PostgresModuleAsyncOptions): DynamicModule {
+    return {
+      module: IamModule,
+      imports: [
+        PostgresModule.forRootAsync(postgresOptions),
+        PostgresModule.forFeature(IAM_POSTGRES_SCHEMA),
+      ],
+      providers: [
+        IamOutboxRelay,
+        OidcAuthGuard,
+        {
+          provide: IdentityProviderPortToken,
+          useClass: KeycloakIdentityProvider,
+        },
+        {
+          provide: UserIdentityRepoPortToken,
+          useClass: UserIdentityPostgresRepository,
+        },
+      ],
+      exports: [
+        OidcAuthGuard,
+        IdentityProviderPortToken,
+        UserIdentityRepoPortToken,
+      ],
+    };
+  }
+}

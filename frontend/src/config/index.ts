@@ -8,8 +8,10 @@ const configuredUrl = (value: string | undefined, fallback: string): string => {
 // Vite exposes only VITE_-prefixed variables and substitutes them during the
 // build. These values are public client configuration, never secrets.
 export const TODO_URL = configuredUrl(import.meta.env.VITE_API_BASE_URL, DEFAULT_API_BASE_URL);
-export const AUTH_URL = configuredUrl(import.meta.env.VITE_AUTH_URL, `${TODO_URL}/auth/login`);
-export const REGISTRATION_URL = configuredUrl(
-  import.meta.env.VITE_REGISTRATION_URL,
-  `${TODO_URL}/auth/register`,
+export const OIDC_AUTHORITY = configuredUrl(
+  import.meta.env.VITE_OIDC_AUTHORITY,
+  'http://localhost:8090/realms/bitloops',
 );
+export const OIDC_CLIENT_ID = import.meta.env.VITE_OIDC_CLIENT_ID?.trim() || 'todo-frontend';
+export const OIDC_REDIRECT_URI = `${window.location.origin}/auth/callback`;
+export const OIDC_POST_LOGOUT_REDIRECT_URI = `${window.location.origin}/auth/logout/callback`;

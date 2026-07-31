@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 // import SimpleButton from '../../components/Buttons/SimpleButton';
 // import Image404 from '../../assets/404.svg';
 // import returnIcon from '../../assets/return.svg';

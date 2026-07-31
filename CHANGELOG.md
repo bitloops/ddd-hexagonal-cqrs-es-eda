@@ -4,6 +4,43 @@ All notable changes to this project are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the
 project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.0.1] - 2026-07-31
+
+### Added
+
+- Keycloak 26.7 with an imported development realm, isolated PostgreSQL
+  database, Compose services, and Kubernetes manifests.
+- OpenID Connect Authorization Code Flow with PKCE in the frontend and
+  standards-based RS256/JWKS access-token validation in the backend.
+- An IAM anti-corruption layer that maps Keycloak issuer/subject identities to
+  internal user UUIDs.
+- A transactional IAM outbox for user registration and email-change
+  integration events.
+- OIDC validation tests covering issuer, audience, authorised client, expiry,
+  verified email, and signing-key rotation, plus identity reconciliation
+  integration tests.
+- React 19.2 and React Router 8.3, including the patched router release for the
+  current RSC action security advisory.
+
+### Changed
+
+- Replaced application-owned credentials and sessions with Keycloak while
+  retaining the IAM bounded context and `/auth/me` reconciliation endpoint.
+- Kept browser access tokens in memory and limited session storage to transient
+  PKCE state.
+- Restored an existing Keycloak SSO session non-interactively when the
+  application opens in another browser window.
+- Regenerated the OpenAPI client after removing local authentication routes.
+- Aligned the root, backend, frontend, and frontend-test package versions at
+  `1.0.1`.
+
+### Removed
+
+- Passport strategies, password hashing, local registration/login commands,
+  locally issued JWTs, and the old `/auth/login` and `/auth/register` routes.
+
 ## [1.0.0] - 2026-07-31
 
 ### Added

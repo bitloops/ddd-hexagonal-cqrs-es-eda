@@ -8,7 +8,9 @@ overrides:
   'js-yaml@>=5': ^5.2.2
 allowBuilds:
   '@scarf/scarf': false
-  bcrypt: true
   esbuild: true
   protobufjs: false
   unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@types/react-dom@19.2.4'
+  - '@types/react@19.2.18'

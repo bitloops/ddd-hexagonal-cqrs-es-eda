@@ -1,9 +1,6 @@
 import { Domain, asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
-import { ConfigService } from '@nestjs/config';
-import * as jsonwebtoken from 'jsonwebtoken';
 import { Pool } from 'pg';
 
-import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
 import { TitleVO } from '@src/lib/bounded-contexts/todo/todo/domain/title.value-object';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { UserIdVO } from '@src/lib/bounded-contexts/todo/todo/domain/user-id.value-object';
@@ -15,7 +12,6 @@ const describeWithDatabase =
   process.env.RUN_DATABASE_TESTS === 'true' ? describe : describe.skip;
 
 describeWithDatabase('Todo PostgreSQL event store and outbox', () => {
-  const jwtSecret = 'integration-test-secret';
   const userId = '4f28e489-3b4f-48f7-a5f8-457246e229a5';
   const pool = new Pool({
     host: process.env.PG_HOST ?? 'localhost',
@@ -28,10 +24,7 @@ describeWithDatabase('Todo PostgreSQL event store and outbox', () => {
   const relay = {
     requestFlush: jest.fn(),
   } as unknown as TodoOutboxRelay;
-  const config = {
-    get: jest.fn(() => jwtSecret),
-  } as unknown as ConfigService<AuthEnvironmentVariables, true>;
-  const repository = new TodoWriteRepository(pool, relay, config);
+  const repository = new TodoWriteRepository(pool, relay);
 
   beforeAll(async () => {
     await pool.query(TODO_POSTGRES_SCHEMA);
@@ -39,11 +32,10 @@ describeWithDatabase('Todo PostgreSQL event store and outbox', () => {
 
   beforeEach(async () => {
     await pool.query('TRUNCATE todo_outbox, todo_projection, todo_events');
-    const jwt = jsonwebtoken.sign({}, jwtSecret, { subject: userId });
     jest.mocked(asyncLocalStorage.getStore).mockReturnValue({
       get: (key: string) => {
         if (key === 'correlationId') return 'integration-test-correlation';
-        if (key === 'context') return { userId, jwt };
+        if (key === 'context') return { userId };
         return undefined;
       },
     } as ReturnType<typeof asyncLocalStorage.getStore>);

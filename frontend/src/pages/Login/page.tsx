@@ -1,40 +1,28 @@
-import { type JSX } from 'react';
-import { Heading, Stack, Text } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
-import { EmailPassForm } from '../../components/EmailPassForm';
-import { type Email, type Password } from '../../models/Auth';
+import { Button, Heading, Stack, Text } from '@chakra-ui/react';
+import type { JSX } from 'react';
+import { Link as RouterLink } from 'react-router';
 
-interface LogInPageProps {
-  email: Email;
-  password: Password;
-  updateEmail: (email: string) => void;
-  updatePassword: (password: string) => void;
-  submit: () => void;
+type LoginPageProps = {
+  login: () => void;
   isProcessing: boolean;
-}
+};
 
-function LoginPage(props: LogInPageProps): JSX.Element {
-  const { email, isProcessing, password, submit, updateEmail, updatePassword } = props;
-
+function LoginPage({ login, isProcessing }: LoginPageProps): JSX.Element {
   return (
-    <>
-      <Heading>Login</Heading>
-      <EmailPassForm
-        email={email}
-        password={password}
-        view="Login"
-        submit={submit}
-        isProcessing={isProcessing}
-        updateEmail={updateEmail}
-        updatePassword={updatePassword}
-      />
-      <Stack>
-        <Text>{'Do not have an account? '}</Text>
-        <RouterLink to="/register">
-          SIGN UP
-        </RouterLink>
-      </Stack>
-    </>
+    <Stack gap="4">
+      <Heading>Sign in</Heading>
+      <Text>
+        Continue to the Bitloops identity service. This application never receives your
+        password.
+      </Text>
+      <Button onClick={login} loading={isProcessing}>
+        Continue with Keycloak
+      </Button>
+      <Text>
+        Need an account? <RouterLink to="/register">Register</RouterLink>
+      </Text>
+    </Stack>
   );
 }
+
 export default LoginPage;
