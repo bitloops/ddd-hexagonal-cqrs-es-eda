@@ -2,9 +2,13 @@ packages:
   - backend
   - frontend
   - frontend/tests
+overrides:
+  '@fastify/static': ^10.1.2
+  find-my-way: ^9.7.0
+  'js-yaml@>=5': ^5.2.2
 allowBuilds:
   '@scarf/scarf': false
   bcrypt: true
   esbuild: true
-  grpc-tools: false
   protobufjs: false
+  unrs-resolver: false

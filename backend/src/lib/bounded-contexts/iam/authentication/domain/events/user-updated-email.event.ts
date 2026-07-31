@@ -5,7 +5,6 @@ export type UserUpdatedEmailDomainEventProps = Domain.TDomainEventProps<{
 }>;
 
 export class UserUpdatedEmailDomainEvent extends Domain.DomainEvent<UserUpdatedEmailDomainEventProps> {
-  public metadata: Domain.TDomainEventMetadata;
   public aggregateId: string;
 
   constructor(payload: UserUpdatedEmailDomainEventProps) {

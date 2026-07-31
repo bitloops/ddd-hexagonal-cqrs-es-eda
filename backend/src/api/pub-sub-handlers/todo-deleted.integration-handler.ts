@@ -1,6 +1,5 @@
 import { Application, ok, Either } from '@bitloops/bl-boilerplate-core';
 import { TodoDeletedIntegrationEvent } from '@src/lib/bounded-contexts/todo/todo/contracts/integration-events/todo-deleted.integration-event';
-import { todo } from '../../proto/generated/todo';
 import { Subscriptions, Subscribers } from '../todo.sse.controller';
 
 export class TodoDeletedPubSubIntegrationEventHandler
@@ -42,11 +41,11 @@ export class TodoDeletedPubSubIntegrationEventHandler
     console.log('found subscribers', subscriptionsSubscribers);
     if (subscriptionsSubscribers) {
       for (const subscriber of subscriptionsSubscribers) {
-        const call = this.subscribers[subscriber]?.call;
-        console.log('subscriber call', !!call);
-        if (call) {
+        const send = this.subscribers[subscriber]?.send;
+        console.log('subscriber send', !!send);
+        if (send) {
           // console.log({ todoObject });
-          call('todo.deleted', {
+          send('todo.deleted', {
             id: payload.todoId,
             userId: userId,
           }, userId);

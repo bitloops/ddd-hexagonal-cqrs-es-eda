@@ -1,90 +1,106 @@
-// import { Model } from 'mongoose';
+import {
+  Application,
+  Either,
+  asyncLocalStorage,
+  ok,
+} from '@bitloops/bl-boilerplate-core';
 import { Inject, Injectable } from '@nestjs/common';
-import { Collection, MongoClient } from 'mongodb';
-import * as jwtwebtoken from 'jsonwebtoken';
-// import { InjectModel } from '@nestjs/mongoose';
-// import { Todo, TodoDocument } from './schema/todo.schema';
-import { TodoReadRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-read.repo-port';
+import { ConfigService } from '@nestjs/config';
+import * as jsonwebtoken from 'jsonwebtoken';
+import { Pool, QueryResultRow } from 'pg';
+
+import { constants } from '@lib/infra/postgres';
+import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
 import {
   TodoReadModel,
   TTodoReadModelSnapshot,
 } from '@src/lib/bounded-contexts/todo/todo/domain/todo.read-model';
-import { ConfigService } from '@nestjs/config';
-import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
-import {
-  Application,
-  asyncLocalStorage,
-  Either,
-  ok,
-} from '@bitloops/bl-boilerplate-core';
+import { TodoReadRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-read.repo-port';
 
-const MONGO_DB_DATABASE = process.env.MONGO_DB_DATABASE || 'todo';
-const MONGO_DB_TODO_COLLECTION =
-  process.env.MONGO_DB_TODO_COLLECTION || 'todos';
+type TodoProjectionRow = QueryResultRow & {
+  id: string;
+  userId: string;
+  title: string;
+  completed: boolean;
+};
 
 @Injectable()
 export class TodoReadRepository implements TodoReadRepoPort {
-  private collectionName = MONGO_DB_TODO_COLLECTION;
-  private dbName = MONGO_DB_DATABASE;
-  private collection: Collection;
-  private JWT_SECRET: string;
+  private readonly jwtSecret: string;
 
   constructor(
-    @Inject('MONGO_DB_CONNECTION') private client: MongoClient,
-    private configService: ConfigService<AuthEnvironmentVariables, true>,
+    @Inject(constants.pg_connection) private readonly pool: Pool,
+    configService: ConfigService<AuthEnvironmentVariables, true>,
   ) {
-    this.collection = this.client
-      .db(this.dbName)
-      .collection(this.collectionName);
-    this.JWT_SECRET = this.configService.get('jwtSecret', { infer: true });
+    this.jwtSecret = configService.get('jwtSecret', { infer: true });
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
   async getById(
     id: string,
   ): Promise<Either<TodoReadModel | null, Application.Repo.Errors.Unexpected>> {
-    throw new Error('Method not implemented.');
+    const userId = this.authenticatedUserId();
+    const result = await this.pool.query<TodoProjectionRow>(
+      `SELECT
+         id::text,
+         user_id::text AS "userId",
+         title,
+         completed
+       FROM todo_projection
+       WHERE id = $1 AND user_id = $2`,
+      [id, userId],
+    );
+    const row = result.rows[0];
+    return ok(row ? TodoReadModel.fromPrimitives(row) : null);
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
   async getAll(params?: {
     limit?: number;
     offset?: number;
-  }): Promise<
-    Either<TTodoReadModelSnapshot[], Application.Repo.Errors.Unexpected>
-  > {
-    const ctx = asyncLocalStorage.getStore()?.get('context');
-    const { jwt } = ctx;
-    let jwtPayload: null | any = null;
-    try {
-      jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
-    } catch (err) {
-      throw new Error('Invalid JWT!');
-    }
-    const userId = jwtPayload.sub;
-    if (!userId) {
-      throw new Error('Invalid userId');
-    }
-    let cursor = this.collection.find({ userId: { id: userId } });
-
-    if (params?.offset !== undefined) {
-      cursor = cursor.skip(+params.offset);
-    }
-    if (params?.limit !== undefined) {
-      cursor = cursor.limit(+params.limit);
-    }
-
-    const todos = await cursor.toArray();
-    return ok(
-      todos.map((todo) => {
-        const res = {
-          id: todo._id.toString(),
-          userId: todo.userId.id,
-          title: todo.title.title,
-          completed: todo.completed,
-        };
-        return res;
-      }),
+  }): Promise<Either<TTodoReadModelSnapshot[], Application.Repo.Errors.Unexpected>> {
+    const userId = this.authenticatedUserId();
+    const limit = this.normaliseInteger(params?.limit, 50, 1, 100);
+    const offset = this.normaliseInteger(params?.offset, 0, 0, Number.MAX_SAFE_INTEGER);
+    const result = await this.pool.query<TodoProjectionRow>(
+      `SELECT
+         id::text,
+         user_id::text AS "userId",
+         title,
+         completed
+       FROM todo_projection
+       WHERE user_id = $1
+       ORDER BY updated_at DESC, id
+       LIMIT $2 OFFSET $3`,
+      [userId, limit, offset],
     );
+
+    return ok(result.rows);
+  }
+
+  private authenticatedUserId(): string {
+    const context = asyncLocalStorage.getStore()?.get('context') as
+      | { jwt?: unknown }
+      | undefined;
+    if (typeof context?.jwt !== 'string') {
+      throw new Error('Missing authenticated request context');
+    }
+
+    const payload = jsonwebtoken.verify(context.jwt, this.jwtSecret);
+    if (typeof payload !== 'object' || typeof payload.sub !== 'string') {
+      throw new Error('JWT subject is missing');
+    }
+    return payload.sub;
+  }
+
+  private normaliseInteger(
+    value: number | undefined,
+    fallback: number,
+    minimum: number,
+    maximum: number,
+  ): number {
+    const parsed = Number(value);
+    if (!Number.isInteger(parsed)) return fallback;
+    return Math.min(maximum, Math.max(minimum, parsed));
   }
 }

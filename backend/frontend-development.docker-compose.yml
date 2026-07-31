@@ -1,26 +1,22 @@
-version: '3.8'
-
 services:
   todo-backend:
     build:
-      context: .
+      context: ..
+      dockerfile: backend/Dockerfile
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-local-development-only-secret-change-me}
+      JWT_LIFETIME_SECONDS: 3600
+      HTTP_IP: 0.0.0.0
+      PG_HOST: bl-postgres
+      PG_DATABASE: bitloops
+      NATS_HOST: bl-nats
     ports:
       - '8080:8080'
-    networks:
-      - bitloops
-
-  bl-mongo:
-    image: mongo:5
-    container_name: mongo1
-    command: ['--replSet', 'my-replica-set', '--bind_ip_all', '--port', '30001']
-    volumes:
-      - bl-mongo_data:/data/db
-    ports:
-      - 30001:30001
-    healthcheck:
-      test: test $$(echo "rs.initiate({_id:'my-replica-set',members:[{_id:0,host:\"mongo1:30001\"}]}).ok || rs.status().ok" | mongo --port 30001 --quiet) -eq 1
-      interval: 10s
-      start_period: 30s
+    depends_on:
+      bl-postgres:
+        condition: service_healthy
+      bl-nats:
+        condition: service_started
     networks:
       - bitloops
 
@@ -41,15 +37,20 @@ services:
     command: ['-js', '-m', '8223']
 
   bl-postgres:
-    image: postgres:latest
+    image: postgres:18-alpine
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: iam
+      POSTGRES_DB: bitloops
       POSTGRES_USER: user
     ports:
       - '5432:5432'
     volumes:
-      - bl-postgres_data:/usr/share/docker/postgresql
+      - bl-postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U user -d bitloops']
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - bitloops
 
@@ -58,7 +59,7 @@ services:
     ports:
       - '7777:7777'
     command:
-      ['-DV', '-gatewayz', '-connz', '-varz', '-jsz=all', 'http://nats:8223']
+      ['-DV', '-gatewayz', '-connz', '-varz', '-jsz=all', 'http://bl-nats:8223']
     networks:
       - bitloops
 
@@ -134,14 +135,6 @@ services:
     labels:
       org.label-schema.group: 'monitoring'
 
-  bl-envoy:
-    build:
-      context: ../envoy
-    ports:
-      - '8080:8080'
-    networks:
-      - bitloops
-
   bl-telemetry-consumer:
     container_name: bl-telemetry-consumer
     build:
@@ -151,7 +144,6 @@ services:
       - bitloops
 
 volumes:
-  bl-mongo_data:
   bl-nats_data:
   bl-postgres_data:
   bl-prometheus_data:

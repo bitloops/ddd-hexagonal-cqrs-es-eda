@@ -9,5 +9,5 @@ spec:
   ports:
     - protocol: TCP
       port: 4173
-      targetPort: 4173
+      targetPort: 8080
   type: LoadBalancer

@@ -4,6 +4,10 @@
 
 Complete working example of using Domain Driven Design (DDD), Hexagonal Architecture, CQRS, Event Sourcing (ES), Event Driven Architecture (EDA), Behaviour Driven Development (BDD) using TypeScript and NestJS.
 
+Current release: **1.0.0**. See the [changelog](./CHANGELOG.md), the
+[backend architecture](./docs/backend-architecture.md), and the proposed
+[Keycloak IAM roadmap](./docs/keycloak-iam-roadmap.md).
+
 ![ddd-hexagonal-cqrs-es-eda](https://storage.googleapis.com/bitloops-github-assets/ddd-hexagonal-cqrs-es-eda-2.gif)
 
 # Table of Contents
@@ -76,24 +80,33 @@ When a todo is completed, if this is the first completed todo, an email should b
 - **Authentication**
 - **Authorization** (Even at the repository level)
 - **Automatic JWT renewal**
-- **gRPC query caching** (deprecated)
 - **Automatic client code generation using OpenAPI**
+- **Event-sourced Todo aggregate with a transactional outbox**
 
 ## Technologies Used - Overview
 
 Here are listed some of the specific technologies used for the implementation of the project:
 
-- **Authentication**: [JSON Web Tokens - JWT](https://jwt.io/)
-- **Databases - Persistence**: [MongoDB](https://www.mongodb.com/), [PostgeSQL](https://www.postgresql.org/)
+- **Authentication**: Application-issued JWTs in 1.0.0, with a documented migration path to [Keycloak](./docs/keycloak-iam-roadmap.md)
+- **Database - Persistence**: [PostgreSQL](https://www.postgresql.org/)
 - **Testing**: [JEST](https://jestjs.io/)
-- **External Communication Protocols**: [REST](https://en.wikipedia.org/wiki/Representational_state_transfer), [gRPC](https://grpc.io/) (deprecated)
+- **External Communication Protocols**: [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) and server-sent events
 - **Frameworks**: [ΝestJS](https://nestjs.com/)
 - **PubSub technology**: [NATS](https://nats.io/)
 - **Message Streaming Technology**: [JetStream](https://docs.nats.io/nats-concepts/jetstream) _by NATS_
 - **Container Technology**: [Docker](https://www.docker.com/)
 - **Tracing-Observability**: [Jaeger](https://www.jaegertracing.io/), [Grafana](https://grafana.com/)
 - **Metrics**: [Prometheus](https://prometheus.io/)
-- **API Gateway - Proxy**: [Envoy](https://www.envoyproxy.io/)
+
+### Persistence and event delivery
+
+PostgreSQL is the sole application database. IAM and Marketing use relational
+tables, while the Todo aggregate is rehydrated from an append-only event stream.
+Each Todo command writes its events, query projection, and outbox messages in
+one PostgreSQL transaction. The outbox relay then publishes domain events to
+NATS JetStream with retry and at-least-once delivery semantics. See the
+[backend architecture](./docs/backend-architecture.md) for the transaction,
+concurrency, and consumer guarantees.
 
 # III. Quick start - running the ToDo App
 
@@ -179,6 +192,13 @@ The problem in this case is that the email information belongs to the IAM bounde
 
 In this project the decision was to keep a local repository in the Marketing bounded context, of the users and their emails, updated by listening to integration events from the IAM bounded contexts (**user registered** and **user email changed**).
 
+Authentication is currently implemented inside the application for continuity
+with the original example. It is now treated as a transitional adapter rather
+than the intended long-term identity system. The next IAM tranche will move
+credential and session ownership to Keycloak while retaining the IAM bounded
+context and translating OIDC claims through an anti-corruption layer. See the
+[Keycloak IAM roadmap](./docs/keycloak-iam-roadmap.md).
+
 # V. Running in development mode
 
 ## A. Project Setup
@@ -223,7 +243,7 @@ cd ddd-hexagonal-cqrs-es-eda
   The frontend is then available at `http://localhost:4173` and the backend at `http://localhost:8080`.
 - For local backend development, start only its infrastructure dependencies:
   ```bash
-  docker compose -p bitloops-todo-app up -d bl-mongo bl-nats bl-postgres
+  docker compose -p bitloops-todo-app up -d bl-nats bl-postgres
   ```
 - For local backend development, copy `backend/.template-env` to `backend/.development.env` and replace the development-only values.
 - Run:
@@ -245,7 +265,8 @@ Those tools could be helpful in the development process as well.
 
 You can exercise the REST API with a client such as [Postman](https://www.postman.com/product/what-is-postman/) or with cURL.
 
-To just test the app is app and running you can just invoke `http://localhost:8080` URI with Post request as shown in the picture below:
+The generated OpenAPI document is available at `http://localhost:8080/api-json`
+and the interactive Swagger UI at `http://localhost:8080/api`.
 
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="900" src="https://storage.googleapis.com/bitloops-github-assets/app-testing-confirmation.png" alt="App Running Confirmation" align="center">
@@ -259,25 +280,39 @@ The server should respond with the message shown in the picture
 
 A faster way to test the app works is to use **[cURL](https://curl.se/)**. In most cases cURL is already installed in your operating system. If not you can download **cURL** [here](https://curl.se/download.html).
 
-To just test the app is app and running you can just run the following command on terminal:
+To confirm that the HTTP application is running, request the OpenAPI document:
 
-`curl http://localhost:8080/`
+```bash
+curl --fail http://localhost:8080/api-json
+```
 
-The server should respond (in the terminal) with:
-`{"statusCode":404,"message":"Cannot GET /auth/register","error":"Not Found"}`
+The server should return an OpenAPI JSON document with HTTP 200.
 
 ### Running the application tests
 
-In order to run the tests of the application run the following on the terminal:
+Run the complete workspace validation from the repository root:
 
-`pnpm --dir backend test`.
+```bash
+pnpm build
+pnpm lint
+pnpm test
+```
 
-To run the complete frontend quality gate, use `pnpm check:frontend` from the repository root.
+To exercise the transactional event store against PostgreSQL, create a
+`bitloops_test` database and run:
+
+```bash
+PG_DATABASE=bitloops_test PG_USER=user PG_PASSWORD=postgres \
+  pnpm --dir backend test:integration
+```
+
+To run only the complete frontend quality gate, use `pnpm check:frontend`.
 
 ## C. Understanding the project structure
 
-The main project structure is located at the `/src` folder.
-The starting point for the whole application is the `src/main.ts` file.
+The backend project structure is located under `backend/src` and starts at
+`backend/src/main.ts`. The frontend lives under `frontend/src`, while
+cross-cutting architecture notes live under `docs`.
 
 <p align="center" style="margin-bottom: 0px !important;">
   <img width="500" src="https://storage.googleapis.com/bitloops-github-assets/project-structure.png" alt="Project Structure" align="center">
@@ -293,11 +328,10 @@ The main folders are the following:
 - bounded-contexts
 - config
 - lib
-- proto
 
 ### API Folder
 
-The api folder contains the **presentation layer** of the application (driving adapters of the infrastructure layer of the [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture)), containing the **authentication controllers** (REST) as well as the **todo controllers** (gRPC).
+The api folder contains the **presentation layer** of the application (driving adapters of the infrastructure layer of the [Hexagonal Architecture](https://bitloops.com/docs/bitloops-language/learning/software-architecture/hexagonal-architecture)), containing the REST authentication and Todo controllers together with the Todo SSE endpoint.
 
 It also contains the [Data Transfer Objects (DTOs)](https://en.wikipedia.org/wiki/Data_transfer_object) for those controllers.
 
@@ -401,12 +435,6 @@ Testing the business logic via the **application layer**, and not from the **dom
 
 The tests use **mock repositories** and **mock services** as adapters (concretions) of the ports to **emulate actual repositories and services**. This helps to **test the business logic fast**, **without using actual databases and external services** to test the business logic.
 
-### proto folder
-
-This folder contains the proto ([protobuf](https://protobuf.dev/) - protocol buffers) files which are mandatory for defining the [gRPC](https://grpc.io/) interface necessary to setup the **todo** api controllers located at the `src/api` folder.
-
-Communication via **Protocol Buffers** have many advantages than communicating via JSON since the message sent via the wire is in binary form thus slimmer and they also communicate the data type in a **programming language agnostic way**. To read more You can read more about them [here](https://en.wikipedia.org/wiki/Protocol_Buffers).
-
 # VI. Conclusion
 
 Our team is privileged to have had the opportunity to work with such powerful software design patterns and cutting-edge technologies. We've learned a lot over the past few months, and we're excited to share our knowledge with other developers who are passionate about building great software.
@@ -470,7 +498,6 @@ Below is a summary of all the software architecture and design patterns used in 
       - [Contracts folder](#contracts-folder)
       - [Ports folder](#ports-folder)
       - [Tests folder](#tests-folder)
-    - [proto folder](#proto-folder)
 - [VI. Conclusion](#vi-conclusion)
   - [❓ Questions](#-questions)
 - [📚 Theoretical Review](#-theoretical-review)
@@ -534,7 +561,7 @@ The layers communicate with each other via abstractions (or contracts). Those co
 
 The standard layers of a classical layered architecture are:
 
-- **Presentation layer** (also known as UI layer, view layer) - This layer is responsible for the user interaction with the system. It is responsible for the presentation of the data (e.g. JSON, HTML) and the way of communication with the external world (e.g. REST or gRPC or GraphQL).
+- **Presentation layer** (also known as UI layer, view layer) - This layer is responsible for the user interaction with the system. It is responsible for the presentation of the data (e.g. JSON, HTML) and the way of communication with the external world (e.g. REST, SSE or GraphQL).
 - **Application layer** (also known as service layer, use case layer) - Exposes the business functionality to the upper layer.
 - **Business Layer** (also known as business logic layer (BLL), domain logic layer) - implements the core functionality of the system, containing the business logic.
 - **Data access layer** (also known as persistence layer) - This layer contains the implementation for the communication between the application and the database. Moreover it can implement the communication between the application and some external service.
@@ -559,7 +586,7 @@ These layers are arranged in a hierarchical order, and each layer provides servi
 
 #### Separation of concerns benefits example
 
-Returning back to why to use layered architecture, a simple example could be that if we want to add a gRPC endpoint to the presentation layer invoking the same functionality (service or use case) utilised already by a REST endpoint, we can just create a gRPC endpoint in the presentation layers and make it invoke the same service (or use case) from the application layer.
+Returning to why layered architecture matters, a simple example is adding another presentation adapter that invokes functionality already used by a REST endpoint: the new adapter can call the same application use case without changing the domain layer.
 
 The key things to consider regarding layered architecture:
 

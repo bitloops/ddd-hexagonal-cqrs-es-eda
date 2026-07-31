@@ -1,6 +1,5 @@
 import { Application, ok, Either } from '@bitloops/bl-boilerplate-core';
 import { TodoCompletedIntegrationEvent } from '@src/lib/bounded-contexts/todo/todo/contracts/integration-events/todo-completed.integration-event';
-import { todo } from '../../proto/generated/todo';
 import { Subscriptions, Subscribers } from '../todo.sse.controller';
 
 export class TodoCompletedPubSubIntegrationEventHandler
@@ -37,9 +36,9 @@ export class TodoCompletedPubSubIntegrationEventHandler
     const subscriptionsSubscribers = subscription?.subscribers;
     if (subscriptionsSubscribers) {
       for (const subscriber of subscriptionsSubscribers) {
-        const call = this.subscribers[subscriber]?.call;
-        if (call) {
-          call('todo.completed', {
+        const send = this.subscribers[subscriber]?.send;
+        if (send) {
+          send('todo.completed', {
             id: payload.todoId,
             userId: userId,
           }, userId);

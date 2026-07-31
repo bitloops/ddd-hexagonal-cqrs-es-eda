@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { AsyncLocalStorageService } from './async-local-storage.service';
 import { MESSAGE_BUS_TOKEN } from './constants';
 import { Infra } from '@bitloops/bl-boilerplate-core';
@@ -6,6 +6,7 @@ import { isAsyncFunction } from './utils';
 import { TelemetryEvent, TraceableDecoratorInput } from './definitons';
 
 const TRACING_TOPIC = 'trace_events';
+const logger = new Logger('Traceable');
 
 /**
  *  the traceable decorator accesses the AsyncLocalStorageService
@@ -59,7 +60,11 @@ export function Traceable(input: TraceableDecoratorInput) {
         const messageBus = this[
           messageBusServiceKey as keyof PropertyDescriptor
         ] as Infra.MessageBus.ISystemMessageBus;
-        await messageBus.publish(TRACING_TOPIC, traceEvent);
+        try {
+          await messageBus.publish(TRACING_TOPIC, traceEvent);
+        } catch (error) {
+          logger.warn('Unable to publish tracing telemetry', error);
+        }
         console.log(`Finished executing ... [${this.constructor.name}][${propertyKey}].`);
       }
     };

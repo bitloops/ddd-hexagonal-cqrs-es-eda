@@ -2,103 +2,91 @@ import {
   Application,
   Domain,
   Either,
-  Infra,
   asyncLocalStorage,
   ok,
 } from '@bitloops/bl-boilerplate-core';
-import { Injectable, Inject } from '@nestjs/common';
-import { Collection, MongoClient } from 'mongodb';
-import * as jwtwebtoken from 'jsonwebtoken';
-import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
-import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
-import { StreamingDomainEventBusToken } from '@src/lib/bounded-contexts/todo/todo/constants';
+import * as jsonwebtoken from 'jsonwebtoken';
+import { Pool, PoolClient, QueryResultRow } from 'pg';
 
-const MONGO_DB_DATABASE = process.env.MONGO_DB_DATABASE || 'todo';
-const MONGO_DB_TODO_COLLECTION =
-  process.env.MONGO_DB_TODO_COLLECTION || 'todos';
+import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
+import { constants } from '@lib/infra/postgres';
+import {
+  TodoEntity,
+  TodoEventPayload,
+  TodoEventType,
+  TodoHistoryEvent,
+} from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
+import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
+import { serialiseTodoEvent, StoredTodoEvent } from './todo-event-store';
+import { TodoOutboxRelay } from './todo-outbox.relay';
+
+type TodoEventRow = QueryResultRow & {
+  eventType: TodoEventType;
+  payload: TodoEventPayload;
+  version: number;
+};
+
+type PersistOperation = 'create' | 'update' | 'delete';
 
 @Injectable()
 export class TodoWriteRepository implements TodoWriteRepoPort {
-  private collectionName = MONGO_DB_TODO_COLLECTION;
-  private dbName = MONGO_DB_DATABASE;
-  private collection: Collection;
-  private JWT_SECRET: string;
+  private readonly jwtSecret: string;
 
   constructor(
-    @Inject('MONGO_DB_CONNECTION') private client: MongoClient,
-    @Inject(StreamingDomainEventBusToken)
-    private readonly domainEventBus: Infra.EventBus.IEventBus,
-    private configService: ConfigService<AuthEnvironmentVariables, true>,
+    @Inject(constants.pg_connection) private readonly pool: Pool,
+    private readonly outboxRelay: TodoOutboxRelay,
+    configService: ConfigService<AuthEnvironmentVariables, true>,
   ) {
-    this.collection = this.client
-      .db(this.dbName)
-      .collection(this.collectionName);
-
-    this.JWT_SECRET = this.configService.get('jwtSecret', { infer: true });
+    this.jwtSecret = configService.get('jwtSecret', { infer: true });
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
   async getById(
     id: Domain.UUIDv4,
   ): Promise<Either<TodoEntity | null, Application.Repo.Errors.Unexpected>> {
-    const ctx = asyncLocalStorage.getStore()?.get('context');
-    const { jwt } = ctx;
-    let jwtPayload: null | any = null;
-    try {
-      jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
-    } catch (err) {
-      throw new Error('Invalid JWT!');
-    }
-    const result = await this.collection.findOne({
-      _id: id.toString() as any,
-    });
-
-    if (!result) {
-      return ok(null);
-    }
-
-    if (result.userId.id !== jwtPayload.sub) {
-      throw new Error('Invalid userId');
-    }
-
-    const { _id, ...todo } = result as any;
-    return ok(
-      TodoEntity.fromPrimitives({
-        ...todo,
-        id: _id.toString(),
-      }),
+    const authenticatedUserId = this.authenticatedUserId();
+    const result = await this.pool.query<TodoEventRow>(
+      `SELECT
+         event_type AS "eventType",
+         payload,
+         version
+       FROM todo_events
+       WHERE aggregate_id = $1
+       ORDER BY version`,
+      [id.toString()],
     );
+
+    if (result.rows.length === 0) return ok(null);
+
+    const history: TodoHistoryEvent[] = result.rows.map((row) => ({
+      eventType: row.eventType,
+      payload: row.payload,
+      version: row.version,
+    }));
+    const todo = TodoEntity.fromHistory(history);
+
+    if (todo.userId.id.toString() !== authenticatedUserId) {
+      throw new Error('Todo does not belong to the authenticated user');
+    }
+
+    return ok(todo.isDeleted ? null : todo);
+  }
+
+  @Application.Repo.Decorators.ReturnUnexpectedError()
+  async save(
+    todo: TodoEntity,
+  ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
+    await this.persist(todo, 'create');
+    return ok();
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
   async update(
     todo: TodoEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
-    const ctx = asyncLocalStorage.getStore()?.get('context');
-    const { jwt } = ctx;
-    let jwtPayload: null | any = null;
-    try {
-      jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
-    } catch (err) {
-      throw new Error('Invalid JWT!');
-    }
-    const deletedTodo = todo.toPrimitives();
-    if (deletedTodo.userId.id !== jwtPayload.sub) {
-      throw new Error('Unauthorized userId');
-    }
-    const { id, userId, ...todoInfo } = todo.toPrimitives();
-    await this.collection.updateOne(
-      {
-        _id: id as any,
-        userId: userId,
-      },
-      {
-        $set: todoInfo,
-      },
-    );
-    this.domainEventBus.publish(todo.domainEvents);
+    await this.persist(todo, 'update');
     return ok();
   }
 
@@ -106,50 +94,182 @@ export class TodoWriteRepository implements TodoWriteRepoPort {
   async delete(
     todo: TodoEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
-    const ctx = asyncLocalStorage.getStore()?.get('context');
-    const { jwt } = ctx;
-    let jwtPayload: null | any = null;
-    try {
-      jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
-    } catch (err) {
-      throw new Error('Invalid JWT!');
-    }
-    const deletedTodo = todo.toPrimitives();
-    if (deletedTodo.userId.id !== jwtPayload.sub) {
-      throw new Error('Unauthorized userId');
-    }
-    const { id, userId } = deletedTodo;
-    await this.collection.deleteOne({
-      _id: id as any,
-      userId,
-    });
-    this.domainEventBus.publish(todo.domainEvents);
+    await this.persist(todo, 'delete');
     return ok();
   }
 
-  @Application.Repo.Decorators.ReturnUnexpectedError()
-  async save(
-    todo: TodoEntity,
-  ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
-    const ctx = asyncLocalStorage.getStore()?.get('context');
-    const { jwt } = ctx;
-    let jwtPayload: null | any = null;
+  private async persist(todo: TodoEntity, operation: PersistOperation): Promise<void> {
+    const authenticatedUserId = this.authenticatedUserId();
+    const snapshot = todo.toPrimitives();
+    if (snapshot.userId.id !== authenticatedUserId) {
+      throw new Error('Todo does not belong to the authenticated user');
+    }
+
+    const pendingEvents = todo.domainEvents as Domain.DomainEvent<TodoEventPayload>[];
+    if (pendingEvents.length === 0) return;
+
+    this.attachRequestMetadata(pendingEvents);
+
+    const client = await this.pool.connect();
+    let committedVersion: number;
+
     try {
-      jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
-    } catch (err) {
-      throw new Error('Invalid JWT!');
+      await client.query('BEGIN');
+      const currentVersion = await this.currentVersion(client, todo.id.toString());
+      if (currentVersion !== todo.version) {
+        throw new Error(
+          `Concurrent Todo update detected for ${todo.id.toString()}: expected version ${todo.version}, found ${currentVersion}`,
+        );
+      }
+
+      const storedEvents = pendingEvents.map((event, index) =>
+        serialiseTodoEvent(event, currentVersion + index + 1),
+      );
+
+      for (const event of storedEvents) {
+        await this.appendEventAndOutbox(client, event);
+      }
+
+      committedVersion = storedEvents.at(-1)?.version ?? currentVersion;
+      await this.updateProjection(client, todo, operation, currentVersion, committedVersion);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
     }
-    const createdTodo = todo.toPrimitives();
-    if (createdTodo.userId.id !== jwtPayload.sub) {
-      throw new Error('Unauthorized userId');
+
+    todo.commit(committedVersion);
+    this.outboxRelay.requestFlush();
+  }
+
+  private async currentVersion(client: PoolClient, aggregateId: string): Promise<number> {
+    const result = await client.query<{ version: number } & QueryResultRow>(
+      `SELECT version
+       FROM todo_events
+       WHERE aggregate_id = $1
+       ORDER BY version DESC
+       LIMIT 1
+       FOR UPDATE`,
+      [aggregateId],
+    );
+    return result.rows[0]?.version ?? 0;
+  }
+
+  private async appendEventAndOutbox(
+    client: PoolClient,
+    event: StoredTodoEvent,
+  ): Promise<void> {
+    await client.query(
+      `INSERT INTO todo_events (
+         event_id, aggregate_id, version, event_type, payload, metadata
+       ) VALUES ($1, $2, $3, $4, $5, $6)`,
+      [
+        event.eventId,
+        event.aggregateId,
+        event.version,
+        event.eventType,
+        event.payload,
+        event.metadata,
+      ],
+    );
+    await client.query(
+      `INSERT INTO todo_outbox (
+         id, aggregate_id, event_type, payload, metadata
+       ) VALUES ($1, $2, $3, $4, $5)`,
+      [
+        event.eventId,
+        event.aggregateId,
+        event.eventType,
+        event.payload,
+        event.metadata,
+      ],
+    );
+  }
+
+  private async updateProjection(
+    client: PoolClient,
+    todo: TodoEntity,
+    operation: PersistOperation,
+    expectedVersion: number,
+    committedVersion: number,
+  ): Promise<void> {
+    const snapshot = todo.toPrimitives();
+
+    if (operation === 'create') {
+      await client.query(
+        `INSERT INTO todo_projection (
+           id, user_id, title, completed, version
+         ) VALUES ($1, $2, $3, $4, $5)`,
+        [
+          snapshot.id,
+          snapshot.userId.id,
+          snapshot.title.title,
+          snapshot.completed,
+          committedVersion,
+        ],
+      );
+      return;
     }
-    const { id, ...todoInfo } = createdTodo;
-    await this.collection.insertOne({
-      _id: id as any,
-      id: id,
-      ...todoInfo,
-    });
-    this.domainEventBus.publish(todo.domainEvents);
-    return ok();
+
+    if (operation === 'delete') {
+      const result = await client.query(
+        `DELETE FROM todo_projection
+         WHERE id = $1 AND user_id = $2 AND version = $3`,
+        [snapshot.id, snapshot.userId.id, expectedVersion],
+      );
+      this.assertProjectionChanged(result.rowCount, todo.id.toString());
+      return;
+    }
+
+    const result = await client.query(
+      `UPDATE todo_projection
+       SET title = $3,
+           completed = $4,
+           version = $5,
+           updated_at = NOW()
+       WHERE id = $1 AND user_id = $2 AND version = $6`,
+      [
+        snapshot.id,
+        snapshot.userId.id,
+        snapshot.title.title,
+        snapshot.completed,
+        committedVersion,
+        expectedVersion,
+      ],
+    );
+    this.assertProjectionChanged(result.rowCount, todo.id.toString());
+  }
+
+  private assertProjectionChanged(rowCount: number | null, aggregateId: string): void {
+    if (rowCount !== 1) {
+      throw new Error(`Todo projection version conflict for ${aggregateId}`);
+    }
+  }
+
+  private authenticatedUserId(): string {
+    const context = asyncLocalStorage.getStore()?.get('context') as
+      | { jwt?: unknown }
+      | undefined;
+    if (typeof context?.jwt !== 'string') {
+      throw new Error('Missing authenticated request context');
+    }
+
+    const payload = jsonwebtoken.verify(context.jwt, this.jwtSecret);
+    if (typeof payload !== 'object' || typeof payload.sub !== 'string') {
+      throw new Error('JWT subject is missing');
+    }
+    return payload.sub;
+  }
+
+  private attachRequestMetadata(events: Domain.DomainEvent<TodoEventPayload>[]): void {
+    const store = asyncLocalStorage.getStore();
+    const correlationId = store?.get('correlationId');
+
+    for (const event of events) {
+      if (typeof correlationId === 'string') event.metadata.correlationId = correlationId;
+      event.metadata.context = {};
+    }
   }
 }

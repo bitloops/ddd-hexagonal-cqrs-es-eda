@@ -32,12 +32,8 @@ export class NatsStreamingMessageBus implements Infra.MessageBus.ISystemMessageB
 
     const messageEncoded = jsonCodec.encode(message);
 
-    try {
-      await this.js.publish(topic, messageEncoded, options);
-    } catch (err) {
-      // NatsError: 503
-      this.logger.error('Error publishing message to topic: ' + topic, err);
-    }
+    await this.jetStreamProvider.createStreamIfNotExists(topic, topic);
+    await this.js.publish(topic, messageEncoded, options);
   }
 
   async subscribe(subject: string, handler: Infra.MessageBus.SubscriberHandler<any>) {
@@ -50,6 +46,7 @@ export class NatsStreamingMessageBus implements Infra.MessageBus.ISystemMessageB
     opts.durable(durableName);
     opts.manualAck();
     opts.ackExplicit();
+    opts.maxDeliver(5);
     opts.deliverTo(createInbox());
 
     try {

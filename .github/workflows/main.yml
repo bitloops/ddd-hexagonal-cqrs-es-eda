@@ -13,6 +13,20 @@ jobs:
   node:
     name: Node workspace
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: bitloops_test
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U user -d bitloops_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
       - uses: actions/checkout@v6
@@ -26,8 +40,16 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Build backend
         run: pnpm --dir backend run build
+      - name: Lint backend
+        run: pnpm --dir backend run lint
       - name: Test backend
         run: pnpm --dir backend run test
+      - name: Test backend PostgreSQL integration
+        run: pnpm --dir backend run test:integration
+        env:
+          PG_DATABASE: bitloops_test
+          PG_USER: user
+          PG_PASSWORD: postgres
       - name: Lint frontend
         run: pnpm --dir frontend run lint
       - name: Build frontend

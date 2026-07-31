@@ -18,7 +18,6 @@ export class TodoDeletedIntegrationEvent extends Infra.EventBus
   static versionMappers: Record<string, ToIntegrationDataMapper> = {
     v1: TodoDeletedIntegrationEvent.toIntegrationDataV1,
   };
-  public metadata: Infra.EventBus.TIntegrationEventMetadata;
 
   constructor(payload: IntegrationSchemas, version: string) {
     super('Todo', payload, version);

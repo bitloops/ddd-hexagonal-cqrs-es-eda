@@ -1,5 +1,6 @@
 {
   "name": "ddd-hexagonal-cqrs-es-eda",
+  "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@11.18.0",
   "engines": {
@@ -7,7 +8,7 @@
   },
   "scripts": {
     "build": "pnpm --dir backend run build && pnpm --dir frontend run build",
-    "lint": "pnpm --dir frontend run lint",
+    "lint": "pnpm --dir backend run lint && pnpm --dir frontend run lint",
     "test": "pnpm --dir backend run test && pnpm --dir frontend/tests run test",
     "check:frontend": "pnpm --dir frontend run lint && pnpm --dir frontend run build && pnpm --dir frontend/tests run test"
   }

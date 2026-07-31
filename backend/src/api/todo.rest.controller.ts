@@ -4,6 +4,7 @@ import {
   Get,
   Patch,
   HttpException,
+  HttpCode,
   HttpStatus,
   Inject,
   Injectable,
@@ -11,10 +12,8 @@ import {
   Delete,
   Param,
   UseGuards,
-  Request,
   Query,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
   ApiTags,
   ApiOperation,
@@ -25,7 +24,6 @@ import {
 import { AddTodoRequestDto } from './dto/add-todo.dto';
 import { ModifyTodoTitleRequestDto } from './dto/modify-todo-title.dto';
 import { BUSES_TOKENS } from '../lib/infra/nest-jetstream';
-import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
 import { JwtAuthGuard } from '../lib/infra/nest-auth-passport';
 import { Infra } from '@bitloops/bl-boilerplate-core';
 import { GetAllTodosResponseDto } from './dto/get-all-todos.dto';
@@ -43,29 +41,18 @@ import { ModifyTodoTitleCommand } from '@src/lib/bounded-contexts/todo/todo/comm
 @UseGuards(JwtAuthGuard)
 @Injectable()
 export class TodoController {
-  private readonly JWT_SECRET: string;
-
   constructor(
     @Inject(BUSES_TOKENS.PUBSUB_COMMAND_BUS)
     private readonly commandBus: Infra.CommandBus.IPubSubCommandBus,
     @Inject(BUSES_TOKENS.PUBSUB_QUERY_BYS)
     private readonly queryBus: Infra.QueryBus.IQueryBus,
-    private configService: ConfigService<AuthEnvironmentVariables, true>,
-  ) {
-    this.JWT_SECRET = this.configService.get('jwtSecret', {
-      infer: true,
-    });
-
-    if (this.JWT_SECRET === '') {
-      throw new Error('JWT_SECRET is not defined!');
-    }
-  }
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new todo' })
   @ApiResponse({ status: 201, description: 'Todo created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid input' })
-  async addTodo(@Request() req, @Body() dto: AddTodoRequestDto) {
+  async addTodo(@Body() dto: AddTodoRequestDto) {
     const command = new AddTodoCommand({ title: dto.title });
     const result = await this.commandBus.request(command);
 
@@ -99,6 +86,7 @@ export class TodoController {
   }
 
   @Patch(':id/complete')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Mark a todo as completed' })
   @ApiParam({ name: 'id', description: 'Todo ID' })
   @ApiResponse({ status: 204, description: 'Todo marked as completed' })
@@ -119,6 +107,7 @@ export class TodoController {
   }
 
   @Patch(':id/uncomplete')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Mark a todo as uncompleted' })
   @ApiParam({ name: 'id', description: 'Todo ID' })
   @ApiResponse({ status: 204, description: 'Todo marked as uncompleted' })
@@ -139,6 +128,7 @@ export class TodoController {
   }
 
   @Patch(':id/title')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Update a todo title' })
   @ApiParam({ name: 'id', description: 'Todo ID' })
   @ApiResponse({ status: 204, description: 'Todo title updated' })
@@ -163,6 +153,7 @@ export class TodoController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a todo' })
   @ApiParam({ name: 'id', description: 'Todo ID' })
   @ApiResponse({ status: 204, description: 'Todo deleted' })

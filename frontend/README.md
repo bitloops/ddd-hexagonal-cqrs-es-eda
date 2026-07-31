@@ -34,6 +34,11 @@ Repositories are used to interact with the app state (e.g. localStorage) and the
 
 Services wrap the generated REST client and SSE connection so transport details do not leak into UI components.
 
+The mapper at this boundary is also an anti-corruption layer: backend payloads
+use `completed`, while the UI model uses `isCompleted`. REST responses and SSE
+events pass through the same translation and validation before they reach
+Redux.
+
 ## Technologies Used
 
 The frontend communicates with the backend over REST. `@hey-api/openapi-ts` generates the typed API client from the backend OpenAPI document; after the contract changes, run `pnpm --dir frontend openapi-ts` from the repository root.
@@ -41,6 +46,11 @@ The frontend communicates with the backend over REST. `@hey-api/openapi-ts` gene
 To receive realtime notifications from the backend, SSE (Server Sent Events) are being used.
 
 The SSE client reconnects after transient failures and sends a heartbeat so the backend can clean up abandoned subscriptions.
+
+Authentication still uses the backend's transitional JWT endpoints in 1.0.0.
+The proposed Keycloak migration retains the frontend IAM repository boundary
+and replaces its implementation with OpenID Connect Authorization Code Flow
+with PKCE. See the [Keycloak IAM roadmap](../docs/keycloak-iam-roadmap.md).
 
 ## Launch the app using the Dockerfile
 

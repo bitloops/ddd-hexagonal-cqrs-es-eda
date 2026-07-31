@@ -2,9 +2,11 @@ import { Domain } from '@bitloops/bl-boilerplate-core';
 import { DomainErrors } from '../errors';
 
 export class TitleOutOfBoundsRule implements Domain.IRule {
-  constructor(private title: string) {}
+  public readonly Error: DomainErrors.TitleOutOfBoundsError;
 
-  public Error = new DomainErrors.TitleOutOfBoundsError(this.title);
+  constructor(private title: string) {
+    this.Error = new DomainErrors.TitleOutOfBoundsError(title);
+  }
 
   public isBrokenIf(): boolean {
     return this.title.length > 150 || this.title.length < 4;

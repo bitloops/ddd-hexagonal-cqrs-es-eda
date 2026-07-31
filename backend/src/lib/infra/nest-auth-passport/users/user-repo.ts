@@ -49,11 +49,11 @@ export class UserPostgresRepository implements UserRepoPort {
 
       const { id, email, password } = user;
       const insertUserValues = [id, email, password];
-      await this.connection.query(insertUserText, insertUserValues);
+      await client.query(insertUserText, insertUserValues);
       await client.query('COMMIT');
 
       const event = new UserRegisteredIntegrationEvent({ userId: id!, email });
-      this.integrationEventBus.publish(event);
+      await this.integrationEventBus.publish(event);
       return ok();
     } catch (e: any) {
       await client.query('ROLLBACK');

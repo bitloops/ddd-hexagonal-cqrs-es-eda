@@ -16,6 +16,26 @@ export interface TodoProps {
   completed: boolean;
 }
 
+export type TodoEventType =
+  | 'TodoAddedDomainEvent'
+  | 'TodoModifiedTitleDomainEvent'
+  | 'TodoCompletedDomainEvent'
+  | 'TodoUncompletedDomainEvent'
+  | 'TodoDeletedDomainEvent';
+
+export type TodoEventPayload = {
+  aggregateId: string;
+  userId: string;
+  title: string;
+  completed: boolean;
+};
+
+export type TodoHistoryEvent = {
+  eventType: TodoEventType;
+  payload: TodoEventPayload;
+  version: number;
+};
+
 type TTodoEntityPrimitives = {
   id: string;
   userId: {
@@ -28,6 +48,9 @@ type TTodoEntityPrimitives = {
 };
 
 export class TodoEntity extends Domain.Aggregate<TodoProps> {
+  private aggregateVersion = 0;
+  private deleted = false;
+
   private constructor(props: TodoProps) {
     super(props, props.id);
   }
@@ -63,6 +86,14 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
 
   get userId(): UserIdVO {
     return this.props.userId;
+  }
+
+  get version(): number {
+    return this.aggregateVersion;
+  }
+
+  get isDeleted(): boolean {
+    return this.deleted;
   }
 
   public complete(): Either<void, DomainErrors.TodoAlreadyCompletedError> {
@@ -102,6 +133,7 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
   }
 
   public delete(): Either<void, void> {
+    this.deleted = true;
     this.addDomainEvent(
       new TodoDeletedDomainEvent({
         title: this.title.title,
@@ -137,6 +169,67 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
       completed: data.completed,
     };
     return new TodoEntity(TodoEntityProps);
+  }
+
+  public static fromHistory(history: readonly TodoHistoryEvent[]): TodoEntity {
+    if (history.length === 0) {
+      throw new Error('Cannot rehydrate a Todo aggregate from an empty history');
+    }
+
+    let todo: TodoEntity | undefined;
+
+    for (const event of history) {
+      const { payload } = event;
+
+      switch (event.eventType) {
+        case 'TodoAddedDomainEvent': {
+          if (todo) {
+            throw new Error(`Todo ${payload.aggregateId} has more than one creation event`);
+          }
+          todo = TodoEntity.fromPrimitives({
+            id: payload.aggregateId,
+            userId: { id: payload.userId },
+            title: { title: payload.title },
+            completed: payload.completed,
+          });
+          break;
+        }
+        case 'TodoModifiedTitleDomainEvent': {
+          const title = TitleVO.create({ title: payload.title });
+          if (!todo || title.isFail()) {
+            throw new Error(`Invalid title history for Todo ${payload.aggregateId}`);
+          }
+          todo.props.title = title.value;
+          break;
+        }
+        case 'TodoCompletedDomainEvent':
+          if (!todo) throw new Error(`Todo ${payload.aggregateId} is missing its creation event`);
+          todo.props.completed = true;
+          break;
+        case 'TodoUncompletedDomainEvent':
+          if (!todo) throw new Error(`Todo ${payload.aggregateId} is missing its creation event`);
+          todo.props.completed = false;
+          break;
+        case 'TodoDeletedDomainEvent':
+          if (!todo) throw new Error(`Todo ${payload.aggregateId} is missing its creation event`);
+          todo.deleted = true;
+          break;
+      }
+
+      if (todo) todo.aggregateVersion = event.version;
+    }
+
+    if (!todo) {
+      throw new Error('Todo history does not contain a creation event');
+    }
+
+    todo.clearEvents();
+    return todo;
+  }
+
+  public commit(version: number): void {
+    this.aggregateVersion = version;
+    this.clearEvents();
   }
 
   public toPrimitives(): TTodoEntityPrimitives {
