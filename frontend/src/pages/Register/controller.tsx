@@ -1,58 +1,29 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-import RegisterPage from './page';
-import { loginWithEmailPassword, registerWithEmailPassword, setEmail, setPassword } from '../../store/auth/authSlice';
+import { useEffect } from 'react';
+import type { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+
+import { register } from '../../store/auth/authSlice';
 import type { AppDispatch, RootState } from '../../store/store';
-import { selectEmailValidation, selectPasswordValidation } from '../../store/auth/selector';
+import RegisterPage from './page';
 
-const LoginController: React.FC = () => {
-
-  const updatePassword = (password: string) => {
-    dispatch(setPassword(password))
-  }
-
-  const updateEmail = (email: string) => {
-    dispatch(setEmail(email))
-  }
-
-  const dispatch = useDispatch<AppDispatch>()
+const RegisterController: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
-  const { isProcessing, isAuthenticated } = useSelector((state: RootState) => state.auth)
-  const password = useSelector(selectPasswordValidation);
-  const email = useSelector(selectEmailValidation);
+  const { isAuthenticated, isProcessing } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
+    if (isAuthenticated) navigate('/', { replace: true });
   }, [isAuthenticated, navigate]);
-
-  const clearEmailAndPassword = () => {
-    updateEmail('');
-    updatePassword('');
-  };
 
   return (
     <RegisterPage
-      email={email}
-      password={password}
-      updateEmail={updateEmail}
-      updatePassword={updatePassword}
-      submit={() => {
-        if (email.isValid && password.isValid) {
-          dispatch(registerWithEmailPassword({
-            email: email.value, password: password.value, onSuccessCallback: () => {
-              dispatch(loginWithEmailPassword({ email: email.value, password: password.value, onSuccessCallback: clearEmailAndPassword }))
-            }
-          }))
-        }
-      }}
       isProcessing={isProcessing}
+      register={() => void dispatch(register())}
     />
   );
 };
 
-export default LoginController;
+export default RegisterController;

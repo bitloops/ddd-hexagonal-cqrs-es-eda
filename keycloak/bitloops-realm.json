@@ -1,0 +1,116 @@
+{
+  "realm": "bitloops",
+  "enabled": true,
+  "displayName": "Bitloops Todo",
+  "sslRequired": "external",
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "rememberMe": true,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "offlineSessionIdleTimeout": 2592000,
+  "passwordPolicy": "length(12) and digits(1) and upperCase(1) and lowerCase(1) and specialChars(1) and notUsername(undefined)",
+  "roles": {
+    "realm": [
+      {
+        "name": "todo-user",
+        "description": "Can use the Todo application"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "todo-api",
+      "name": "Todo API",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "bearerOnly": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false
+    },
+    {
+      "clientId": "todo-frontend",
+      "name": "Todo frontend",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "frontchannelLogout": true,
+      "redirectUris": [
+        "http://localhost:4173/auth/callback",
+        "http://localhost:5173/auth/callback",
+        "http://localhost:5175/auth/callback"
+      ],
+      "webOrigins": [
+        "http://localhost:4173",
+        "http://localhost:5173",
+        "http://localhost:5175"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:4173/auth/logout/callback##http://localhost:5173/auth/logout/callback##http://localhost:5175/auth/logout/callback"
+      },
+      "protocolMappers": [
+        {
+          "name": "todo-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "todo-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true",
+            "introspection.token.claim": "true",
+            "lightweight.claim": "false"
+          }
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "roles",
+        "profile",
+        "basic",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "10000000-0000-4000-8000-000000000001",
+      "username": "demo@example.com",
+      "email": "demo@example.com",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Demo",
+      "lastName": "User",
+      "realmRoles": [
+        "todo-user"
+      ],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Todo-Demo-2026!",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

@@ -8,21 +8,28 @@ kubectl apply -f namespace-bitloops.yaml
 
 # Apply ConfigMaps, Secrets, and Persistent Volume Claims
 kubectl apply -f configmap-bl-grafana-config.yaml
+kubectl apply -f configmap-bl-keycloak-realm.yaml
 kubectl apply -f secret-bl-postgres-secret.yaml
+kubectl apply -f secret-bl-keycloak-secret.yaml
 kubectl apply -f pvc-bl-nats-data.yaml
 kubectl apply -f pvc-bl-postgres-data.yaml
+kubectl apply -f pvc-bl-keycloak-postgres-data.yaml
 kubectl apply -f pvc-bl-prometheus-data.yaml
 kubectl apply -f pvc-bl-grafana-data.yaml
 
 # Apply Deployments and Services
-kubectl apply -f deployment-todo-frontend.yaml
-kubectl apply -f service-todo-frontend.yaml
-kubectl apply -f deployment-todo-backend.yaml
-kubectl apply -f service-todo-backend.yaml
 kubectl apply -f deployment-bl-nats.yaml
 kubectl apply -f service-bl-nats.yaml
 kubectl apply -f deployment-bl-postgres.yaml
 kubectl apply -f service-bl-postgres.yaml
+kubectl apply -f deployment-bl-keycloak-postgres.yaml
+kubectl apply -f service-bl-keycloak-postgres.yaml
+kubectl apply -f deployment-bl-keycloak.yaml
+kubectl apply -f service-bl-keycloak.yaml
+kubectl apply -f deployment-todo-backend.yaml
+kubectl apply -f service-todo-backend.yaml
+kubectl apply -f deployment-todo-frontend.yaml
+kubectl apply -f service-todo-frontend.yaml
 kubectl apply -f deployment-bl-prometheus-nats-exporter.yaml
 kubectl apply -f service-bl-prometheus-nats-exporter.yaml
 kubectl apply -f deployment-bl-jaeger.yaml

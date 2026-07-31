@@ -29,10 +29,7 @@ describe('Complete todo feature test', () => {
     const completeTodoCommand = new CompleteTodoCommand(
       { todoId },
       {
-        context: new ContextBuilder()
-          .withJWT('jwt')
-          .withUserId(userId.id)
-          .build(),
+        context: new ContextBuilder().withUserId(userId.id).build(),
       },
     );
 
@@ -141,10 +138,7 @@ describe('Complete todo feature test', () => {
     const completeTodoCommand = new CompleteTodoCommand(
       { todoId },
       {
-        context: new ContextBuilder()
-          .withJWT('jwt')
-          .withUserId(userId.id)
-          .build(),
+        context: new ContextBuilder().withUserId(userId.id).build(),
       },
     );
 

@@ -5,12 +5,9 @@ import {
   ok,
 } from '@bitloops/bl-boilerplate-core';
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as jsonwebtoken from 'jsonwebtoken';
 import { Pool, QueryResultRow } from 'pg';
 
 import { constants } from '@lib/infra/postgres';
-import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
 import {
   TodoReadModel,
   TTodoReadModelSnapshot,
@@ -26,14 +23,7 @@ type TodoProjectionRow = QueryResultRow & {
 
 @Injectable()
 export class TodoReadRepository implements TodoReadRepoPort {
-  private readonly jwtSecret: string;
-
-  constructor(
-    @Inject(constants.pg_connection) private readonly pool: Pool,
-    configService: ConfigService<AuthEnvironmentVariables, true>,
-  ) {
-    this.jwtSecret = configService.get('jwtSecret', { infer: true });
-  }
+  constructor(@Inject(constants.pg_connection) private readonly pool: Pool) {}
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
   async getById(
@@ -80,17 +70,12 @@ export class TodoReadRepository implements TodoReadRepoPort {
 
   private authenticatedUserId(): string {
     const context = asyncLocalStorage.getStore()?.get('context') as
-      | { jwt?: unknown }
+      | { userId?: unknown }
       | undefined;
-    if (typeof context?.jwt !== 'string') {
+    if (typeof context?.userId !== 'string') {
       throw new Error('Missing authenticated request context');
     }
-
-    const payload = jsonwebtoken.verify(context.jwt, this.jwtSecret);
-    if (typeof payload !== 'object' || typeof payload.sub !== 'string') {
-      throw new Error('JWT subject is missing');
-    }
-    return payload.sub;
+    return context.userId;
   }
 
   private normaliseInteger(

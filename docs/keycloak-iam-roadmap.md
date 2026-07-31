@@ -1,118 +1,83 @@
-# Keycloak IAM roadmap
+# Keycloak IAM architecture
 
-## Decision
+Keycloak owns credentials, login, registration, recovery, browser sessions,
+and token issuance. The application retains its IAM bounded context: it owns
+the internal user identifier and publishes application integration events.
+Keycloak tables are private to Keycloak and are never read by application
+code.
 
-Adopt Keycloak as the identity provider, but do not replace the IAM bounded
-context with Keycloak.
+## Request flow
 
-Keycloak should own authentication concerns: credentials, password policies,
-email verification, recovery, MFA/passkeys, login sessions, token issuance,
-and external identity brokering. The application should continue to own its
-internal user identity, profile lifecycle, domain policies, ownership checks,
-and integration events.
+1. The React client redirects to the public `todo-frontend` client using OpenID
+   Connect Authorization Code Flow with PKCE (`S256`).
+2. Keycloak authenticates the user and returns a short-lived access token whose
+   audience includes `todo-api`.
+3. The API guard passes the bearer token to `IdentityProviderPort`.
+4. `KeycloakIdentityProvider` verifies the RS256 signature against a cached,
+   rate-limited JWKS client and validates issuer, audience, authorised party,
+   expiry, and required claims.
+5. `UserIdentityRepositoryPort` reconciles `(issuer, subject)` to an
+   application UUID. First access provisions the user; a later email claim
+   updates it.
+6. Only the application UUID enters application request context. Todo
+   repositories never receive Keycloak claims or verify tokens themselves.
 
-This split keeps a third-party identity system outside the domain model and
-gives the application an explicit anti-corruption layer.
+This is the IAM anti-corruption layer: external OIDC vocabulary and identifiers
+stop at the boundary, while downstream bounded contexts continue to use the
+application identity model.
 
-## Target flow
+## Events and consistency
 
-1. The browser uses OpenID Connect Authorization Code Flow with PKCE against a
-   public Keycloak client.
-2. The frontend holds tokens in memory and delegates renewal to an OIDC client;
-   it no longer posts passwords to this backend.
-3. The backend validates issuer, audience, signature, expiry, and authorised
-   party using the realm discovery document and JWKS.
-4. An authentication adapter maps standard claims such as `sub`, `email`, and
-   roles into an application `AuthenticatedPrincipal`.
-5. IAM provisions or reconciles an internal user idempotently, keyed by the
-   immutable `(issuer, subject)` pair.
-6. IAM emits application-owned integration events such as user registered or
-   email changed. Downstream contexts never consume Keycloak events directly.
+Provisioning or changing an email writes the `users` row and an `iam_outbox`
+row in the same PostgreSQL transaction. The relay publishes
+`UserRegisteredIntegrationEvent` or `UserEmailChangedIntegrationEvent` to
+NATS. Marketing consumes those application-owned events and does not consume
+Keycloak-specific events.
 
-Use standards-based OpenID Connect libraries from the NestJS and browser
-ecosystems rather than a Keycloak-specific application adapter. Keycloak's
-current guidance recommends ecosystem protocol support where available.
+Reconciliation happens on authenticated API access. Therefore an email change
+in Keycloak becomes visible to the application on the user's next request.
+The outbox is at-least-once; consumers must remain idempotent.
 
-## Ownership boundaries
+## Browser session
 
-| Concern | Owner |
-| --- | --- |
-| Credentials, MFA, recovery and login UI | Keycloak |
-| Browser session and token issuance | Keycloak |
-| Token verification and claim translation | IAM infrastructure adapter |
-| Internal user id and profile lifecycle | IAM domain |
-| Todo ownership and business authorisation | Application domain |
-| User registration/email integration events | IAM application layer |
-| Marketing's user/email view | Marketing bounded context |
+The frontend uses `oidc-client-ts`. Access tokens are kept in memory, while
+only transient PKCE state uses session storage. A new browser window recovers
+an existing Keycloak SSO session through a top-level `prompt=none` request; it
+does not persist or copy the access token between windows. Login, registration,
+callback, renewal, and logout stay behind the frontend IAM repository
+interface. REST and SSE both receive the same access token without exposing
+OIDC details to UI components.
 
-Keycloak roles may be mapped into the principal for coarse access control, but
-fine-grained domain authorisation should remain in application policies and
-repositories during the first migration.
+## Development realm
 
-## Rollout sequence
+Compose imports `keycloak/bitloops-realm.json` into the `bitloops` realm and
+runs Keycloak 26.7.0 with a separate PostgreSQL database.
 
-### 1. Infrastructure and reproducibility
+- Issuer: `http://localhost:8090/realms/bitloops`
+- Admin console: `http://localhost:8090/admin/`
+- Development administrator: `admin` / `admin-development-only`
+- Development user: `demo@example.com` / `Todo-Demo-2026!`
 
-- Add a pinned Keycloak container and a committed development realm import.
-- Give Keycloak an isolated database/schema and database user; application code
-  must not read Keycloak tables.
-- Add health checks, secrets, backup notes, and CI smoke coverage.
+These values are deliberately local-development defaults. Never reuse them in
+an exposed environment.
 
-### 2. Backend resource server
+## Production checklist
 
-- Introduce an `IdentityProviderPort` and a Keycloak/OIDC adapter.
-- Replace local JWT signature checks with discovery/JWKS validation.
-- Map `(iss, sub)` to the internal user and retain repository ownership checks.
-- Test key rotation, invalid issuer/audience, expiry, clock skew, and disabled
-  users.
+- Replace all bootstrap and database credentials with externally managed
+  secrets; do not use the committed development realm as a production realm.
+- Configure the public HTTPS hostname in Keycloak, the backend `OIDC_ISSUER`,
+  and the frontend `VITE_OIDC_AUTHORITY` to the same issuer.
+- Replace localhost redirect URIs and web origins with exact HTTPS origins.
+- Enable email verification and set `OIDC_REQUIRE_VERIFIED_EMAIL=true`.
+- Run Keycloak in production mode behind a supported ingress or proxy, retain
+  its separate database, and back it up independently.
+- Restrict management port `9000` to cluster health and metrics traffic.
+- Use multiple Keycloak replicas and an appropriately highly available
+  database when availability requirements demand it.
 
-### 3. Frontend PKCE client
-
-- Redirect login, registration, verification, and recovery to Keycloak.
-- Use Authorization Code Flow with PKCE; do not use the password grant.
-- Preserve the frontend IAM repository interface so Keycloak details remain at
-  the boundary.
-
-### 4. User lifecycle bridge
-
-- Reconcile the internal IAM user on the first authenticated request or a
-  dedicated callback.
-- Make provisioning idempotent and publish application integration events only
-  after the local user transaction succeeds.
-- Add a scheduled reconciliation path before considering a custom Keycloak
-  Event Listener SPI. Avoid making an SPI the first dependency.
-
-### 5. Remove local authentication
-
-- Deprecate and then remove `/auth/login` and `/auth/register`.
-- Remove local password hashes, Passport Local, application token issuance, and
-  refresh logic only after all clients use Keycloak.
-- Define an explicit migration/reset flow for any existing local accounts;
-  password hashes should not be copied casually.
-
-## Acceptance criteria
-
-- The backend never receives a user's password.
-- Token validation fails closed and supports signing-key rotation.
-- A Keycloak outage does not invalidate already issued access tokens while
-  cached signing keys remain valid, subject to normal expiry.
-- Duplicate lifecycle notifications do not create duplicate users or events.
-- Todo ownership rules use the internal principal and remain independent of
-  Keycloak APIs.
-- Local development, CI, Compose, and Kubernetes paths are reproducible.
-
-## Trade-offs
-
-Keycloak removes a sizeable amount of security-sensitive custom code and adds
-MFA, recovery, session administration, federation, and standards compliance.
-It also adds an operationally significant Java service, database lifecycle,
-realm configuration, upgrades, and availability requirements. For this
-architecture reference, that trade is worthwhile if the deployment and realm
-configuration are treated as first-class code rather than an optional manual
-setup.
-
-References:
+## References
 
 - [Keycloak OpenID Connect endpoints](https://www.keycloak.org/securing-apps/oidc-layers)
-- [Keycloak securing applications guidance](https://www.keycloak.org/securing-apps/overview)
-- [Keycloak server administration guide](https://www.keycloak.org/docs/latest/server_admin/)
+- [Keycloak container guidance](https://www.keycloak.org/server/containers)
+- [Keycloak realm import and export](https://www.keycloak.org/server/importExport)
+- [oidc-client-ts documentation](https://authts.github.io/oidc-client-ts/)

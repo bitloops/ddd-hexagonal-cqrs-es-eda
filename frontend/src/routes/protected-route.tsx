@@ -1,19 +1,16 @@
-import { type ReactNode, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import type { RootState } from '../store/store';
+import type { ReactNode } from 'react';
 import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router';
+
+import type { RootState } from '../store/store';
 
 function ProtectedRoute({ element }: { element: ReactNode }) {
-  const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.auth.user)
+  const { isAuthenticated, isInitialising } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
-  useEffect(() => {
-    if (user === null) {
-      navigate('/login');
-    }
-  }, [navigate, user]);
-
-  return user !== null ? element : null;
+  if (isInitialising) return null;
+  return isAuthenticated ? element : <Navigate to="/login" replace />;
 }
 
 export default ProtectedRoute;

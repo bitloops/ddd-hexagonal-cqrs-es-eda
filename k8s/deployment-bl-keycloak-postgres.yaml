@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bl-keycloak-postgres
+  namespace: bitloops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bl-keycloak-postgres
+  template:
+    metadata:
+      labels:
+        app: bl-keycloak-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:18-alpine
+          env:
+            - name: POSTGRES_DB
+              value: keycloak
+            - name: POSTGRES_USER
+              value: keycloak
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bl-keycloak-secret
+                  key: KEYCLOAK_DB_PASSWORD
+          ports:
+            - containerPort: 5432
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "keycloak", "-d", "keycloak"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: bl-keycloak-postgres-data
+              mountPath: /var/lib/postgresql
+      volumes:
+        - name: bl-keycloak-postgres-data
+          persistentVolumeClaim:
+            claimName: bl-keycloak-postgres-data

@@ -6,7 +6,7 @@
 - Corepack with the repository-pinned pnpm version
 - Docker and Docker Compose
 
-Install the complete workspace from the repository root:
+Install the workspace from the repository root:
 
 ```bash
 corepack enable
@@ -15,16 +15,18 @@ pnpm install --frozen-lockfile
 
 ## Configuration and infrastructure
 
-Copy `backend/.template-env` to `backend/.development.env` and replace the
-development JWT secret. Start PostgreSQL and NATS:
+Copy `backend/.template-env` to `backend/.development.env`. Start the backend's
+dependencies, including the OIDC issuer:
 
 ```bash
-docker compose -p bitloops-todo-app up -d bl-postgres bl-nats
+docker compose -p bitloops-todo-app up -d \
+  bl-postgres bl-nats bl-keycloak-postgres bl-keycloak
 ```
 
-PostgreSQL is the only application database. The backend creates the IAM,
-Marketing, Todo event-store, projection, and outbox tables idempotently during
-startup.
+The default issuer is `http://localhost:8090/realms/bitloops`; the backend uses
+the internal Keycloak URL only for JWKS retrieval. PostgreSQL is the only
+application database. Keycloak owns a separate database that application code
+must not access.
 
 Start the backend in watch mode:
 
@@ -32,27 +34,28 @@ Start the backend in watch mode:
 pnpm --dir backend start:dev
 ```
 
-The REST API listens on `http://localhost:8080`, Swagger UI is available at
-`/api`, and the OpenAPI document at `/api-json`.
+The REST API listens on `http://localhost:8080`, Swagger UI is at `/api`, and
+the OpenAPI document is at `/api-json`.
 
 ## Module boundaries
 
 - `src/api` contains REST and SSE driving adapters.
 - `src/lib/bounded-contexts` contains application and domain code.
-- `src/bounded-contexts` contains PostgreSQL, NATS, and service adapters.
+- `src/bounded-contexts` contains OIDC, PostgreSQL, NATS, and service adapters.
 - `src/lib/infra` contains reusable NestJS infrastructure.
 
-Controllers dispatch commands and queries through NATS request/reply. The Todo
-write adapter reconstructs aggregates from `todo_events`, then commits events,
-the query projection, and outbox rows in one PostgreSQL transaction. See
-[`../docs/backend-architecture.md`](../docs/backend-architecture.md).
+The OIDC guard validates the external access token and the IAM repository
+reconciles it to an internal UUID. Controllers dispatch Todo commands and
+queries through NATS. The Todo write adapter reconstructs aggregates from
+`todo_events`, then commits events, projection updates, and outbox rows in one
+transaction. See [backend architecture](../docs/backend-architecture.md).
 
 ## Validation
 
 ```bash
-pnpm --dir backend run build
-pnpm --dir backend run lint
-pnpm --dir backend run test
+pnpm --dir backend build
+pnpm --dir backend lint
+pnpm --dir backend test
 ```
 
 Run the database integration lane against an isolated test database:
@@ -61,19 +64,16 @@ Run the database integration lane against an isolated test database:
 PG_DATABASE=bitloops_test \
 PG_USER=user \
 PG_PASSWORD=postgres \
-pnpm --dir backend run test:integration
+pnpm --dir backend test:integration
 ```
 
-## Tracing
+## IAM configuration
 
-Register `TracingModule` with the system message bus and apply `@Traceable` to
-async application or adapter methods. Tracing publication is deliberately
-isolated from business results: an observability outage must not turn a valid
-command into an HTTP failure.
+`OIDC_ISSUER`, `OIDC_AUDIENCE`, and `OIDC_CLIENT_ID` are mandatory.
+`OIDC_JWKS_URI` supports an internal JWKS endpoint while issuer validation
+continues to use the public URL. Enable `OIDC_REQUIRE_VERIFIED_EMAIL` in
+environments whose Keycloak realm enforces email verification.
 
-## IAM direction
-
-The application-owned password and JWT implementation is transitional. New IAM
-work should follow the
-[`../docs/keycloak-iam-roadmap.md`](../docs/keycloak-iam-roadmap.md) and keep
-Keycloak behind an OpenID Connect anti-corruption adapter.
+Keycloak remains behind `IdentityProviderPort`; application and domain code
+must not import Keycloak libraries or consume Keycloak database records. See
+[Keycloak IAM architecture](../docs/keycloak-iam-roadmap.md).

@@ -32,8 +32,7 @@ class TodoRepository implements ITodoRepository {
     this.user = user;
 
     if (user) {
-      // Set JWT for SSE client
-      todoSSEClient.setJwt(user.jwt);
+      todoSSEClient.setAccessToken(user.accessToken);
 
       // Initialize SSE connection
       this.initializeSSEConnection();
@@ -42,7 +41,7 @@ class TodoRepository implements ITodoRepository {
       client.setConfig({
         baseUrl: TODO_URL,
         headers: {
-          authorization: `Bearer ${user.jwt}`,
+          authorization: `Bearer ${user.accessToken}`,
         },
       });
     } else {
@@ -81,7 +80,6 @@ class TodoRepository implements ITodoRepository {
   }
 
   async addTodo(title: string): Promise<void> {
-    // const token = LocalStorageRepository.getAccessToken();
     const response = await todoControllerAddTodo({ body: { title } });
     if (response.error) {
       throw new Error((response as { error: string }).error);

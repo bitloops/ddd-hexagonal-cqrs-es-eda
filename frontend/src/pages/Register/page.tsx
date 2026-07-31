@@ -1,40 +1,27 @@
-import { type JSX } from 'react';
-import { Heading, Stack, Text } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
-import { EmailPassForm } from '../../components/EmailPassForm';
-import { type Email, type Password } from '../../models/Auth';
+import { Button, Heading, Stack, Text } from '@chakra-ui/react';
+import type { JSX } from 'react';
+import { Link as RouterLink } from 'react-router';
 
-interface LogInPageProps {
-  email: Email;
-  password: Password;
-  updateEmail: (email: string) => void;
-  updatePassword: (password: string) => void;
-  submit: () => void;
+type RegisterPageProps = {
+  register: () => void;
   isProcessing: boolean;
-}
+};
 
-function RegisterPage(props: LogInPageProps): JSX.Element {
-  const { email, isProcessing, password, submit, updateEmail, updatePassword } = props;
-
+function RegisterPage({ register, isProcessing }: RegisterPageProps): JSX.Element {
   return (
-    <>
-      <Heading>Register</Heading>
-      <EmailPassForm
-        email={email}
-        password={password}
-        view="Register"
-        submit={submit}
-        isProcessing={isProcessing}
-        updateEmail={updateEmail}
-        updatePassword={updatePassword}
-      />
-      <Stack>
-        <Text>{'Already have an account? '}</Text>
-        <RouterLink to="/login">
-          LOGIN
-        </RouterLink>
-      </Stack>
-    </>
+    <Stack gap="4">
+      <Heading>Create an account</Heading>
+      <Text>
+        Registration, credential policy and account recovery are managed by Keycloak.
+      </Text>
+      <Button onClick={register} loading={isProcessing}>
+        Continue to registration
+      </Button>
+      <Text>
+        Already registered? <RouterLink to="/login">Sign in</RouterLink>
+      </Text>
+    </Stack>
   );
 }
+
 export default RegisterPage;

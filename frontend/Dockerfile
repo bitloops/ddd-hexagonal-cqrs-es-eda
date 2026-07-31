@@ -21,11 +21,11 @@ COPY frontend ./frontend
 # Vite replaces these public values at build time. Changing them on a running
 # container has no effect; rebuild the image with the appropriate --build-arg.
 ARG VITE_API_BASE_URL=http://localhost:8080
-ARG VITE_AUTH_URL
-ARG VITE_REGISTRATION_URL
+ARG VITE_OIDC_AUTHORITY=http://localhost:8090/realms/bitloops
+ARG VITE_OIDC_CLIENT_ID=todo-frontend
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL} \
-    VITE_AUTH_URL=${VITE_AUTH_URL} \
-    VITE_REGISTRATION_URL=${VITE_REGISTRATION_URL}
+    VITE_OIDC_AUTHORITY=${VITE_OIDC_AUTHORITY} \
+    VITE_OIDC_CLIENT_ID=${VITE_OIDC_CLIENT_ID}
 
 RUN pnpm --filter todo-frontend run build
 

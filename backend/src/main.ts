@@ -9,7 +9,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ApiModule } from './api/api.module';
 import config from './config/configuration';
-import { AsyncLocalStorageInterceptor } from './lib/infra/nest-auth-passport';
+import { AsyncLocalStorageInterceptor } from './lib/infra/oidc';
 import { CorrelationIdInterceptor } from './lib/infra/telemetry';
 
 async function bootstrap() {

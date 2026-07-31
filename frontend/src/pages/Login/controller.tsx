@@ -1,48 +1,27 @@
-import { type FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import LoginPage from './page';
-import type { AppDispatch, RootState } from '../../store/store';
+import { useEffect } from 'react';
+import type { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginWithEmailPassword, setEmail, setPassword } from '../../store/auth/authSlice';
-import { selectEmailValidation, selectPasswordValidation } from '../../store/auth/selector';
+import { useNavigate } from 'react-router';
+
+import type { AppDispatch, RootState } from '../../store/store';
+import { login } from '../../store/auth/authSlice';
+import LoginPage from './page';
 
 const LoginController: FC = () => {
-  const dispatch = useDispatch<AppDispatch>()
-  const updatePassword = (password: string) => {
-    dispatch(setPassword(password))
-  }
-
-  const updateEmail = (email: string) => {
-    dispatch(setEmail(email))
-  }
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { isProcessing, isAuthenticated } = useSelector((state: RootState) => state.auth)
-  const password = useSelector(selectPasswordValidation);
-  const email = useSelector(selectEmailValidation);
+  const { isAuthenticated, isProcessing } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
+    if (isAuthenticated) navigate('/', { replace: true });
   }, [isAuthenticated, navigate]);
-
-  const clearEmailAndPassword = () => {
-    updateEmail('');
-    updatePassword('');
-  };
 
   return (
     <LoginPage
-      email={email}
-      password={password}
-      updateEmail={updateEmail}
-      updatePassword={updatePassword}
-      submit={() => {
-        if (email.isValid && password.isValid) {
-          dispatch(loginWithEmailPassword({ email: email.value, password: password.value, onSuccessCallback: clearEmailAndPassword }))
-        }
-      }}
       isProcessing={isProcessing}
+      login={() => void dispatch(login())}
     />
   );
 };

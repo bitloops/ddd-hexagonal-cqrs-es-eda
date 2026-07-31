@@ -5,14 +5,13 @@ import { TodoController } from './todo.rest.controller';
 import { TodoSSEController } from './todo.sse.controller';
 import {
   JetstreamModule,
-  NatsStreamingIntegrationEventBus,
   NatsStreamingMessageBus,
 } from '@lib/infra/nest-jetstream';
 import configuration from '@src/config/configuration';
 import authConfiguration, {
   AuthEnvironmentVariables,
 } from '@src/config/auth.configuration';
-import { AuthModule } from '@lib/infra/nest-auth-passport';
+import { IamModule } from '@src/bounded-contexts/iam/iam/iam.module';
 import {
   // CorrelationIdMiddleware,
   TracingModule,
@@ -25,33 +24,18 @@ import {
       envFilePath: '.development.env', // TODO make dynamic
       load: [configuration, authConfiguration],
     }),
-    AuthModule.forRootAsync({
-      jwtOptions: {
-        useFactory: (
-          configService: ConfigService<AuthEnvironmentVariables, true>,
-        ) => ({
-          secret: configService.get('jwtSecret'),
-          signOptions: {
-            expiresIn: `${configService.get('JWT_LIFETIME_SECONDS')}s`,
-          },
-        }),
-        inject: [ConfigService],
-      },
-      postgresOptions: {
-        useFactory: (
-          configService: ConfigService<AuthEnvironmentVariables, true>,
-        ) => ({
-          database: configService.get('database.database', { infer: true }),
-          host: configService.get('database.host', { infer: true }),
-          port: configService.get('database.port', { infer: true }),
-          user: configService.get('database.user', { infer: true }),
-          password: configService.get('database.password', { infer: true }),
-          max: 20,
-        }),
-        inject: [ConfigService],
-      },
-      // TODO fix this
-      integrationEventBus: NatsStreamingIntegrationEventBus as any,
+    IamModule.forRootAsync({
+      useFactory: (
+        configService: ConfigService<AuthEnvironmentVariables, true>,
+      ) => ({
+        database: configService.get('database.database', { infer: true }),
+        host: configService.get('database.host', { infer: true }),
+        port: configService.get('database.port', { infer: true }),
+        user: configService.get('database.user', { infer: true }),
+        password: configService.get('database.password', { infer: true }),
+        max: 20,
+      }),
+      inject: [ConfigService],
     }),
     JetstreamModule.forRoot({
       servers: [

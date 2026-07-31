@@ -1,5 +1,5 @@
 import { EventSourcePolyfill } from 'event-source-polyfill';
-import { todoSseControllerOn } from '../../api/sdk.gen';
+import { todoSseControllerSubscribe } from '../../api/sdk.gen';
 import { TODO_URL } from '../../config';
 
 type SSEClientOptions = {
@@ -24,7 +24,7 @@ export class SSEClient {
 
   private baseUrl: string;
 
-  private jwt: string | null = null;
+  private accessToken: string | null = null;
 
   private isConnected = false;
 
@@ -37,8 +37,8 @@ export class SSEClient {
     this.subscriptionId = Math.random().toString(36).substr(2, 9);
   }
 
-  public setJwt(jwt: string | null) {
-    this.jwt = jwt;
+  public setAccessToken(accessToken: string | null) {
+    this.accessToken = accessToken;
   }
 
   private handleReconnect = () => {
@@ -79,10 +79,10 @@ export class SSEClient {
     this.disconnect();
     this.connectionOptions = options;
 
-    if (!this.jwt) {
-      console.error('JWT token is required');
+    if (!this.accessToken) {
+      console.error('An OIDC access token is required');
       if (options.onError) {
-        options.onError(new Error('JWT token is required'));
+        options.onError(new Error('An OIDC access token is required'));
       }
       return;
     }
@@ -90,7 +90,7 @@ export class SSEClient {
     try {
       this.eventSource = new EventSourcePolyfill(this.baseUrl, {
         headers: {
-          Authorization: `Bearer ${this.jwt}`,
+          Authorization: `Bearer ${this.accessToken}`,
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache',
           'X-Request-Id': this.subscriptionId,
@@ -109,7 +109,7 @@ export class SSEClient {
           this.reconnectTimeout = null;
         }
         if (options.onOpen) options.onOpen();
-        todoSseControllerOn({
+        void todoSseControllerSubscribe({
           body: {
             events: [
               'todo.added',

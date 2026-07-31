@@ -1,149 +1,127 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { AuthMessage } from '../../models/Auth';
-import type { User } from '../../models/User';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+
+import { EventBus, Events } from '../../Events';
 import IamRepository from '../../infra/repositories/iam';
 import IamService from '../../infra/services/IamService';
+import type { AuthMessage } from '../../models/Auth';
+import type { User } from '../../models/User';
 import { AUTH_MESSAGE_DURATION } from '../../constants';
-import { EventBus, Events } from '../../Events';
 
 const iamService = new IamService();
 const iamRepository = new IamRepository(iamService);
 
 interface AuthState {
-    user: User | null;
-    email: string;
-    password: string;
-    authMessage: AuthMessage | null;
-    isProcessing: boolean;
-    isAuthenticated: boolean;
+  user: User | null;
+  authMessage: AuthMessage | null;
+  isProcessing: boolean;
+  isInitialising: boolean;
+  isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
-    user: null,
-    email: '',
-    password: '',
-    authMessage: null,
-    isProcessing: false,
-    isAuthenticated: false
+  user: null,
+  authMessage: null,
+  isProcessing: false,
+  isInitialising: true,
+  isAuthenticated: false,
 };
 
+export const initialiseAuthentication = createAsyncThunk<User | null>(
+  'auth/initialise',
+  () => iamRepository.getUser(),
+);
 
-(() => console.log(initialState))()
+export const login = createAsyncThunk<void>('auth/login', () => iamRepository.login());
 
-export const registerWithEmailPassword = createAsyncThunk<
-    void, // return type
-    { email: string; password: string; onSuccessCallback: () => void }>(
-        'auth/registerWithEmailPassword',
-        async ({ email, password, onSuccessCallback }, { rejectWithValue, dispatch }) => {
-            dispatch(setIsProcessing(true));
-            try {
-                await iamRepository.registerWithEmailPassword(email, password);
-                dispatch(setAuthMessage({
-                    type: 'success',
-                    message: 'Registered successfully!',
-                    startAt: Date.now(),
-                    duration: AUTH_MESSAGE_DURATION,
-                }));
-                onSuccessCallback();
-            } catch (error) {
-                dispatch(setAuthMessage({
-                    type: 'error',
-                    message: (error as Error).message,
-                    startAt: Date.now(),
-                    duration: AUTH_MESSAGE_DURATION,
-                }));
-                return rejectWithValue((error as Error).message);
-            } finally {
-                dispatch(setIsProcessing(false));
-            }
-        }
-    );
+export const register = createAsyncThunk<void>('auth/register', () =>
+  iamRepository.register(),
+);
 
-export const loginWithEmailPassword = createAsyncThunk<
-    void,
-    { email: string; password: string; onSuccessCallback: () => void }
->(
-    'auth/loginWithEmailPassword',
-    async ({ email, password, onSuccessCallback }, { dispatch, rejectWithValue }) => {
-        dispatch(setIsProcessing(true));
-        try {
-            const user = await iamRepository.loginWithEmailPassword(email, password);
-            dispatch(setUser(user));
-            dispatch(setIsAuthenticated(true));
-            dispatch(setAuthMessage({
-                type: 'success',
-                message: 'Login successful!',
-                startAt: Date.now(),
-                duration: AUTH_MESSAGE_DURATION,
-            }));
-            onSuccessCallback();
-        } catch (error) {
-            dispatch(setAuthMessage({
-                type: 'error',
-                message: (error as Error).message,
-                startAt: Date.now(),
-                duration: AUTH_MESSAGE_DURATION,
-            }));
-            return rejectWithValue((error as Error).message);
-        } finally {
-            dispatch(setIsProcessing(false));
-        }
-    }
+export const completeLogin = createAsyncThunk<User>('auth/completeLogin', () =>
+  iamRepository.completeLogin(),
+);
+
+export const logout = createAsyncThunk<void>('auth/logout', () => iamRepository.logout());
+
+export const completeLogout = createAsyncThunk<void>('auth/completeLogout', () =>
+  iamRepository.completeLogout(),
 );
 
 const authSlice = createSlice({
-    name: 'auth',
-    initialState,
-    reducers: {
-        setAuthMessage(state, action: PayloadAction<AuthMessage | null>) {
-            state.authMessage = action.payload;
+  name: 'auth',
+  initialState,
+  reducers: {
+    authenticationChanged(state, action: PayloadAction<User | null>) {
+      state.user = action.payload;
+      state.isAuthenticated = action.payload !== null;
+      state.isInitialising = false;
+      state.isProcessing = false;
+    },
+    clearAuthMessage(state) {
+      state.authMessage = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(initialiseAuthentication.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = action.payload !== null;
+        state.isInitialising = false;
+      })
+      .addCase(initialiseAuthentication.rejected, (state, action) => {
+        state.isInitialising = false;
+        state.authMessage = errorMessage(action.error.message);
+      })
+      .addCase(login.pending, processing)
+      .addCase(register.pending, processing)
+      .addCase(completeLogin.pending, processing)
+      .addCase(logout.pending, processing)
+      .addCase(completeLogout.pending, processing)
+      .addCase(completeLogin.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
+        state.isProcessing = false;
+        state.authMessage = null;
+      })
+      .addCase(completeLogout.fulfilled, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+        state.isProcessing = false;
+        state.authMessage = null;
+      })
+      .addMatcher(
+        (action) => action.type.startsWith('auth/') && action.type.endsWith('/rejected'),
+        (state, action: { error?: { message?: string } }) => {
+          state.isProcessing = false;
+          state.isInitialising = false;
+          state.authMessage = errorMessage(action.error?.message);
         },
-        setIsProcessing(state, action: PayloadAction<boolean>) {
-            state.isProcessing = action.payload;
-        },
-        setUser(state, action: PayloadAction<User | null>) {
-            state.user = action.payload;
-        },
-
-        setEmail(state, action: PayloadAction<string>) {
-            state.email = action.payload;
-        },
-        setPassword(state, action: PayloadAction<string>) {
-            state.password = action.payload;
-        },
-        setIsAuthenticated(state, action: PayloadAction<boolean>) {
-            state.isAuthenticated = action.payload;
-        },
-        logout(state) {
-            iamRepository.logout();
-            state.user = null;
-            state.email = '';
-            state.password = '';
-            state.authMessage = null;
-            state.isProcessing = false;
-            state.isAuthenticated = false;
-        },
-        init(state) {
-            const user = iamRepository.getUser();
-            state.user = user;
-            state.isAuthenticated = iamRepository.getUser() ? true : false;
-            EventBus.emit(Events.AUTH_CHANGED, user);
-            if (user) {
-                iamRepository.setUser(user);
-            } else iamRepository.logout();
-        }
-    }
+      );
+  },
 });
 
-export const {
-    setAuthMessage,
-    setIsProcessing,
-    setUser,
-    setEmail,
-    setPassword,
-    setIsAuthenticated,
-    logout,
-    init
-} = authSlice.actions;
+function processing(state: AuthState): void {
+  state.isProcessing = true;
+  state.authMessage = null;
+}
+
+function errorMessage(message?: string): AuthMessage {
+  return {
+    type: 'error',
+    message: message || 'Authentication failed',
+    startAt: Date.now(),
+    duration: AUTH_MESSAGE_DURATION,
+  };
+}
+
+export const { authenticationChanged, clearAuthMessage } = authSlice.actions;
+
+export const observeAuthentication = (
+  listener: (user: User | null) => void,
+): (() => void) => {
+  EventBus.subscribe(Events.AUTH_CHANGED, listener);
+  return () => EventBus.unsubscribe(Events.AUTH_CHANGED, listener);
+};
 
 export default authSlice.reducer;

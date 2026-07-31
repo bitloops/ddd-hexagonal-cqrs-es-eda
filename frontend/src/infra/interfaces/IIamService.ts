@@ -1,28 +1,16 @@
-export type LoginResponse = {
-  access_token: string;
-};
-
-export type AuthOptions = {
-  idToken: string | null;
-};
-
-export type GetUserResponse = {
-  id: string;
-  email?: string;
-  name?: string;
-  phone?: string;
-};
-
-export type UpdateUserDetailsRequest = {
-  userId: string;
-  email?: string;
-  oldPassword?: string;
-  newPassword?: string;
-  name?: string;
-  phone?: string;
+export type IdentityProviderSession = {
+  accessToken: string;
+  idToken?: string;
+  subject: string;
 };
 
 export interface IIamService {
-  loginWithEmailPassword(email: string, password: string): Promise<LoginResponse>;
-  registerWithEmailPassword(email: string, password: string): Promise<void>;
+  login(): Promise<void>;
+  register(): Promise<void>;
+  completeLogin(): Promise<IdentityProviderSession>;
+  logout(): Promise<void>;
+  completeLogout(): Promise<void>;
+  getSession(): Promise<IdentityProviderSession | null>;
+  onSessionLoaded(listener: (session: IdentityProviderSession) => void): () => void;
+  onSessionUnloaded(listener: () => void): () => void;
 }

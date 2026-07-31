@@ -15,76 +15,66 @@ interface TodoProps {
   handleCheckbox: (d: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const buttonProps = {
-  icon: <FaTrash />,
-  isRound: true,
-  'aria-label': 'delete',
-};
-
 function TodoEntryComponent(props: TodoProps) {
   const { todo, editable, setEditable, handleCheckbox, modifyTitle, updateLocalItem, removeItem } =
     props;
 
   const { title, isCompleted } = todo;
   return (
-    <li key={todo.id}>
-      <div key={todo.id} className="flex flex-row space-between items-center">
-        <div className="todo_element">
-          <Tooltip content={todo.isCompleted ? 'Uncomplete Todo' : 'Complete Todo'}>
-            <input
-              className="checkbox"
-              id={todo.id}
-              type="checkbox"
-              checked={isCompleted}
-              onChange={(e) => handleCheckbox(e)}
-            />
-          </Tooltip>
-          {editable === todo.id ? (
-            <input
-              type="title"
-              value={title}
-              id={todo.id}
-              className="element_title"
-              onChange={(e) => updateLocalItem(e)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  setEditable(null);
-                  modifyTitle(e);
-                }
-              }}
-              onBlur={() => modifyTitle}
-            />
-          ) : (
-            <p
-              className="element_title"
-              id={todo.id}
-              tabIndex={0}
-              onClick={(e: React.MouseEvent<HTMLElement>) => {
+    <li className="todo-list-item">
+      <div className="todo_element">
+        <Tooltip content={isCompleted ? 'Mark Todo incomplete' : 'Mark Todo complete'}>
+          <input
+            className="checkbox"
+            id={todo.id}
+            type="checkbox"
+            checked={isCompleted}
+            aria-label={isCompleted ? 'Mark Todo incomplete' : 'Mark Todo complete'}
+            onChange={handleCheckbox}
+          />
+        </Tooltip>
+        {editable === todo.id ? (
+          <input
+            type="text"
+            value={title}
+            id={todo.id}
+            className="element_title element_title--editing"
+            onChange={updateLocalItem}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setEditable(null);
+                modifyTitle(e);
+              }
+            }}
+          />
+        ) : (
+          <p
+            className={`element_title${isCompleted ? ' element_title--completed' : ''}`}
+            id={todo.id}
+            tabIndex={0}
+            onClick={(e: React.MouseEvent<HTMLElement>) => {
+              const target = e.target as HTMLParagraphElement;
+              setEditable(target.id);
+            }}
+            onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => {
+              if (e.key === 'Enter' || e.key === ' ') {
                 const target = e.target as HTMLParagraphElement;
                 setEditable(target.id);
-              }}
-              onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  const target = e.target as HTMLParagraphElement;
-                  setEditable(target.id);
-                }
-              }}
+              }
+            }}
+          >
+            {title}
+          </p>
+        )}
+        <div className="delete_button">
+          <Tooltip content="Delete Todo">
+            <Button
+              aria-label="Delete Todo"
+              onClick={() => removeItem(todo.id)}
             >
-              {title}
-            </p>
-          )}
-          <div className="delete_button">
-            <Tooltip content="Delete Todo">
-              <Button
-                onClick={() => {
-                  removeItem(todo.id);
-                }}
-                {...buttonProps}
-              >
-                <FaTrash />
-              </Button>
-            </Tooltip>
-          </div>
+              <FaTrash aria-hidden="true" />
+            </Button>
+          </Tooltip>
         </div>
       </div>
     </li>
