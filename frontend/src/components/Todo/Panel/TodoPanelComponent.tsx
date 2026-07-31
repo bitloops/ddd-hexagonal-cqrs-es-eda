@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { type JSX } from 'react';
 import { Button, HStack, Input, VStack } from '@chakra-ui/react';
 import { Tooltip } from '../../ui/Tooltip';

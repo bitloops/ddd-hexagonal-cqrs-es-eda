@@ -59,6 +59,7 @@ export class NatsStreamingCommandBus implements Infra.CommandBus.IStreamCommandB
     opts.durable(durableName);
     opts.manualAck();
     opts.ackExplicit();
+    opts.maxDeliver(5);
     opts.deliverTo(createInbox());
 
     const stream = subject.split('.')[0];
@@ -93,7 +94,7 @@ export class NatsStreamingCommandBus implements Infra.CommandBus.IStreamCommandB
             this.logger.log(
               `[Command ${subject}]: Error executing command: ${JSON.stringify(err)}`,
             );
-            m.ack();
+            m.nak(1_000);
           }
         }
         this.logger.log('Exiting command loop...');

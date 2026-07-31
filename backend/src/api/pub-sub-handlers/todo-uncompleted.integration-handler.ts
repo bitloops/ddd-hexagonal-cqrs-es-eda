@@ -1,6 +1,5 @@
 import { Application, ok, Either } from '@bitloops/bl-boilerplate-core';
 import { TodoUncompletedIntegrationEvent } from '@src/lib/bounded-contexts/todo/todo/contracts/integration-events/todo-uncompleted.integration-event';
-import { todo } from '../../proto/generated/todo';
 import { Subscriptions, Subscribers } from '../todo.sse.controller';
 
 export class TodoUncompletedPubSubIntegrationEventHandler
@@ -42,10 +41,10 @@ export class TodoUncompletedPubSubIntegrationEventHandler
     console.log('found subscribers', subscriptionsSubscribers);
     if (subscriptionsSubscribers) {
       for (const subscriber of subscriptionsSubscribers) {
-        const call = this.subscribers[subscriber]?.call;
-        console.log('subscriber call', !!call);
-        if (call) {
-          call('todo.uncompleted', {
+        const send = this.subscribers[subscriber]?.send;
+        console.log('subscriber send', !!send);
+        if (send) {
+          send('todo.uncompleted', {
             id: payload.todoId,
             userId: userId,
           }, userId);

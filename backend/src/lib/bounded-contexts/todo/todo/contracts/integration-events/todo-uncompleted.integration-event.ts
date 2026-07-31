@@ -18,7 +18,6 @@ export class TodoUncompletedIntegrationEvent extends Infra.EventBus
   static versionMappers: Record<string, ToIntegrationDataMapper> = {
     v1: TodoUncompletedIntegrationEvent.toIntegrationDataV1,
   };
-  public metadata: Infra.EventBus.TIntegrationEventMetadata;
 
   constructor(public payload: IntegrationSchemas, version: string) {
     super('Todo', payload, version);

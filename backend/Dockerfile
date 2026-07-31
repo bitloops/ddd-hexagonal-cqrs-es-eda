@@ -1,33 +1,50 @@
-FROM node:20-alpine 
-# Set the working directory to /app inside the container
-WORKDIR /app
-# Copy app files
-COPY . .
-#      BUILD      
-# Install dependencies (--immutable makes sure the exact versions in the lockfile gets installed)
-RUN yarn install --immutable
-# Build the app
-RUN yarn build
-#      RUN        
-# Set the env to "production"
-ENV JWT_SECRET "p2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B"
-ENV JWT_LIFETIME_SECONDS 3600
-ENV HTTP_IP todo-backend
-ENV GRPC_IP todo-backend
-ENV IAM_DATABASE_HOST todo-backend
-ENV TODO_DATABASE_HOST bl-mongo
-ENV PG_IAM_HOST bl-postgres
-ENV PG_HOST bl-postgres
-ENV MONGO_HOST bl-mongo
-ENV MARKETING_DATABASE_HOST bl-mongo
-ENV NATS_HOST bl-nats
-ENV GRAFANA_ADMIN_USER admin
-ENV GRAFANA_ADMIN_PASSWORD admin
-ENV NODE_ENV production
-ENV AUTH_URL "http://todo-backend:8080/auth/login"
-ENV TODO_URL "http://todo-backend:8080"
-ENV REGISTRATION_URL "http://todo-backend:8080/auth/register"
-# Expose the port on which the app will be running (3000 is the default that `serve` uses)
+# syntax=docker/dockerfile:1.7
+
+FROM node:24.18.1-alpine3.24 AS pnpm-base
+
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+
+RUN corepack enable
+
+WORKDIR /workspace
+
+FROM pnpm-base AS build
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY backend/package.json backend/package.json
+COPY frontend/package.json frontend/package.json
+COPY frontend/tests/package.json frontend/tests/package.json
+
+RUN pnpm install --frozen-lockfile --filter todo...
+
+COPY backend backend
+
+RUN pnpm --dir backend run build
+
+FROM pnpm-base AS production-dependencies
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY backend/package.json backend/package.json
+COPY frontend/package.json frontend/package.json
+COPY frontend/tests/package.json frontend/tests/package.json
+
+RUN pnpm install --frozen-lockfile --prod --filter todo...
+
+FROM node:24.18.1-alpine3.24 AS runtime
+
+ENV NODE_ENV=production
+
+WORKDIR /workspace
+
+COPY --from=production-dependencies /workspace/node_modules node_modules
+COPY --from=production-dependencies /workspace/backend/node_modules backend/node_modules
+COPY --from=build /workspace/backend/dist backend/dist
+COPY backend/package.json backend/package.json
+
+USER node
+WORKDIR /workspace/backend
+
 EXPOSE 8080
-# Start the app
-CMD [ "yarn", "start:prod" ]
+
+CMD ["node", "dist/main"]

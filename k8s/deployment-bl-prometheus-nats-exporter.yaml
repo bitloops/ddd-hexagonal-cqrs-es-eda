@@ -16,6 +16,6 @@ spec:
       containers:
       - name: prometheus-nats-exporter
         image: natsio/prometheus-nats-exporter:latest
-        args: ["-DV", "-gatewayz", "-connz", "-varz", "-jsz=all", "http://nats:8223"]
+        args: ["-DV", "-gatewayz", "-connz", "-varz", "-jsz=all", "http://bl-nats:8223"]
         ports:
         - containerPort: 7777

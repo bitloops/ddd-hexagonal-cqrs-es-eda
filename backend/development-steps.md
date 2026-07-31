@@ -1,53 +1,79 @@
-## Transpile bl code
+# Backend development
 
-Transpile your bl code giving as target option path the absolute path of your project's `src/lib`.
+## Prerequisites
 
-Remove strict and strictNullChecks from your tsconfig if present.
+- Node.js 24
+- Corepack with the repository-pinned pnpm version
+- Docker and Docker Compose
 
-## Install dependencies
+Install the complete workspace from the repository root:
 
 ```bash
-# install bitloops plugins
-yarn add @bitloops/bl-boilerplate-core \
-      @bitloops/bl-boilerplate-infra-mongo \
-      @bitloops/bl-boilerplate-infra-nest-auth-passport \
-      @bitloops/bl-boilerplate-infra-nest-jetstream \
-      @bitloops/bl-boilerplate-infra-postgres \
-      @bitloops/bl-boilerplate-infra-telemetry \
-      nats \
-      mongodb
+corepack enable
+pnpm install --frozen-lockfile
 ```
 
-### Api module
+## Configuration and infrastructure
 
-Each controller will have injected the commandBus or/and the queryBus from the bus-plugin you will be using. On `api.module.ts` we register the controllers, import the buses-plugin, the auth-module plugin and nest's config module if needed. Each controller dispatches a command/query using the appropriate bus and then handles the response, by matching each error to the appropriate response code.
+Copy `backend/.template-env` to `backend/.development.env` and replace the
+development JWT secret. Start PostgreSQL and NATS:
 
-### App module
+```bash
+docker compose -p bitloops-todo-app up -d bl-postgres bl-nats
+```
 
-We will be registering each bl module, connecting it with its required adapters. We can place this code under `src/bounded-contexts/[bounded-context-name]/[module-name]/`.
+PostgreSQL is the only application database. The backend creates the IAM,
+Marketing, Todo event-store, projection, and outbox tables idempotently during
+startup.
 
-Each bl module is a dynamic module, so when we import it, we need to pass the injected modules & adapters(nestjs providers) as arguments.
+Start the backend in watch mode:
 
-Every bl module has a `constants.ts` file, listing all the injection tokens its respective infra module will have to provide.
+```bash
+pnpm --dir backend start:dev
+```
+
+The REST API listens on `http://localhost:8080`, Swagger UI is available at
+`/api`, and the OpenAPI document at `/api-json`.
+
+## Module boundaries
+
+- `src/api` contains REST and SSE driving adapters.
+- `src/lib/bounded-contexts` contains application and domain code.
+- `src/bounded-contexts` contains PostgreSQL, NATS, and service adapters.
+- `src/lib/infra` contains reusable NestJS infrastructure.
+
+Controllers dispatch commands and queries through NATS request/reply. The Todo
+write adapter reconstructs aggregates from `todo_events`, then commits events,
+the query projection, and outbox rows in one PostgreSQL transaction. See
+[`../docs/backend-architecture.md`](../docs/backend-architecture.md).
+
+## Validation
+
+```bash
+pnpm --dir backend run build
+pnpm --dir backend run lint
+pnpm --dir backend run test
+```
+
+Run the database integration lane against an isolated test database:
+
+```bash
+PG_DATABASE=bitloops_test \
+PG_USER=user \
+PG_PASSWORD=postgres \
+pnpm --dir backend run test:integration
+```
 
 ## Tracing
 
-We can trace the execution of a method by using the @Traceable decorator provided by the bitloops-tracing plugin. Let's say we want to use it on the api module to trace the duration of a `addTodo` post http route. First we have to register the plugin in the `api.module.ts`. After that we just decorate the method we want.
+Register `TracingModule` with the system message bus and apply `@Traceable` to
+async application or adapter methods. Tracing publication is deliberately
+isolated from business results: an observability outage must not turn a valid
+command into an HTTP failure.
 
-```ts
-  @OtherDecorators...
-  @Traceable()
-  async addTodo() {
-    // Controller logic
-  }
-```
+## IAM direction
 
-We can also trace the execution of a repo method, or any adapter we have concreted in the same way.
-
-```ts
-  @OtherDecorators...
-  @Traceable()
-  async save(entity: Entity) {
-    // ...
-  }
-```
+The application-owned password and JWT implementation is transitional. New IAM
+work should follow the
+[`../docs/keycloak-iam-roadmap.md`](../docs/keycloak-iam-roadmap.md) and keep
+Keycloak behind an OpenID Connect anti-corruption adapter.

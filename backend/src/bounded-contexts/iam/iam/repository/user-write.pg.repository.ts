@@ -39,7 +39,8 @@ export class UserWritePostgresRepository implements UserWriteRepoPort {
     SET email = $2, password = $3, last_login = $4
     WHERE id = $1`;
     await this.connection.query(sqlStatement, [id, email, password, lastLogin]);
-    this.domainEventBus.publish(aggregate.domainEvents);
+    await this.domainEventBus.publish(aggregate.domainEvents);
+    aggregate.clearEvents();
     return ok();
   }
 
@@ -50,7 +51,8 @@ export class UserWritePostgresRepository implements UserWriteRepoPort {
     const aggregateRootId = aggregate.id;
     const sqlStatement = `DELETE FROM ${this.tableName} WHERE id = $1`;
     await this.connection.query(sqlStatement, [aggregateRootId.toString()]);
-    this.domainEventBus.publish(aggregate.domainEvents);
+    await this.domainEventBus.publish(aggregate.domainEvents);
+    aggregate.clearEvents();
     return ok();
   }
 
@@ -60,11 +62,11 @@ export class UserWritePostgresRepository implements UserWriteRepoPort {
   ): Promise<Either<UserEntity | null, Application.Repo.Errors.Unexpected>> {
     const ctx = asyncLocalStorage.getStore()?.get('context');
     const { jwt } = ctx;
-    let jwtPayload: null | any = null;
+    let jwtPayload: string | jwtwebtoken.JwtPayload;
     try {
       jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
-    } catch (err) {
-      throw new Error('Invalid JWT!');
+    } catch (error) {
+      throw new Error('Invalid JWT!', { cause: error });
     }
     const result = await this.connection.query(
       `SELECT * FROM ${this.tableName} WHERE id = $1`,
@@ -121,7 +123,8 @@ export class UserWritePostgresRepository implements UserWriteRepoPort {
     const userPrimitives = user.toPrimitives();
     const { id, email, password, lastLogin } = userPrimitives;
     await this.connection.query(sqlStatement, [id, email, password, lastLogin]);
-    this.domainEventBus.publish(user.domainEvents);
+    await this.domainEventBus.publish(user.domainEvents);
+    user.clearEvents();
     return ok();
   }
 }

@@ -14,14 +14,8 @@ spec:
         app: todo-frontend
     spec:
       containers:
-      - name: todo-frontend
-        context: ../frontend
-        ports:
-        - containerPort: 4173
-        volumeMounts:
-        - name: frontend-context
-          mountPath: /frontend
-      volumes:
-      - name: frontend-context
-        hostPath:
-          path: ../frontend
+        - name: todo-frontend
+          image: todo-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080

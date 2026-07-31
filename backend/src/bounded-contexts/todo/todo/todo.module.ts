@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TodoWriteRepository } from './repository/todo-write.repository';
 import { TodoReadRepository } from './repository/todo-read.repository';
 import { TodoModule as LibTodoModule } from 'src/lib/bounded-contexts/todo/todo/todo.module';
-import { MongoModule } from '@lib/infra/mongo';
+import { PostgresModule } from '@lib/infra/postgres';
 import { PubSubCommandHandlers } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers';
 import { QueryHandlers } from '@src/lib/bounded-contexts/todo/todo/application/query-handlers';
 import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/todo/todo/application/event-handlers/integration';
@@ -22,8 +22,11 @@ import {
   NatsStreamingIntegrationEventBus,
   NatsPubSubIntegrationEventsBus,
 } from '@lib/infra/nest-jetstream';
+import { TodoOutboxRelay } from './repository/todo-outbox.relay';
+import { TODO_POSTGRES_SCHEMA } from './repository/todo-postgres.schema';
 
 const providers = [
+  TodoOutboxRelay,
   {
     provide: TodoWriteRepoPortToken,
     useClass: TodoWriteRepository,
@@ -53,7 +56,8 @@ const providers = [
   imports: [
     LibTodoModule.register({
       imports: [
-        MongoModule,
+        PostgresModule,
+        PostgresModule.forFeature(TODO_POSTGRES_SCHEMA),
         JetstreamModule.forFeature({
           moduleOfHandlers: TodoModule,
           pubSubCommandHandlers: [...PubSubCommandHandlers],

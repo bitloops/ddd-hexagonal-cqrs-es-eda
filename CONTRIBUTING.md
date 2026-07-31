@@ -17,6 +17,20 @@ We recommend baby steps so you can get familiar with our contribution process. W
 If you decide to fix an issue, please be sure to check the comments in case somebody is already working on it. If there hasn’t been any activity, then leave a comment stating that you intend to work on it so other people don’t accidentally duplicate your effort.
 If the issue has already been claimed by someone else, but there hasn’t been any recent activity, then feel free to take over after leaving a comment. 
 
+Use Node.js 24 and the pnpm version pinned by the root `packageManager` field.
+Before opening a pull request, run the workspace gates:
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+pnpm build
+pnpm lint
+pnpm test
+```
+
+Changes to Todo persistence should also include the PostgreSQL integration lane
+described in [`docs/backend-architecture.md`](./docs/backend-architecture.md).
+
 We would also welcome any new issues you may find. We do suggest searching for the particular issue you would like to report in the existing issue list before reporting new ones. In addition, if you do encounter any vulnerability issues, please do follow our [Security Policy](https://github.com/bitloops/bitloops-language/blob/main/.github/SECURITY) instead of creating a new issue. 
  
 ### Create a Pull Request

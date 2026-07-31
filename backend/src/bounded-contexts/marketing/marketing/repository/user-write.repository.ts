@@ -3,123 +3,88 @@ import {
   Domain,
   Either,
   Infra,
-  asyncLocalStorage,
   ok,
 } from '@bitloops/bl-boilerplate-core';
-import { Injectable, Inject } from '@nestjs/common';
-import { Collection, MongoClient } from 'mongodb';
-import * as jwtwebtoken from 'jsonwebtoken';
+import { Inject, Injectable } from '@nestjs/common';
+import { Pool, QueryResultRow } from 'pg';
+
+import { constants } from '@lib/infra/postgres';
+import { StreamingDomainEventBusToken } from '@src/lib/bounded-contexts/marketing/marketing/constants';
 import { UserEntity } from '@src/lib/bounded-contexts/marketing/marketing/domain/user.entity';
 import { UserWriteRepoPort } from '@src/lib/bounded-contexts/marketing/marketing/ports/user-write.repo-port';
-import { ConfigService } from '@nestjs/config';
-import { AuthEnvironmentVariables } from '@src/config/auth.configuration';
-import { StreamingDomainEventBusToken } from '@src/lib/bounded-contexts/marketing/marketing/constants';
 
-const MONGO_DB_DATABASE = process.env.MONGO_DB_DATABASE || 'marketing';
-const MONGO_DB_TODO_COLLECTION =
-  process.env.MONGO_DB_TODO_COLLECTION || 'users';
+type MarketingUserRow = QueryResultRow & {
+  id: string;
+  completedTodos: number;
+  email: string;
+};
 
 @Injectable()
 export class UserWriteRepository implements UserWriteRepoPort {
-  private collectionName = MONGO_DB_TODO_COLLECTION;
-  private dbName = MONGO_DB_DATABASE;
-  private collection: Collection;
-  private JWT_SECRET: string;
-
   constructor(
-    @Inject('MONGO_DB_CONNECTION') private client: MongoClient,
+    @Inject(constants.pg_connection) private readonly pool: Pool,
     @Inject(StreamingDomainEventBusToken)
     private readonly domainEventBus: Infra.EventBus.IEventBus,
-    private configService: ConfigService<AuthEnvironmentVariables, true>,
-  ) {
-    this.collection = this.client
-      .db(this.dbName)
-      .collection(this.collectionName);
-    this.JWT_SECRET = this.configService.get('jwtSecret', { infer: true });
-  }
+  ) {}
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
   async update(
     user: UserEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
-    const ctx = asyncLocalStorage.getStore()?.get('context');
-    const { jwt } = ctx;
-    let jwtPayload: null | any = null;
-    try {
-      jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
-    } catch (err) {
-      throw new Error('Invalid JWT!');
-    }
-    const userPrimitives = user.toPrimitives();
-    if (userPrimitives.id !== jwtPayload.sub) {
-      throw new Error('Unauthorized userId');
-    }
-    const { id, ...userInfo } = userPrimitives;
-    await this.collection.updateOne(
-      {
-        _id: id as any,
-      },
-      {
-        $set: userInfo,
-      },
+    const snapshot = user.toPrimitives();
+    const result = await this.pool.query(
+      `UPDATE marketing_users
+       SET completed_todos = $2, email = $3, updated_at = NOW()
+       WHERE id = $1`,
+      [snapshot.id, snapshot.completedTodos, snapshot.email],
     );
-
-    this.domainEventBus.publish(user.domainEvents);
+    if (result.rowCount !== 1) throw new Error(`Marketing user ${snapshot.id} was not found`);
+    await this.domainEventBus.publish(user.domainEvents);
+    user.clearEvents();
     return ok();
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
-  delete(
-    aggregate: UserEntity,
+  async delete(
+    user: UserEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
-    throw new Error('Method not implemented.');
+    await this.pool.query('DELETE FROM marketing_users WHERE id = $1', [user.id.toString()]);
+    await this.domainEventBus.publish(user.domainEvents);
+    user.clearEvents();
+    return ok();
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
   async getById(
     id: Domain.UUIDv4,
   ): Promise<Either<UserEntity | null, Application.Repo.Errors.Unexpected>> {
-    const ctx = asyncLocalStorage.getStore()?.get('context');
-    const { jwt } = ctx;
-    let jwtPayload: null | any = null;
-    try {
-      jwtPayload = jwtwebtoken.verify(jwt, this.JWT_SECRET);
-    } catch (err) {
-      throw new Error('Invalid JWT!');
-    }
-    const result = await this.collection.findOne({
-      _id: id.toString() as any,
-    });
-
-    if (!result) {
-      return ok(null);
-    }
-
-    if (result.id !== jwtPayload.sub) {
-      throw new Error('Invalid userId');
-    }
-
-    const { _id, ...todo } = result as any;
-    return ok(
-      UserEntity.fromPrimitives({
-        ...todo,
-        id: _id.toString(),
-      }),
+    const result = await this.pool.query<MarketingUserRow>(
+      `SELECT
+         id::text,
+         completed_todos AS "completedTodos",
+         email
+       FROM marketing_users
+       WHERE id = $1`,
+      [id.toString()],
     );
+    const row = result.rows[0];
+    return ok(row ? UserEntity.fromPrimitives(row) : null);
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
   async save(
     user: UserEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
-    const createdUser = user.toPrimitives();
-
-    await this.collection.insertOne({
-      _id: createdUser.id as any,
-      ...createdUser,
-    });
-
-    this.domainEventBus.publish(user.domainEvents);
+    const snapshot = user.toPrimitives();
+    await this.pool.query(
+      `INSERT INTO marketing_users (id, completed_todos, email)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (id) DO UPDATE
+       SET email = EXCLUDED.email, updated_at = NOW()`,
+      [snapshot.id, snapshot.completedTodos, snapshot.email],
+    );
+    await this.domainEventBus.publish(user.domainEvents);
+    user.clearEvents();
     return ok();
   }
 }

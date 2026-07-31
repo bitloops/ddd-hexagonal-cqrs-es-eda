@@ -11,7 +11,7 @@ import {
 } from 'nats';
 import { Application, Domain, Infra } from '@bitloops/bl-boilerplate-core';
 import { NestjsJetstream } from '../nestjs-jetstream.class';
-import { ASYNC_LOCAL_STORAGE, METADATA_HEADERS, ProvidersConstants } from '../jetstream.constants';
+import { ASYNC_LOCAL_STORAGE, ProvidersConstants } from '../jetstream.constants';
 import { ContextPropagation } from './utils/context-propagation';
 
 const jsonCodec = JSONCodec();
@@ -34,11 +34,10 @@ export class NatsStreamingIntegrationEventBus implements Infra.EventBus.IEventBu
   async publish(
     eventsInput: Infra.EventBus.IntegrationEvent<any> | Infra.EventBus.IntegrationEvent<any>[],
   ): Promise<void> {
-    let integrationEvents: Infra.EventBus.IntegrationEvent<any>[];
-    Array.isArray(eventsInput)
-      ? (integrationEvents = eventsInput)
-      : (integrationEvents = [eventsInput]);
-    integrationEvents.forEach(async (integrationEvent) => {
+    const integrationEvents = Array.isArray(eventsInput)
+      ? eventsInput
+      : [eventsInput];
+    await Promise.all(integrationEvents.map(async (integrationEvent) => {
       integrationEvent.correlationId = this.getCorelationId();
       integrationEvent.context = this.getContext();
       const headers = this.generateHeaders(integrationEvent);
@@ -52,12 +51,7 @@ export class NatsStreamingIntegrationEventBus implements Infra.EventBus.IEventBu
         NatsStreamingIntegrationEventBus.getSubjectFromEventInstance(integrationEvent);
       this.logger.log('publishing integration event to:', subject);
 
-      try {
-        await this.js.publish(subject, message, options);
-      } catch (err) {
-        // NatsError: 503
-        this.logger.error('Error publishing integration event to:' + subject, err);
-      }
+      await this.js.publish(subject, message, options);
 
       // the jetstream returns an acknowledgement with the
       // stream that captured the message, it's assigned sequence
@@ -65,7 +59,7 @@ export class NatsStreamingIntegrationEventBus implements Infra.EventBus.IEventBu
       // const stream = pubAck.stream;
       // const seq = pubAck.seq;
       // const duplicate = pubAck.duplicate;
-    });
+    }));
   }
 
   async subscribe(subject: string, handler: Application.IHandleIntegrationEvent) {
@@ -77,6 +71,7 @@ export class NatsStreamingIntegrationEventBus implements Infra.EventBus.IEventBu
     opts.durable(durableName);
     opts.manualAck();
     opts.ackExplicit();
+    opts.maxDeliver(5);
     opts.deliverTo(createInbox());
 
     try {
@@ -106,7 +101,7 @@ export class NatsStreamingIntegrationEventBus implements Infra.EventBus.IEventBu
             this.logger.error(
               `[${subject}]: Error handling integration event:, ${JSON.stringify(err)}`,
             );
-            m.ack();
+            m.nak(1_000);
           }
         }
       })();

@@ -10,7 +10,6 @@ import { PostgresModule } from '@lib/infra/postgres';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import authConfiguration from './config/auth.configuration';
-import { MongoModule } from '@lib/infra/mongo';
 import { TracingModule } from '@lib/infra/telemetry';
 
 @Module({
@@ -28,19 +27,13 @@ import { TracingModule } from '@lib/infra/telemetry';
       ],
     }),
     PostgresModule.forRoot({
-      database: process.env.PG_IAM_DATABASE ?? 'iam',
-      host: process.env.PG_IAM_HOST ?? 'localhost',
-      port: process.env.PG_IAM_PORT ? +process.env.PG_IAM_PORT : 5432,
-      user: process.env.PG_IAM_USER ?? 'user',
-      password: process.env.PG_IAM_PASSWORD ?? 'postgres',
+      database: process.env.PG_DATABASE ?? 'bitloops',
+      host: process.env.PG_HOST ?? 'localhost',
+      port: process.env.PG_PORT ? +process.env.PG_PORT : 5432,
+      user: process.env.PG_USER ?? 'user',
+      password: process.env.PG_PASSWORD ?? 'postgres',
       max: 20,
     }),
-    MongoModule.forRoot({
-      url: `mongodb://${process.env.MONGO_HOST || 'localhost'}:${
-        process.env.MONGO_PORT || 30001
-      }/?directConnection=true&replicaSet=my-replica-set`,
-    }),
-
     TodoModule,
     MarketingModule,
     IamModule,

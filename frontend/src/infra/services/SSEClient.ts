@@ -20,7 +20,7 @@ export class SSEClient {
 
   private maxReconnectInterval = 30000; // Max 30 seconds
 
-  private reconnectTimeout: NodeJS.Timeout | null = null;
+  private reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 
   private baseUrl: string;
 

@@ -34,16 +34,17 @@ export class NatsStreamingDomainEventBus implements Infra.EventBus.IEventBus {
   async publish(
     domainEventsInput: Domain.DomainEvent<any> | Domain.DomainEvent<any>[],
   ): Promise<void> {
-    let domainEvents: Domain.DomainEvent<any>[];
-    Array.isArray(domainEventsInput)
-      ? (domainEvents = domainEventsInput)
-      : (domainEvents = [domainEventsInput]);
-    domainEvents.forEach(async (domainEvent) => {
+    const domainEvents = Array.isArray(domainEventsInput)
+      ? domainEventsInput
+      : [domainEventsInput];
+    await Promise.all(domainEvents.map(async (domainEvent) => {
       const boundedContext = domainEvent.metadata.boundedContextId;
       const stream = NatsStreamingDomainEventBus.getStreamName(boundedContext);
       const subject = `${stream}.${domainEvent.constructor.name}`;
-      domainEvent.correlationId = this.getCorrelationId();
-      domainEvent.context = this.getContext();
+      const correlationId = this.getCorrelationId();
+      const context = this.getContext();
+      if (correlationId) domainEvent.correlationId = correlationId;
+      if (context) domainEvent.context = context;
       const headers = this.generateHeaders(domainEvent);
       const options: Partial<JetStreamPublishOptions> = {
         msgID: domainEvent.metadata.messageId,
@@ -54,12 +55,7 @@ export class NatsStreamingDomainEventBus implements Infra.EventBus.IEventBus {
       const message = jsonCodec.encode(domainEvent);
       this.logger.log('publishing domain event to:' + subject);
 
-      try {
-        await this.js.publish(subject, message, options);
-      } catch (err) {
-        // NatsError: 503
-        this.logger.error('Error publishing domain event to:' + subject, err);
-      }
+      await this.js.publish(subject, message, options);
 
       // the jetstream returns an acknowledgement with the
       // stream that captured the message, it's assigned sequence
@@ -67,7 +63,7 @@ export class NatsStreamingDomainEventBus implements Infra.EventBus.IEventBus {
       // const stream = pubAck.stream;
       // const seq = pubAck.seq;
       // const duplicate = pubAck.duplicate;
-    });
+    }));
   }
 
   async subscribe(subject: string, handler: Application.IHandleDomainEvent) {
@@ -76,6 +72,7 @@ export class NatsStreamingDomainEventBus implements Infra.EventBus.IEventBus {
     opts.durable(durableName);
     opts.manualAck();
     opts.ackExplicit();
+    opts.maxDeliver(5);
     opts.deliverTo(createInbox());
 
     const stream = subject.split('.')[0];
@@ -111,7 +108,7 @@ export class NatsStreamingDomainEventBus implements Infra.EventBus.IEventBus {
             this.logger.error(
               `[Domain Event ${subject}]: Error handling domain event: ${JSON.stringify(err)}`,
             );
-            m.ack();
+            m.nak(1_000);
           }
         }
       })();
@@ -130,7 +127,7 @@ export class NatsStreamingDomainEventBus implements Infra.EventBus.IEventBus {
   }
 
   private getContext() {
-    return this.asyncLocalStorage.getStore()?.get('context') || {};
+    return this.asyncLocalStorage.getStore()?.get('context');
   }
 
   private generateHeaders(domainEvent: Domain.DomainEvent<any>): MsgHdrs {

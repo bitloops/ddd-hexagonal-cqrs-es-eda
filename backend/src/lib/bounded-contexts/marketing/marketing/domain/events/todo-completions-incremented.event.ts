@@ -6,7 +6,6 @@ export type TodoCompletionsIncrementedDomainEventProps =
   }>;
 
 export class TodoCompletionsIncrementedDomainEvent extends Domain.DomainEvent<TodoCompletionsIncrementedDomainEventProps> {
-  public metadata: Domain.TDomainEventMetadata;
   public aggregateId: string;
 
   constructor(payload: TodoCompletionsIncrementedDomainEventProps) {

@@ -8,7 +8,6 @@ type TodoModifiedTitleDomainEventProps = Domain.TDomainEventProps<{
 
 export class TodoModifiedTitleDomainEvent extends Domain.DomainEvent<TodoModifiedTitleDomainEventProps> {
   public aggregateId: any;
-  public metadata: Domain.TDomainEventMetadata;
 
   constructor(payload: TodoModifiedTitleDomainEventProps) {
     super('Todo', payload);

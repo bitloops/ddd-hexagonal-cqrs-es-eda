@@ -9,11 +9,7 @@ export class TodoModule {
     const InjectedProviders = options.inject || [];
     return {
       module: TodoModule,
-      imports: [
-        // MongooseModule.forFeature([{ name: Todo.name, schema: TodoSchema }]),
-        ...options.imports,
-      ],
-      // controllers: [TodoController],
+      imports: [...options.imports],
       providers: [
         ...PubSubCommandHandlers,
         ...EventHandlers,

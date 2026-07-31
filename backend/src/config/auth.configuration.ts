@@ -22,6 +22,6 @@ export default () => ({
     port: process.env.PG_PORT ? +process.env.PG_PORT : 5432,
     user: process.env.PG_USER ?? 'user',
     password: process.env.PG_PASSWORD ?? 'postgres',
-    database: process.env.PG_DATABASE ?? 'iam',
+    database: process.env.PG_DATABASE ?? 'bitloops',
   },
 });

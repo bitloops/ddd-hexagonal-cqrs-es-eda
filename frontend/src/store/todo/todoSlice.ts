@@ -1,184 +1,101 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { Todo } from '../../models/Todo';
-import TodoRepository from '../../infra/repositories/todo';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+
 import { EventBus, Events } from '../../Events';
-
-interface TodoState {
-    todosState: Todo[];
-    todoIdsState: string[];
-}
-
-const initialState: TodoState = {
-    todosState: [],
-    todoIdsState: [],
-};
+import TodoRepository from '../../infra/repositories/todo';
+import todoReducer, { setTodoIds, setTodos, updateTodoTitle } from './todoReducer';
 
 const todoRepository = new TodoRepository();
+let isSubscribedToTodoEvents = false;
 
-export const initTodos = createAsyncThunk<
-    void,
-    void,
-    { rejectValue: string }
->(
-    'todo/initTodos',
-    async (_, { dispatch, rejectWithValue }) => {
-        // Subscribe to SSE events only once
-        EventBus.subscribe(Events.TODO_EVENT, (data: { eventName: string; payload: unknown }) => {
-            const { eventName, payload } = data;
-            switch (eventName) {
-                case 'onAdded': {
-                    dispatch(setTodos({ type: 'onAdded', todos: [payload as Todo] }));
-                    break;
-                }
-                case 'onDeleted':
-                    dispatch(setTodos({ type: 'onDeleted', todos: [payload as Todo] }));
-                    break;
-                case 'onModifiedTitle':
-                    dispatch(setTodos({ type: 'onModifiedTitle', todos: [payload as Todo] }));
-                    break;
-                case 'onCompleted':
-                    dispatch(setTodos({ type: 'onCompleted', todos: [payload as Todo] }));
-                    break;
-                case 'onUncompleted':
-                    dispatch(setTodos({ type: 'onUncompleted', todos: [payload as Todo] }));
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        // Fetch all todos
-        try {
-            const todoRepository = new TodoRepository();
-            const response = await todoRepository.getAllTodo(5, 0); //Getting only 5 todos on page load
-            if (response.status === 'success' && response.todos) {
-                dispatch(setTodos({ type: 'init', todos: response.todos }));
-            } else {
-                return rejectWithValue(response.error ?? 'Unknown error');
-            }
-        } catch (error) {
-            const message = (error as Error).message;
-            return rejectWithValue(message);
+export const initTodos = createAsyncThunk<void, void, { rejectValue: string }>(
+  'todo/initTodos',
+  async (_, { dispatch, rejectWithValue }) => {
+    if (!isSubscribedToTodoEvents) {
+      EventBus.subscribe(
+        Events.TODO_EVENT,
+        (todoEvent) => {
+          switch (todoEvent.eventName) {
+            case 'onAdded':
+              dispatch(setTodos({ type: 'onAdded', todos: [todoEvent.payload] }));
+              break;
+            case 'onDeleted':
+              dispatch(setTodos({ type: 'onDeleted', todos: [todoEvent.payload] }));
+              break;
+            case 'onModifiedTitle':
+              dispatch(setTodos({ type: 'onModifiedTitle', todos: [todoEvent.payload] }));
+              break;
+            case 'onCompleted':
+              dispatch(setTodos({ type: 'onCompleted', todos: [todoEvent.payload] }));
+              break;
+            case 'onUncompleted':
+              dispatch(setTodos({ type: 'onUncompleted', todos: [todoEvent.payload] }));
+              break;
+            default:
+              break;
+          }
         }
+      );
+      isSubscribedToTodoEvents = true;
     }
+
+    try {
+      const response = await todoRepository.getAllTodo(5, 0);
+      if (response.status === 'success' && response.todos) {
+        dispatch(setTodos({ type: 'init', todos: response.todos }));
+        return;
+      }
+      return rejectWithValue(response.error ?? 'Unknown error');
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Unknown error');
+    }
+  }
 );
 
 export const loadMoreTodos = createAsyncThunk<
-    void,
-    { offset: number; limit: number },
-    { rejectValue: string }
+  void,
+  { offset: number; limit: number },
+  { rejectValue: string }
 >(
-    'todo/loadMoreTodos',
-    async ({ offset, limit }, { dispatch, rejectWithValue }) => {
-        try {
-            const todoRepository = new TodoRepository();
-            const response = await todoRepository.getAllTodo(limit, offset);
-            if (response.status === 'success' && response.todos) {
-                dispatch(setTodos({ type: 'onAdded', todos: response.todos }))
-            } else {
-                return rejectWithValue(response.error ?? 'Unknown error');
-            }
-        } catch (error) {
-            const message = (error as Error).message;
-            return rejectWithValue(message);
-        }
+  'todo/loadMoreTodos',
+  async ({ offset, limit }, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await todoRepository.getAllTodo(limit, offset);
+      if (response.status === 'success' && response.todos) {
+        dispatch(setTodos({ type: 'onAdded', todos: response.todos }));
+        return;
+      }
+      return rejectWithValue(response.error ?? 'Unknown error');
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Unknown error');
     }
+  }
 );
 
-const todoSlice = createSlice({
-    name: 'todo',
-    initialState,
-    reducers: {
-        setTodos(state, action: PayloadAction<{ type: string, todos: Todo[] }>) {
-            const { type, todos } = action.payload;
-
-            switch (type) {
-                case 'init':
-                    state.todosState = todos;
-                    state.todoIdsState = todos.map(todo => todo.id);
-                    break;
-                case 'onAdded':
-                    state.todosState = Array.from(new Set([...state.todosState, ...todos]));
-                    state.todoIdsState = Array.from(new Set([...state.todoIdsState, ...todos.map(todo => todo.id)]));
-                    break;
-                case 'onDeleted':
-                    state.todosState = state.todosState.filter(todo => todo.id !== todos[0].id);
-                    state.todoIdsState = state.todoIdsState.filter(id => id !== todos[0].id);
-                    break;
-                case 'onCompleted':
-                    state.todosState = state.todosState.map(todo => {
-                        if (todo.id === todos[0].id) {
-                            return { ...todo, completed: true };
-                        }
-                        return todo;
-                    });
-                    break;
-                case 'onUncompleted':
-                    state.todosState = state.todosState.map(todo => {
-                        if (todo.id === todos[0].id) {
-                            return { ...todo, completed: false };
-                        }
-                        return todo;
-                    });
-                    break;
-                case 'onModifiedTitle':
-                    state.todosState = state.todosState.map(todo => {
-                        if (todo.id === todos[0].id) {
-                            return { ...todo, title: todos[0].title };
-                        }
-                        return todo;
-                    });
-                    break;
-                default:
-                    break;
-            }
-        },
-        setTodoIds(state, action: PayloadAction<string[]>) {
-            state.todoIdsState = action.payload;
-        },
-        addTodo(_state, action: PayloadAction<string>) {
-            const title = action.payload;
-            todoRepository.addTodo(title)
-        },
-        deleteTodo(_state, action: PayloadAction<string>) {
-            const id = action.payload;
-            todoRepository.deleteTodo(id);
-        },
-        modifyTodoTitle(_state, action: PayloadAction<{ id: string, title: string }>) {
-            const { id, title } = action.payload;
-            todoRepository.modifyTodoTitle(id, title);
-        },
-        completeTodo(_state, action: PayloadAction<string>) {
-            const id = action.payload;
-            todoRepository.completeTodo(id);
-        },
-        uncompleteTodo(_state, action: PayloadAction<string>) {
-            const id = action.payload;
-            todoRepository.uncompleteTodo(id)
-
-        },
-        updateTodoTitle(state, action: PayloadAction<{ id: string, title: string }>) {
-            const { id, title } = action.payload;
-            state.todosState = state.todosState.map(todo => {
-                if (todo.id === id) {
-                    return { ...todo, title };
-                }
-                return todo;
-            });
-        }
-
-    },
+export const addTodo = createAsyncThunk<void, string>('todo/addTodo', async (title) => {
+  await todoRepository.addTodo(title);
 });
 
-export const {
-    setTodos,
-    setTodoIds,
-    addTodo,
-    deleteTodo,
-    modifyTodoTitle,
-    completeTodo,
-    uncompleteTodo,
-    updateTodoTitle
-} = todoSlice.actions;
+export const deleteTodo = createAsyncThunk<void, string>('todo/deleteTodo', async (id) => {
+  await todoRepository.deleteTodo(id);
+});
 
-export default todoSlice.reducer;
+export const modifyTodoTitle = createAsyncThunk<void, { id: string; title: string }>(
+  'todo/modifyTodoTitle',
+  async ({ id, title }) => {
+    await todoRepository.modifyTodoTitle(id, title);
+  }
+);
+
+export const completeTodo = createAsyncThunk<void, string>('todo/completeTodo', async (id) => {
+  await todoRepository.completeTodo(id);
+});
+
+export const uncompleteTodo = createAsyncThunk<void, string>(
+  'todo/uncompleteTodo',
+  async (id) => {
+    await todoRepository.uncompleteTodo(id);
+  }
+);
+
+export { setTodoIds, setTodos, updateTodoTitle };
+export default todoReducer;

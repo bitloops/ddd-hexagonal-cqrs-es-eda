@@ -28,7 +28,7 @@ const LoginController: React.FC = () => {
     if (isAuthenticated) {
       navigate('/');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   const clearEmailAndPassword = () => {
     updateEmail('');

@@ -2,9 +2,11 @@ import { Domain } from '@bitloops/bl-boilerplate-core';
 import { DomainErrors } from '../errors';
 
 export class ValidEmailRule implements Domain.IRule {
-  constructor(private email: string) {}
+  public readonly Error: DomainErrors.InvalidEmailDomainError;
 
-  public Error = new DomainErrors.InvalidEmailDomainError(this.email);
+  constructor(private email: string) {
+    this.Error = new DomainErrors.InvalidEmailDomainError(email);
+  }
 
   public isBrokenIf(): boolean {
     const re = /\S+@\S+\.\S+/;

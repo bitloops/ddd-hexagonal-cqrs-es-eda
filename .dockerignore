@@ -1,0 +1,13 @@
+.git
+.github
+.vscode
+**/node_modules
+**/dist
+**/coverage
+**/.nyc_output
+**/*.log
+**/*.tsbuildinfo
+**/.env
+**/.development.env
+README.md
+k8s

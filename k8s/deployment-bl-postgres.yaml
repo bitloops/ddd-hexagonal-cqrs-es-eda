@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:latest
+        image: postgres:18-alpine
         env:
         - name: POSTGRES_PASSWORD
           valueFrom:
@@ -23,14 +23,14 @@ spec:
               name: secret-bl-postgres-secret
               key: POSTGRES_PASSWORD
         - name: POSTGRES_DB
-          value: iam
+          value: bitloops
         - name: POSTGRES_USER
           value: user
         ports:
         - containerPort: 5432
         volumeMounts:
         - name: bl-postgres-data
-          mountPath: /usr/share/docker/postgresql
+          mountPath: /var/lib/postgresql/data
       volumes:
       - name: bl-postgres-data
         persistentVolumeClaim:

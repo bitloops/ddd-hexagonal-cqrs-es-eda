@@ -8,7 +8,7 @@ class LocalStorageRepository {
     if (value) {
       try {
         return JSON.parse(value) as T;
-      } catch (e) {
+      } catch {
         throw new Error('Could not parse local storage object');
       }
     }

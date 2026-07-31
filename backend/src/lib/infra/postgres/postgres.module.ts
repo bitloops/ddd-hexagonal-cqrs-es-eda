@@ -1,8 +1,7 @@
-import { Module, DynamicModule, Inject, ModuleMetadata } from '@nestjs/common';
+import { Module, DynamicModule, ModuleMetadata } from '@nestjs/common';
 
-import { Pool, PoolConfig } from 'pg';
+import { PoolConfig } from 'pg';
 import { PostgresCoreModule } from './postgres-core.module';
-import { constants } from './postgres.constants';
 
 export interface PostgresModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
   // useExisting?: Type<JwtOptionsFactory>;
@@ -13,7 +12,6 @@ export interface PostgresModuleAsyncOptions extends Pick<ModuleMetadata, 'import
 
 @Module({})
 export class PostgresModule {
-  constructor(@Inject(constants.pg_connection) private pool: Pool) {}
   static forRoot(options: PoolConfig): DynamicModule {
     return {
       module: PostgresModule,
@@ -33,8 +31,5 @@ export class PostgresModule {
       module: PostgresModule,
       imports: [PostgresCoreModule.forFeature(sqlStatement)],
     };
-    // return {
-    //   module: PostgresModule,
-    // };
   }
 }

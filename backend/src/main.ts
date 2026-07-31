@@ -11,7 +11,6 @@ import { ApiModule } from './api/api.module';
 import config from './config/configuration';
 import { AsyncLocalStorageInterceptor } from './lib/infra/nest-auth-passport';
 import { CorrelationIdInterceptor } from './lib/infra/telemetry';
-import { writeFileSync } from 'fs';
 
 async function bootstrap() {
   const api = await NestFactory.create<NestFastifyApplication>(
@@ -26,14 +25,12 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('API Documentation')
     .setDescription('API description')
-    .setVersion('1.0')
+    .setVersion('1.0.0')
     .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(api, swaggerConfig);
   SwaggerModule.setup('api', api, document);
-
-  writeFileSync('swagger.json', JSON.stringify(document, null, 2));
 
   api.enableCors({
     origin: ['http://localhost:5175', 'http://localhost:4173', 'http://localhost:5173'],
@@ -48,6 +45,11 @@ async function bootstrap() {
     new AsyncLocalStorageInterceptor(),
   );
   api.useGlobalPipes(new ValidationPipe());
+
+  const worker = await NestFactory.createApplicationContext(AppModule);
+  api.enableShutdownHooks();
+  worker.enableShutdownHooks();
+
   await api.listen(appConfig.http.port, appConfig.http.ip, () => {
     console.log(
       `HTTP server is listening on ${appConfig.http.ip}:${appConfig.http.port}`,
@@ -55,6 +57,9 @@ async function bootstrap() {
     console.log(`Swagger documentation available at http://${appConfig.http.ip}:${appConfig.http.port}/api`);
   });
 
-  await NestFactory.createMicroservice(AppModule);
 }
-bootstrap();
+
+void bootstrap().catch((error: unknown) => {
+  console.error('Backend failed to start', error);
+  process.exitCode = 1;
+});

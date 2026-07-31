@@ -2,11 +2,9 @@
 JWT_SECRET=p2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B # !!! replace this with your own secret
 JWT_LIFETIME_SECONDS=3600
 HTTP_IP=localhost
-GRPC_IP=localhost
-IAM_DATABASE_HOST=localhost
-TODO_DATABASE_HOST=localhost
 PG_HOST=localhost
-PG_IAM_HOST=localhost
-MONGO_HOST=localhost
-MARKETING_DATABASE_HOST=localhost
+PG_PORT=5432
+PG_DATABASE=bitloops
+PG_USER=user
+PG_PASSWORD=postgres
 NATS_HOST=localhost

@@ -1,4 +1,0 @@
-export const constants = {
-  MONGO_DB_CLIENT: 'MONGO_DB_CLIENT',
-  MONGO_DB_CONNECTION: 'MONGO_DB_CONNECTION',
-};

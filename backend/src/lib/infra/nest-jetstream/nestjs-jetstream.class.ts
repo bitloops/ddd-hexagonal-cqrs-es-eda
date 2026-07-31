@@ -22,9 +22,9 @@ export class NestjsJetstream {
       this.logger.log(`connected to ${this.nc.getServer()}`);
 
       return this;
-    } catch (e: any) {
-      this.logger.error(e);
-      throw new Error(e);
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Unable to connect to NATS JetStream', { cause: error });
     }
   }
 

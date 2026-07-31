@@ -55,11 +55,9 @@ function TodoEntryComponent(props: TodoProps) {
               onBlur={() => modifyTitle}
             />
           ) : (
-            // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
             <p
               className="element_title"
               id={todo.id}
-              // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
               tabIndex={0}
               onClick={(e: React.MouseEvent<HTMLElement>) => {
                 const target = e.target as HTMLParagraphElement;
@@ -76,16 +74,16 @@ function TodoEntryComponent(props: TodoProps) {
             </p>
           )}
           <div className="delete_button">
-          <Tooltip content="Delete Todo">
-            <Button
-              onClick={() => {
-                removeItem(todo.id);
-              }}
-              {...buttonProps}
-            >
-              <FaTrash />
-            </Button>
-          </Tooltip>
+            <Tooltip content="Delete Todo">
+              <Button
+                onClick={() => {
+                  removeItem(todo.id);
+                }}
+                {...buttonProps}
+              >
+                <FaTrash />
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </div>

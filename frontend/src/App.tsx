@@ -7,25 +7,31 @@ import { useDispatch } from 'react-redux';
 import { init } from './store/auth/authSlice';
 import { initTodos } from './store/todo/todoSlice';
 
-function App(): JSX.Element {
-  const dispatch = useDispatch<AppDispatch>()
+function DebugObserver() {
   useEffect(() => {
-    dispatch(init()) // init Auth
-    dispatch(initTodos()) // Init Todos
-  }, []);
+    let previousState = store.getState();
 
-  function DebugObserver() {
-    let prevState = store.getState();
-
-    store.subscribe(() => {
+    const unsubscribe = store.subscribe(() => {
       const nextState = store.getState();
-      if (prevState !== nextState) {
+      if (previousState !== nextState) {
         console.debug('Redux state changed');
-        prevState = nextState;
+        previousState = nextState;
       }
     });
-    return null;
-  }
+
+    return unsubscribe;
+  }, []);
+
+  return null;
+}
+
+function App(): JSX.Element {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(init());
+    dispatch(initTodos());
+  }, [dispatch]);
 
   return (
     <div className="App">

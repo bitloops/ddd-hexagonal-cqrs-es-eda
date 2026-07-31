@@ -14,14 +14,32 @@ spec:
         app: todo-backend
     spec:
       containers:
-      - name: todo-backend
-        context: ../backend
-    ports:
-    - containerPort: 8080
-    volumeMounts:
-    - name: backend-context
-      mountPath: /backend
-  volumes:
-  - name: backend-context
-    hostPath:
-      path: ../backend
+        - name: todo-backend
+          image: todo-backend:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: HTTP_IP
+              value: 0.0.0.0
+            - name: NATS_HOST
+              value: bl-nats
+            - name: PG_HOST
+              value: bl-postgres
+            - name: PG_DATABASE
+              value: bitloops
+            - name: PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secret-bl-postgres-secret
+                  key: POSTGRES_USER
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-bl-postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret-bl-postgres-secret
+                  key: JWT_SECRET
+          ports:
+            - containerPort: 8080

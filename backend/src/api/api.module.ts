@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './authentication.controller';
 import { TodoController } from './todo.rest.controller';
@@ -17,7 +17,6 @@ import {
   // CorrelationIdMiddleware,
   TracingModule,
 } from '@lib/infra/telemetry';
-import { SSEModule } from './sse.module';
 
 @Module({
   imports: [
@@ -61,7 +60,6 @@ import { SSEModule } from './sse.module';
         }`,
       ],
     }),
-    SSEModule,
     TracingModule.register({
       messageBus: NatsStreamingMessageBus,
     }),

@@ -5,7 +5,6 @@ export type UserLoggedInDomainEventProps = Domain.TDomainEventProps<{
 }>;
 
 export class UserLoggedInDomainEvent extends Domain.DomainEvent<UserLoggedInDomainEventProps> {
-  public metadata: Domain.TDomainEventMetadata;
   public aggregateId: string;
 
   constructor(payload: UserLoggedInDomainEventProps) {

@@ -13,7 +13,7 @@ import {
   UserWriteRepoPortToken,
 } from '@src/lib/bounded-contexts/marketing/marketing/constants';
 import { MockEmailService } from './service';
-import { MongoModule } from '@lib/infra/mongo';
+import { PostgresModule } from '@lib/infra/postgres';
 import { StreamingIntegrationEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers/integration';
 import { StreamingCommandHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers';
 import {
@@ -24,6 +24,7 @@ import {
   NatsPubSubIntegrationEventsBus,
 } from '@lib/infra/nest-jetstream';
 import { StreamingDomainEventHandlers } from '@src/lib/bounded-contexts/marketing/marketing/application/event-handlers/domain';
+import { MARKETING_POSTGRES_SCHEMA } from './repository/marketing-postgres.schema';
 
 const RepoProviders = [
   {
@@ -59,7 +60,10 @@ const RepoProviders = [
   imports: [
     LibMarketingModule.register({
       inject: [...RepoProviders],
-      imports: [MongoModule],
+      imports: [
+        PostgresModule,
+        PostgresModule.forFeature(MARKETING_POSTGRES_SCHEMA),
+      ],
     }),
     JetstreamModule.forFeature({
       moduleOfHandlers: MarketingModule,
