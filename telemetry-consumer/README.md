@@ -33,3 +33,19 @@ In Prometheus we can spot our metric and query by it at the time frame we want.
 - For example if we want to search for commandHandlers we filter with `command_handler_requests_total`
 
 http://localhost:9090/
+
+#### Development
+
+The telemetry consumer requires Go 1.25 or newer.
+
+```sh
+go mod verify
+go test ./...
+go build ./...
+```
+
+The container uses the same Go release declared in `go.mod`:
+
+```sh
+docker build --tag bitloops-telemetry-consumer:local .
+```
