@@ -10,6 +10,28 @@ permissions:
   contents: read
 
 jobs:
+  go:
+    name: Go telemetry consumer
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: telemetry-consumer
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: telemetry-consumer/go.mod
+          cache-dependency-path: telemetry-consumer/go.sum
+      - name: Verify Go modules
+        run: go mod verify
+      - name: Test Go telemetry consumer
+        run: go test ./...
+      - name: Build Go telemetry consumer
+        run: go build ./...
+      - name: Build telemetry consumer image
+        run: docker build --tag bitloops-telemetry-consumer:ci .
+
   node:
     name: Node workspace
     runs-on: ubuntu-latest
