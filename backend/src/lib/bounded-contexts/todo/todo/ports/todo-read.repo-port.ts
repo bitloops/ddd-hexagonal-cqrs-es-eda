@@ -1,4 +1,4 @@
-import { Application, Either } from '@bitloops/bl-boilerplate-core';
+import { Application, Either } from 'ddd-tactical-core-boilerplate';
 import { TTodoReadModelSnapshot } from '../domain/todo.read-model.js';
 
 export interface TodoReadRepoPort

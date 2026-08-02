@@ -1,6 +1,6 @@
 import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import { ConnectionOptions } from 'nats';
-import { Application, asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
+import { Application, asyncLocalStorage } from 'ddd-tactical-core-boilerplate';
 import { NestjsJetstream } from './nestjs-jetstream.class';
 import { NatsPubSubCommandBus } from './buses/nats-pubsub-command-bus';
 import { NatsPubSubQueryBus } from './buses/nats-pubsub-query-bus';

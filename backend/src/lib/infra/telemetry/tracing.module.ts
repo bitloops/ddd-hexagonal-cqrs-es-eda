@@ -1,6 +1,6 @@
 import { Global, Module, Type } from '@nestjs/common';
 import { AsyncLocalStorageService } from './async-local-storage.service';
-import { Infra } from '@bitloops/bl-boilerplate-core';
+import { Infra } from 'ddd-tactical-core-boilerplate';
 import { MESSAGE_BUS_TOKEN } from './constants';
 
 @Global()

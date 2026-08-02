@@ -1,4 +1,4 @@
-import { Application, Domain } from '@bitloops/bl-boilerplate-core';
+import { Application, Domain } from 'ddd-tactical-core-boilerplate';
 import { TodoEntity } from '../domain/todo.entity.js';
 
 export type TodoWriteRepoPort = Application.Repo.ICRUDWritePort<

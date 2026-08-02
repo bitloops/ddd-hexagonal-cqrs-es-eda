@@ -1,5 +1,5 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
-import { asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
+import { asyncLocalStorage } from 'ddd-tactical-core-boilerplate';
 import { Observable } from 'rxjs';
 
 import { AuthenticatedPrincipal } from '@src/lib/bounded-contexts/iam/authentication/domain/authenticated-principal';

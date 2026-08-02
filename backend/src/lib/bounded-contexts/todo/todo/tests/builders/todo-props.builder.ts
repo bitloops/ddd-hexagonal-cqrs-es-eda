@@ -1,4 +1,4 @@
-import { Domain } from '@bitloops/bl-boilerplate-core';
+import { Domain } from 'ddd-tactical-core-boilerplate';
 import { TitleVO } from '@src/lib/bounded-contexts/todo/todo/domain/title.value-object';
 import { TodoProps } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { UserIdVO } from '@src/lib/bounded-contexts/todo/todo/domain/user-id.value-object';

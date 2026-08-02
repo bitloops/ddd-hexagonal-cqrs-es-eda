@@ -4,7 +4,7 @@ import {
   ok,
   fail,
   Domain,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import {
   CREATE_USER_REPO_ERROR_CASE,
   CREATE_USER_SUCCESS_CASE,
@@ -21,7 +21,7 @@ export class MockCreateUserWriteRepo {
     this.mockUserWriteRepo = {
       update: jest.fn(),
       getById: jest.fn(),
-      save: this.mockSaveMethod,
+      create: this.mockSaveMethod,
       delete: jest.fn(),
     };
   }

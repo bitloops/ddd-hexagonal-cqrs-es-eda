@@ -1,6 +1,6 @@
 {
   "name": "@bitloops/todo-frontend-behaviour-tests",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Unit and behavioural tests for the todo frontend",
   "private": true,
   "type": "module",

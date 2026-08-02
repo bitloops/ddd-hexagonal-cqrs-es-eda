@@ -1,4 +1,4 @@
-import { AsyncLocalStorageStore } from '@bitloops/bl-boilerplate-core';
+import { AsyncLocalStorageStore } from 'ddd-tactical-core-boilerplate';
 import { MsgHdrs } from 'nats';
 import { METADATA_HEADERS } from '../../jetstream.constants';
 

@@ -4,7 +4,7 @@
 
 Complete working example of using Domain Driven Design (DDD), Hexagonal Architecture, CQRS, Event Sourcing (ES), Event Driven Architecture (EDA), Behaviour Driven Development (BDD) using TypeScript and NestJS.
 
-Current release: **1.0.1**. See the [changelog](./CHANGELOG.md), the
+Current release: **1.0.2**. See the [changelog](./CHANGELOG.md), the
 [backend architecture](./docs/backend-architecture.md), and the
 [Keycloak IAM architecture](./docs/keycloak-iam-roadmap.md).
 

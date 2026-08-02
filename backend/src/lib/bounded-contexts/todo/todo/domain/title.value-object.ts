@@ -1,4 +1,4 @@
-import { Domain, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
+import { Domain, Either, ok, fail } from 'ddd-tactical-core-boilerplate';
 import { DomainErrors } from './errors';
 import { Rules } from './rules';
 

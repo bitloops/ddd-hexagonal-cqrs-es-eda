@@ -4,7 +4,7 @@ import {
   Either,
   fail,
   ok,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
 import { ADD_TODO_REPO_ERROR_CASE } from './add-todo.mock';
@@ -16,7 +16,7 @@ export class MockAddTodoWriteRepo {
   constructor() {
     this.mockSaveMethod = this.getMockSaveMethod();
     this.mockTodoWriteRepo = {
-      save: this.mockSaveMethod,
+      create: this.mockSaveMethod,
       getById: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),

@@ -12,7 +12,7 @@ import {
   COMPLETE_TODO_REPO_ERROR_SAVE_CASE,
   COMPLETE_TODO_SUCCESS_CASE,
 } from './complete-todo.mock';
-import { Application } from '@bitloops/bl-boilerplate-core';
+import { Application } from 'ddd-tactical-core-boilerplate';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
 import { ContextBuilder } from '../../builders/context.builder';

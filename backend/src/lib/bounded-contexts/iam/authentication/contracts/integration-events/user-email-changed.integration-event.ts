@@ -1,4 +1,4 @@
-import { Infra } from '@bitloops/bl-boilerplate-core';
+import { Infra } from 'ddd-tactical-core-boilerplate';
 
 export type IntegrationSchemaV1 = {
   userId: string;

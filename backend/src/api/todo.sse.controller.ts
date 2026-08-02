@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { Observable, Subscriber } from 'rxjs';
 
-import { Infra } from '@bitloops/bl-boilerplate-core';
+import { Infra } from 'ddd-tactical-core-boilerplate';
 import { OidcAuthGuard } from '@src/bounded-contexts/iam/iam/oidc/oidc-auth.guard';
 import { TodoSubscriptionDto } from './dto/todo-subscription.dto';
 import {

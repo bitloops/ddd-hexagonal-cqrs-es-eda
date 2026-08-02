@@ -1,4 +1,4 @@
-import { Application, Domain } from '@bitloops/bl-boilerplate-core';
+import { Application, Domain } from 'ddd-tactical-core-boilerplate';
 import { ModifyTodoTitleHandler } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers/modify-title-todo.handler';
 import { ApplicationErrors } from '@src/lib/bounded-contexts/todo/todo/application/errors';
 import { ModifyTodoTitleCommand } from '@src/lib/bounded-contexts/todo/todo/commands/modify-todo-title.command';

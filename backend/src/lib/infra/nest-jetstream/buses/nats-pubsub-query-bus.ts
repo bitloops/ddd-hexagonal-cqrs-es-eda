@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { NatsConnection, JSONCodec, headers, MsgHdrs } from 'nats';
-import { Application, Infra } from '@bitloops/bl-boilerplate-core';
+import { Application, Infra } from 'ddd-tactical-core-boilerplate';
 import { ASYNC_LOCAL_STORAGE, ProvidersConstants, TIMEOUT_MILLIS } from '../jetstream.constants';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { ContextPropagation } from './utils/context-propagation';

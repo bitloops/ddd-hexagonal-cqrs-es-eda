@@ -1,4 +1,4 @@
-import { Infra, Application, Either, ok } from '@bitloops/bl-boilerplate-core';
+import { Infra, Application, Either, ok } from 'ddd-tactical-core-boilerplate';
 import { UserEmailChangedIntegrationEvent } from '@src/lib/bounded-contexts/iam/authentication/contracts/integration-events/user-email-changed.integration-event';
 import { ChangeUserEmailCommand } from '../../../commands/change-user-email.command';
 import { Traceable } from '@lib/infra/telemetry';

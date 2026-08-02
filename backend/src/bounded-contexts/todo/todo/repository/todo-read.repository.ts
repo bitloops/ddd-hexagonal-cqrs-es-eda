@@ -3,7 +3,7 @@ import {
   Either,
   asyncLocalStorage,
   ok,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool, QueryResultRow } from 'pg';
 

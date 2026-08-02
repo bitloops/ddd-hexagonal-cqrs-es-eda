@@ -4,7 +4,7 @@ import {
   Either,
   asyncLocalStorage,
   ok,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool, PoolClient, QueryResultRow } from 'pg';
 
@@ -67,7 +67,7 @@ export class TodoWriteRepository implements TodoWriteRepoPort {
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
-  async save(
+  async create(
     todo: TodoEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
     await this.persist(todo, 'create');

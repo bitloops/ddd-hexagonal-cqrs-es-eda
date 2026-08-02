@@ -1,4 +1,4 @@
-import { Application, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
+import { Application, Either, ok, fail } from 'ddd-tactical-core-boilerplate';
 import { Inject } from '@nestjs/common';
 // import { QueryHandler } from '@nestjs/cqrs';
 import { TTodoReadModelSnapshot } from '../../domain/todo.read-model';

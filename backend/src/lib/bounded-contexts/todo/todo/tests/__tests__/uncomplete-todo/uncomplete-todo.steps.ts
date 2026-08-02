@@ -10,7 +10,7 @@ import {
   UNCOMPLETE_TODO_REPO_ERROR_SAVE_CASE,
   UNCOMPLETE_TODO_SUCCESS_CASE,
 } from './uncomplete-todo.mock';
-import { Application } from '@bitloops/bl-boilerplate-core';
+import { Application } from 'ddd-tactical-core-boilerplate';
 import { TodoUncompletedDomainEvent } from '../../../domain/events/todo-uncompleted.event';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { UncompleteTodoCommand } from '../../../commands/uncomplete-todo.command';

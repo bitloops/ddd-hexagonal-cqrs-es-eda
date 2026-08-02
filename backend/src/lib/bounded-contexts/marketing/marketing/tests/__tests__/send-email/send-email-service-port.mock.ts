@@ -1,4 +1,4 @@
-import { Application, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
+import { Application, Either, ok, fail } from 'ddd-tactical-core-boilerplate';
 import { EmailServicePort } from '@src/lib/bounded-contexts/marketing/marketing/ports/email.service-port';
 import { SendEmailRequest } from '../../../structs/send-email-request.struct';
 

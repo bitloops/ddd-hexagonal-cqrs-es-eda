@@ -1,4 +1,4 @@
-import { Domain, asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
+import { Domain, asyncLocalStorage } from 'ddd-tactical-core-boilerplate';
 import { Pool } from 'pg';
 
 import { TitleVO } from '@src/lib/bounded-contexts/todo/todo/domain/title.value-object';
@@ -48,7 +48,7 @@ describeWithDatabase('Todo PostgreSQL event store and outbox', () => {
   it('commits events, projection and outbox together and rehydrates from history', async () => {
     const todo = createTodo('Persist all three records');
 
-    expect((await repository.save(todo)).isOk()).toBe(true);
+    expect((await repository.create(todo)).isOk()).toBe(true);
     todo.complete();
     expect((await repository.update(todo)).isOk()).toBe(true);
 
@@ -86,7 +86,7 @@ describeWithDatabase('Todo PostgreSQL event store and outbox', () => {
 
   it('rejects a stale aggregate without appending a partial event or outbox record', async () => {
     const todo = createTodo('Detect concurrent writes');
-    expect((await repository.save(todo)).isOk()).toBe(true);
+    expect((await repository.create(todo)).isOk()).toBe(true);
 
     const first = (await repository.getById(todo.id)).value as TodoEntity;
     const stale = (await repository.getById(todo.id)).value as TodoEntity;

@@ -5,7 +5,7 @@ import {
   fail,
   ok,
   Domain,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { TodoCompletionsIncrementedDomainEvent } from '../../../domain/events/todo-completions-incremented.event';
 import { SendEmailCommand } from '../../../commands/send-email.command';
 import { Inject } from '@nestjs/common';

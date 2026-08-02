@@ -1,4 +1,4 @@
-import { Application, Either } from '@bitloops/bl-boilerplate-core';
+import { Application, Either } from 'ddd-tactical-core-boilerplate';
 import { NotificationTemplateReadModel } from '../domain/notification-template.read-model';
 
 export interface NotificationTemplateReadRepoPort

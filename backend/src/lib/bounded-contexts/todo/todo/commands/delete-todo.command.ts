@@ -1,5 +1,5 @@
-import { Application, Domain } from '@bitloops/bl-boilerplate-core';
-import { asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
+import { Application, Domain } from 'ddd-tactical-core-boilerplate';
+import { asyncLocalStorage } from 'ddd-tactical-core-boilerplate';
 
 export type TDeleteTodoCommand = {
   id: string;

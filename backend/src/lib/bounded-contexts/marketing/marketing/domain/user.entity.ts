@@ -1,4 +1,4 @@
-import { Either, Domain, ok, fail } from '@bitloops/bl-boilerplate-core';
+import { Either, Domain, ok, fail } from 'ddd-tactical-core-boilerplate';
 import { CompletedTodosVO } from './completed-todos.value-object';
 import { TodoCompletionsIncrementedDomainEvent } from './events/todo-completions-incremented.event';
 import { DomainErrors } from '@src/lib/bounded-contexts/marketing/marketing/domain/errors';
@@ -34,7 +34,7 @@ export class UserEntity extends Domain.Aggregate<UserProps> {
     return this.props.email;
   }
 
-  get id() {
+  get id(): Domain.UUIDv4 {
     return this._id;
   }
 

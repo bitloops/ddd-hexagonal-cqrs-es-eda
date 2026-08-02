@@ -1,4 +1,4 @@
-import { Domain, Infra } from '@bitloops/bl-boilerplate-core';
+import { Domain, Infra } from 'ddd-tactical-core-boilerplate';
 import { TodoAddedDomainEvent } from '../../domain/events/todo-added.event';
 
 export type IntegrationSchemaV1 = {

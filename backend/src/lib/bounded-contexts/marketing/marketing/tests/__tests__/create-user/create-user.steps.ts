@@ -5,7 +5,7 @@ import {
 import { CreateUserCommand } from '@src/lib/bounded-contexts/marketing/marketing/commands/create-user.command';
 import { MockCreateUserWriteRepo } from './create-user-write-repo.mock';
 import { CreateUserCommandHandler } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers/create-user.command-handler';
-import { Application } from '@bitloops/bl-boilerplate-core';
+import { Application } from 'ddd-tactical-core-boilerplate';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
 import { UserEntityBuilder } from '../../builders/user-entity.builder';
 

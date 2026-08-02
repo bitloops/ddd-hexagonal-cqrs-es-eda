@@ -12,8 +12,8 @@ jest.mock('@lib/infra/telemetry', () => ({
 }));
 
 const mockGet = jest.fn();
-jest.mock('@bitloops/bl-boilerplate-core', () => ({
-  ...jest.requireActual('@bitloops/bl-boilerplate-core'),
+jest.mock('ddd-tactical-core-boilerplate', () => ({
+  ...jest.requireActual('ddd-tactical-core-boilerplate'),
   asyncLocalStorage: {
     getStore: jest.fn(() => ({
       get: mockGet,

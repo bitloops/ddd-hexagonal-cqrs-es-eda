@@ -4,7 +4,7 @@ import {
   fail,
   ok,
   Domain,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { Inject } from '@nestjs/common';
 import { AddTodoCommand } from '../../commands/add-todo.command';
 import { DomainErrors } from '../../domain/errors';
@@ -62,9 +62,9 @@ export class AddTodoCommandHandler
       return fail(todo.value);
     }
 
-    const saveResult = await this.todoRepo.save(todo.value);
-    if (saveResult.isFail()) {
-      return fail(saveResult.value);
+    const createResult = await this.todoRepo.create(todo.value);
+    if (createResult.isFail()) {
+      return fail(createResult.value);
     }
 
     return ok(todo.value.id.toString());

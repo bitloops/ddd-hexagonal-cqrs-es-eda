@@ -1,4 +1,4 @@
-import { Application, Either } from '@bitloops/bl-boilerplate-core';
+import { Application, Either } from 'ddd-tactical-core-boilerplate';
 import { SendEmailRequest } from '../structs/send-email-request.struct';
 
 export interface EmailServicePort {
