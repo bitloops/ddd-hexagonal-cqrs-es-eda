@@ -1,4 +1,4 @@
-import { Infra, ok, Application } from '@bitloops/bl-boilerplate-core';
+import { Infra, ok, Application } from 'ddd-tactical-core-boilerplate';
 
 export class MockStreamCommandBus {
   public readonly mockPublish: jest.Mock;

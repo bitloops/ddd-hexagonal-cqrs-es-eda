@@ -1,4 +1,4 @@
-import { Application, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
+import { Application, Either, ok, fail } from 'ddd-tactical-core-boilerplate';
 import { NotificationTemplateReadRepoPort } from '../../ports/notification-template-read.repo-port';
 import { NotificationTemplateReadModel } from '../notification-template.read-model';
 import { UserEntity } from '../user.entity';

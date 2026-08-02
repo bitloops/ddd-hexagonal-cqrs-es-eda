@@ -4,7 +4,7 @@ import {
   Either,
   Infra,
   ok,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool, QueryResultRow } from 'pg';
 
@@ -72,7 +72,7 @@ export class UserWriteRepository implements UserWriteRepoPort {
   }
 
   @Application.Repo.Decorators.ReturnUnexpectedError()
-  async save(
+  async create(
     user: UserEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
     const snapshot = user.toPrimitives();

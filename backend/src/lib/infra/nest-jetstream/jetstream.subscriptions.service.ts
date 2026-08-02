@@ -8,7 +8,7 @@ import {
   NatsStreamingIntegrationEventBus,
 } from './buses';
 import { HANDLERS_TOKENS } from './jetstream.constants';
-import { Application, Infra } from '@bitloops/bl-boilerplate-core';
+import { Application, Infra } from 'ddd-tactical-core-boilerplate';
 import { NatsPubSubIntegrationEventsBus } from './buses/nats-pubsub-integration-events-bus';
 
 @Injectable()

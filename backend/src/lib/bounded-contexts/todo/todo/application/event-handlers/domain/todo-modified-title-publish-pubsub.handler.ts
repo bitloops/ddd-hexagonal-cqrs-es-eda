@@ -1,4 +1,4 @@
-import { Infra, Application, ok, Either } from '@bitloops/bl-boilerplate-core';
+import { Infra, Application, ok, Either } from 'ddd-tactical-core-boilerplate';
 import { Inject } from '@nestjs/common';
 import { TodoModifiedTitleDomainEvent } from '../../../domain/events/todo-modified-title.event';
 import { PubSubIntegrationEventBusToken } from '../../../constants';

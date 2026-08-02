@@ -4,7 +4,7 @@ import {
   ok,
   fail,
   asyncLocalStorage,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { TodoReadModel } from '../../../domain/todo.read-model';
 import { TodoReadRepoPort } from '../../../ports/todo-read.repo-port';
 import {

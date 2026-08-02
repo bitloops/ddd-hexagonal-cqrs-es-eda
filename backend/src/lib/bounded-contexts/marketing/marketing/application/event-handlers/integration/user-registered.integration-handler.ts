@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Infra, Application, Either, ok } from '@bitloops/bl-boilerplate-core';
+import { Infra, Application, Either, ok } from 'ddd-tactical-core-boilerplate';
 import { UserRegisteredIntegrationEvent } from '@src/lib/bounded-contexts/iam/authentication/contracts/integration-events/user-registered.integration-event';
 import { CreateUserCommand } from '../../../commands/create-user.command';
 import { StreamingCommandBusToken } from '../../../constants';

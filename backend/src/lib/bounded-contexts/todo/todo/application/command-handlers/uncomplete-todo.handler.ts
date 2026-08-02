@@ -4,7 +4,7 @@ import {
   fail,
   ok,
   Domain,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { UncompleteTodoCommand } from '../../commands/uncomplete-todo.command';
 import { DomainErrors } from '../../domain/errors';
 import { Inject } from '@nestjs/common';

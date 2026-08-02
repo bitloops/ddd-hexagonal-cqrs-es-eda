@@ -1,7 +1,7 @@
 import { Inject, Logger } from '@nestjs/common';
 import { AsyncLocalStorageService } from './async-local-storage.service';
 import { MESSAGE_BUS_TOKEN } from './constants';
-import { Infra } from '@bitloops/bl-boilerplate-core';
+import { Infra } from 'ddd-tactical-core-boilerplate';
 import { isAsyncFunction } from './utils';
 import { TelemetryEvent, TraceableDecoratorInput } from './definitons';
 

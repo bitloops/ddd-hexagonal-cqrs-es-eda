@@ -4,7 +4,7 @@ import {
   Either,
   ok,
   fail,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { UserEntity } from '@src/lib/bounded-contexts/marketing/marketing/domain/user.entity';
 import { UserWriteRepoPort } from '@src/lib/bounded-contexts/marketing/marketing/ports/user-write.repo-port';
 import {
@@ -27,7 +27,7 @@ export class MockIncrementCompletedTodosWriteRepo {
     this.mockSaveMethod = this.getMockSaveMethod();
     this.mockGetByIdMethod = this.getMockGetByIdMethod();
     this.mockUserWriteRepo = {
-      save: this.mockSaveMethod,
+      create: this.mockSaveMethod,
       getById: this.mockGetByIdMethod,
       update: this.mockUpdateMethod,
       delete: jest.fn(),

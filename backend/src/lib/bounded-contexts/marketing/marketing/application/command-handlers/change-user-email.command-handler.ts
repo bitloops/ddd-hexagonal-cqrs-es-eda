@@ -4,7 +4,7 @@ import {
   Either,
   Domain,
   fail,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { Inject } from '@nestjs/common';
 import { ChangeUserEmailCommand } from '../../commands/change-user-email.command';
 import { Traceable } from '@lib/infra/telemetry';

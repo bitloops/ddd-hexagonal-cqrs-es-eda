@@ -1,4 +1,4 @@
-import { Application, ok, Either } from '@bitloops/bl-boilerplate-core';
+import { Application, ok, Either } from 'ddd-tactical-core-boilerplate';
 import { TodoAddedIntegrationEvent } from '@src/lib/bounded-contexts/todo/todo/contracts/integration-events/todo-added.integration-event';
 import { Subscriptions, Subscribers } from '../todo.sse.controller';
 

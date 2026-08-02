@@ -4,7 +4,7 @@ import {
   Either,
   Domain,
   fail,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { Inject } from '@nestjs/common';
 import { CreateUserCommand } from '../../commands/create-user.command';
 import { Traceable } from '@lib/infra/telemetry';
@@ -65,7 +65,7 @@ export class CreateUserCommandHandler
       return fail(user.value);
     }
 
-    const createOrError = await this.userRepo.save(user.value);
+    const createOrError = await this.userRepo.create(user.value);
     if (createOrError.isFail()) {
       return fail(createOrError.value);
     }

@@ -4,7 +4,7 @@ import {
   Either,
   ok,
   fail,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { TodoWriteRepoPort } from '@src/lib/bounded-contexts/todo/todo/ports/todo-write.repo-port';
 import {
@@ -24,7 +24,7 @@ export class ModifyTitleWriteRepo {
     this.mockUpdateMethod = this.getMockUpdateMethod();
     this.mockGetByIdMethod = this.getMockGetByIdMethod();
     this.mockTodoWriteRepo = {
-      save: jest.fn(),
+      create: jest.fn(),
       getById: this.mockGetByIdMethod,
       update: this.mockUpdateMethod,
       delete: jest.fn(),

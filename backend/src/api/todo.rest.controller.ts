@@ -25,7 +25,7 @@ import { AddTodoRequestDto } from './dto/add-todo.dto';
 import { ModifyTodoTitleRequestDto } from './dto/modify-todo-title.dto';
 import { BUSES_TOKENS } from '../lib/infra/nest-jetstream';
 import { OidcAuthGuard } from '@src/bounded-contexts/iam/iam/oidc/oidc-auth.guard';
-import { Infra } from '@bitloops/bl-boilerplate-core';
+import { Infra } from 'ddd-tactical-core-boilerplate';
 import { GetAllTodosResponseDto } from './dto/get-all-todos.dto';
 import { CompleteTodoCommand } from '@src/lib/bounded-contexts/todo/todo/commands/complete-todo.command';
 import { TodoReadModel } from '@src/lib/bounded-contexts/todo/todo/domain/todo.read-model';

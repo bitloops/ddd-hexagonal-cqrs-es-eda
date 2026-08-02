@@ -1,4 +1,4 @@
-import { Domain, Either, ok } from '@bitloops/bl-boilerplate-core';
+import { Domain, Either, ok } from 'ddd-tactical-core-boilerplate';
 
 export interface NotificationTemplateProps {
   id?: Domain.UUIDv4;
@@ -24,7 +24,7 @@ export class NotificationTemplateEntity extends Domain.Aggregate<NotificationTem
     return ok(notificationTemplate);
   }
 
-  get id() {
+  get id(): Domain.UUIDv4 {
     return this._id;
   }
 

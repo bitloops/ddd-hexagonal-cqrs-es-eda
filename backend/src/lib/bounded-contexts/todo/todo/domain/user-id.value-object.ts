@@ -1,4 +1,4 @@
-import { Domain, Either, ok } from '@bitloops/bl-boilerplate-core';
+import { Domain, Either, ok } from 'ddd-tactical-core-boilerplate';
 
 interface UserIdProps {
   id: Domain.UUIDv4;

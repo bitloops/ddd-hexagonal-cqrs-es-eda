@@ -3,7 +3,7 @@ import { MockUserWriteRepo } from './user-write-repo.mock';
 import { TodoCompletionsIncrementedHandler } from '../../../application/event-handlers/domain/todo-completions-incremented.handler';
 import { MockNotificationTemplateReadRepo } from './notification-template-read-repo.mock';
 import { UserEntityBuilder } from '../../builders/user-entity.builder';
-import { Application, Domain } from '@bitloops/bl-boilerplate-core';
+import { Application, Domain } from 'ddd-tactical-core-boilerplate';
 import {
   SUCCESS_CASE,
   UNSUCCESS_USER_NOT_FOUND_CASE,

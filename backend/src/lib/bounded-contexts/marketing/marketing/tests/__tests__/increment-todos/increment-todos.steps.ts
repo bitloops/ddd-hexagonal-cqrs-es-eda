@@ -1,4 +1,4 @@
-import { Application, Domain } from '@bitloops/bl-boilerplate-core';
+import { Application, Domain } from 'ddd-tactical-core-boilerplate';
 import { IncrementTodosCommand } from '@src/lib/bounded-contexts/marketing/marketing/commands/Increment-todos.command';
 import { IncrementTodosCommandHandler } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers/increment-todos.command-handler';
 import { UserPropsBuilder } from '../../builders/user-props.builder';

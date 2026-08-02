@@ -1,4 +1,4 @@
-import { Infra, asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
+import { Infra, asyncLocalStorage } from 'ddd-tactical-core-boilerplate';
 
 export type UserRegisteredIntegrationSchemaV1 = {
   userId: string;

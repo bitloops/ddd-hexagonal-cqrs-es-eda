@@ -1,4 +1,4 @@
-import { asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
+import { asyncLocalStorage } from 'ddd-tactical-core-boilerplate';
 import { ContextBuilder } from '../builders/context.builder';
 export function mockAsyncLocalStorageGet(userId: string) {
   jest

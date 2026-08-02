@@ -6,7 +6,7 @@ import { SendEmailCommand } from '@src/lib/bounded-contexts/marketing/marketing/
 import { MockEmailService } from './send-email-service-port.mock';
 import { SendEmailCommandHandler } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers/send-email.command-handler';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
-import { Application } from '@bitloops/bl-boilerplate-core';
+import { Application } from 'ddd-tactical-core-boilerplate';
 
 describe('Send email feature test', () => {
   it('Sent email successfully', async () => {

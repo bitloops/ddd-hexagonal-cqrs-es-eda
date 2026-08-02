@@ -1,4 +1,4 @@
-import { Infra, Application, Either, ok } from '@bitloops/bl-boilerplate-core';
+import { Infra, Application, Either, ok } from 'ddd-tactical-core-boilerplate';
 import { Inject } from '@nestjs/common';
 import { TodoCompletedDomainEvent } from '../../../domain/events/todo-completed.event';
 import { TodoCompletedIntegrationEvent } from '../../../contracts/integration-events/todo-completed.integration-event';

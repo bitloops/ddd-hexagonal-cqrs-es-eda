@@ -1,7 +1,7 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Observable, tap } from 'rxjs';
-import { asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
+import { asyncLocalStorage } from 'ddd-tactical-core-boilerplate';
 
 @Injectable()
 export class CorrelationIdInterceptor implements NestInterceptor {

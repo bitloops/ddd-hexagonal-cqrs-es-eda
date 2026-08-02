@@ -9,7 +9,7 @@ import {
   headers,
   MsgHdrs,
 } from 'nats';
-import { Application, Infra } from '@bitloops/bl-boilerplate-core';
+import { Application, Infra } from 'ddd-tactical-core-boilerplate';
 import { NestjsJetstream } from '../nestjs-jetstream.class';
 import { ASYNC_LOCAL_STORAGE, ProvidersConstants } from '../jetstream.constants';
 import { ContextPropagation } from './utils/context-propagation';

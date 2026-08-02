@@ -1,6 +1,6 @@
 {
   "name": "todo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Todo Backend using Domain Driven Design (DDD), Hexagonal Architecture, CQRS, Event Sourcing (ES), Event Driven Architecture (EDA), Behaviour Driven Development (BDD) using TypeScript and NestJS. Like what you see? Don't forget to star! ⭐",
   "author": "Bitloops S.A.",
   "private": false,
@@ -27,7 +27,7 @@
     "node": ">=24 <25"
   },
   "dependencies": {
-    "@bitloops/bl-boilerplate-core": "^0.3.6",
+    "ddd-tactical-core-boilerplate": "^1.0.0",
     "@fastify/autoload": "^6.3.1",
     "@fastify/cors": "^11.0.1",
     "@fastify/helmet": "^13.0.1",

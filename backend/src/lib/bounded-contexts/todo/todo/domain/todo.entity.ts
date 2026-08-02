@@ -1,4 +1,4 @@
-import { Domain, Either, ok, fail } from '@bitloops/bl-boilerplate-core';
+import { Domain, Either, ok, fail } from 'ddd-tactical-core-boilerplate';
 import { TitleVO } from './title.value-object';
 import { UserIdVO } from './user-id.value-object';
 import { DomainErrors } from './errors';
@@ -48,7 +48,7 @@ type TTodoEntityPrimitives = {
 };
 
 export class TodoEntity extends Domain.Aggregate<TodoProps> {
-  private aggregateVersion = 0;
+  private eventStreamVersion = 0;
   private deleted = false;
 
   private constructor(props: TodoProps) {
@@ -76,7 +76,7 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
     return this.props.completed;
   }
 
-  get id() {
+  get id(): Domain.UUIDv4 {
     return this._id;
   }
 
@@ -89,7 +89,7 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
   }
 
   get version(): number {
-    return this.aggregateVersion;
+    return this.eventStreamVersion;
   }
 
   get isDeleted(): boolean {
@@ -216,7 +216,7 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
           break;
       }
 
-      if (todo) todo.aggregateVersion = event.version;
+      if (todo) todo.eventStreamVersion = event.version;
     }
 
     if (!todo) {
@@ -228,7 +228,7 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
   }
 
   public commit(version: number): void {
-    this.aggregateVersion = version;
+    this.eventStreamVersion = version;
     this.clearEvents();
   }
 

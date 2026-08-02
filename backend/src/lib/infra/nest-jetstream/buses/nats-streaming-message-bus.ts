@@ -8,7 +8,7 @@ import {
   createInbox,
 } from 'nats';
 import { randomUUID } from 'crypto';
-import { Infra, Domain } from '@bitloops/bl-boilerplate-core';
+import { Infra, Domain } from 'ddd-tactical-core-boilerplate';
 import { NestjsJetstream } from '../nestjs-jetstream.class';
 import { ProvidersConstants } from '../jetstream.constants';
 

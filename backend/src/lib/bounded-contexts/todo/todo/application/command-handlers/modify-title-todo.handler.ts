@@ -4,7 +4,7 @@ import {
   Either,
   fail,
   ok,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { ModifyTodoTitleCommand } from '../../commands/modify-todo-title.command';
 import { Inject } from '@nestjs/common';
 import { DomainErrors } from '../../domain/errors';

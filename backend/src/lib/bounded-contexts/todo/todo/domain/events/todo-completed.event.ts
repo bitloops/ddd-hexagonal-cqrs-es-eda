@@ -1,4 +1,4 @@
-import { Domain } from '@bitloops/bl-boilerplate-core';
+import { Domain } from 'ddd-tactical-core-boilerplate';
 
 type TodoCompletedDomainEventProps = Domain.TDomainEventProps<{
   userId: string;

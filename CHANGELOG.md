@@ -6,6 +6,15 @@ project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-08-02
+
+### Changed
+
+- Replaced the legacy `@bitloops/bl-boilerplate-core` dependency with the
+  maintained, dependency-free `ddd-tactical-core-boilerplate` package.
+- Aligned the root, backend, frontend, and frontend-test package versions at
+  `1.0.2`.
+
 ## [1.0.1] - 2026-07-31
 
 ### Added

@@ -4,7 +4,7 @@ import {
   fail,
   ok,
   Domain,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { DeleteTodoCommand } from '../../commands/delete-todo.command';
 import { Inject } from '@nestjs/common';
 import { ApplicationErrors } from '../errors';

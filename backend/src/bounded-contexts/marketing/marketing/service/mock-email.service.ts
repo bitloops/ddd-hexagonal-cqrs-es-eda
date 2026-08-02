@@ -1,4 +1,4 @@
-import { Application, Either, ok } from '@bitloops/bl-boilerplate-core';
+import { Application, Either, ok } from 'ddd-tactical-core-boilerplate';
 import { Injectable } from '@nestjs/common';
 import { EmailServicePort } from '@src/lib/bounded-contexts/marketing/marketing/ports/email.service-port';
 import { SendEmailRequest } from '@src/lib/bounded-contexts/marketing/marketing/structs/send-email-request.struct';

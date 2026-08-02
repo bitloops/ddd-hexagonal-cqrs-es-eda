@@ -1,4 +1,4 @@
-import { Application } from '@bitloops/bl-boilerplate-core';
+import { Application } from 'ddd-tactical-core-boilerplate';
 
 export type TAddTodoCommand = {
   title: string;

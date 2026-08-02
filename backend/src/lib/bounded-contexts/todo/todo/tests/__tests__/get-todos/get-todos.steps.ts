@@ -1,4 +1,4 @@
-import { Application } from '@bitloops/bl-boilerplate-core';
+import { Application } from 'ddd-tactical-core-boilerplate';
 import { GetTodosHandler } from '../../../application/query-handlers/get-todos.handler';
 import { GetTodosQuery } from '../../../queries/get-todos.query';
 import { TodoReadModelBuilder } from '../../builders/todo-read-model.builder';

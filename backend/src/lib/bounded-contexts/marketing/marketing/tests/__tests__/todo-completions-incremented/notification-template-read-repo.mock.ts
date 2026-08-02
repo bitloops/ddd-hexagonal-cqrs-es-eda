@@ -4,7 +4,7 @@ import {
   ok,
   fail,
   asyncLocalStorage,
-} from '@bitloops/bl-boilerplate-core';
+} from 'ddd-tactical-core-boilerplate';
 import { NotificationTemplateReadModel } from '../../../domain/notification-template.read-model';
 import { NotificationTemplateReadRepoPort } from '../../../ports/notification-template-read.repo-port';
 import {

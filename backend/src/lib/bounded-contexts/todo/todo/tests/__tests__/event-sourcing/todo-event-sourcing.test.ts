@@ -1,4 +1,4 @@
-import { Domain } from '@bitloops/bl-boilerplate-core';
+import { Domain } from 'ddd-tactical-core-boilerplate';
 
 import { serialiseTodoEvent } from '@src/bounded-contexts/todo/todo/repository/todo-event-store';
 import { TodoEntity } from '../../../domain/todo.entity';

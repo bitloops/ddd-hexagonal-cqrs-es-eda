@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { Injectable } from '@nestjs/common';
-import { AsyncLocalStorageStore, asyncLocalStorage } from '@bitloops/bl-boilerplate-core';
+import { AsyncLocalStorageStore, asyncLocalStorage } from 'ddd-tactical-core-boilerplate';
 
 export interface IAsyncLocalStorageService {
   asyncLocalStorage: AsyncLocalStorage<AsyncLocalStorageStore>;
