@@ -97,7 +97,7 @@ export class TodoWriteRepository implements TodoWriteRepoPort {
       throw new Error('Todo does not belong to the authenticated user');
     }
 
-    const pendingEvents = todo.domainEvents as Domain.DomainEvent<TodoEventPayload>[];
+    const pendingEvents = todo.domainEvents as readonly Domain.DomainEvent<TodoEventPayload>[];
     if (pendingEvents.length === 0) return;
 
     this.attachRequestMetadata(pendingEvents);
@@ -250,7 +250,9 @@ export class TodoWriteRepository implements TodoWriteRepoPort {
     return context.userId;
   }
 
-  private attachRequestMetadata(events: Domain.DomainEvent<TodoEventPayload>[]): void {
+  private attachRequestMetadata(
+    events: readonly Domain.DomainEvent<TodoEventPayload>[],
+  ): void {
     const store = asyncLocalStorage.getStore();
     const correlationId = store?.get('correlationId');
 

@@ -16,13 +16,14 @@ type TUserEntityPrimitives = {
   email: string;
 };
 
-export class UserEntity extends Domain.Aggregate<UserProps> {
-  private constructor(props: UserProps) {
-    super(props, props.id);
+export class UserEntity extends Domain.Aggregate<UserProps, Domain.UUIDv4> {
+  private constructor(props: UserProps, id: Domain.UUIDv4) {
+    super(props, id);
   }
 
   public static create(props: UserProps): Either<UserEntity, never> {
-    const user = new UserEntity(props);
+    const id = props.id ?? Domain.UUIDv4.generate();
+    const user = new UserEntity({ ...props, id }, id);
     return ok(user);
   }
 
@@ -32,10 +33,6 @@ export class UserEntity extends Domain.Aggregate<UserProps> {
 
   get email(): EmailVO {
     return this.props.email;
-  }
-
-  get id(): Domain.UUIDv4 {
-    return this._id;
   }
 
   changeEmail(
@@ -76,8 +73,9 @@ export class UserEntity extends Domain.Aggregate<UserProps> {
   }
 
   public static fromPrimitives(data: TUserEntityPrimitives): UserEntity {
+    const id = Domain.UUIDv4.fromString(data.id);
     const userEntityProps = {
-      id: new Domain.UUIDv4(data.id),
+      id,
       completedTodos: CompletedTodosVO.create({
         counter: data.completedTodos,
       }).value as CompletedTodosVO,
@@ -85,7 +83,7 @@ export class UserEntity extends Domain.Aggregate<UserProps> {
         email: data.email,
       }).value as EmailVO,
     };
-    return new UserEntity(userEntityProps);
+    return new UserEntity(userEntityProps, id);
   }
 
   public toPrimitives(): TUserEntityPrimitives {

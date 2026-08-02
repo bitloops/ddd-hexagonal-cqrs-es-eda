@@ -3,7 +3,6 @@ import { AddTodoCommand } from '@src/lib/bounded-contexts/todo/todo/commands/add
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { TodoAddedDomainEvent } from '@src/lib/bounded-contexts/todo/todo/domain/events/todo-added.event';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
-import { TodoPropsBuilder } from '../../builders/todo-props.builder';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
 import { MockAddTodoWriteRepo } from './add-todo-write-repo.mock';
 import {
@@ -26,18 +25,14 @@ describe('Add todo feature test', () => {
     const result = await addTodoHandler.execute(addTodoCommand);
 
     //then
-    const todoProps = new TodoPropsBuilder()
-      .withTitle(title)
-      .withCompleted(completed)
-      .withUserId(userId)
-      .build();
-
     expect(mockTodoWriteRepo.mockSaveMethod).toHaveBeenCalledWith(
       expect.any(TodoEntity),
     );
     const todoAggregate = mockTodoWriteRepo.mockSaveMethod.mock.calls[0][0];
-    expect(todoAggregate.props.title).toEqual(todoProps.title);
-    expect(todoAggregate.props.completed).toEqual(todoProps.completed);
+    expect(todoAggregate.toPrimitives()).toMatchObject({
+      title: { title },
+      completed,
+    });
     expect(todoAggregate.domainEvents[0]).toBeInstanceOf(TodoAddedDomainEvent);
     expect(typeof result.value).toBe('string');
   });

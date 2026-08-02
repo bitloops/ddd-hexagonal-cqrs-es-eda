@@ -1,4 +1,4 @@
 export const SUCCESS_CASE = {
-  userId: '123',
-  todoId: 'todo1',
+  userId: '10000000-0000-4000-8000-000000000003',
+  todoId: '20000000-0000-4000-8000-000000000001',
 };

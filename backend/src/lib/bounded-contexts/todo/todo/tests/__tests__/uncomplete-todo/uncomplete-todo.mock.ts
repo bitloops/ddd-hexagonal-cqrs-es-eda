@@ -1,34 +1,34 @@
 export const UNCOMPLETE_TODO_SUCCESS_CASE = {
-  userId: { id: '123' },
-  id: 'todo1',
+  userId: { id: '10000000-0000-4000-8000-000000000003' },
+  id: '20000000-0000-4000-8000-000000000001',
   title: { title: 'New todo title' },
   completed: true,
 };
 
 export const UNCOMPLETE_TODO_NOT_FOUND_CASE = {
-  userId: { id: '123' },
-  id: 'todo2',
+  userId: { id: '10000000-0000-4000-8000-000000000003' },
+  id: '20000000-0000-4000-8000-000000000002',
   title: { title: 'New todo title' },
   completed: true,
 };
 
 export const UNCOMPLETE_TODO_REPO_ERROR_GETBYID_CASE = {
-  userId: { id: '123' },
-  id: 'todo3',
+  userId: { id: '10000000-0000-4000-8000-000000000003' },
+  id: '20000000-0000-4000-8000-000000000003',
   title: { title: 'New todo title' },
   completed: true,
 };
 
 export const UNCOMPLETE_TODO_REPO_ERROR_SAVE_CASE = {
-  userId: { id: '1234' },
-  id: 'todo4',
+  userId: { id: '10000000-0000-4000-8000-000000000004' },
+  id: '20000000-0000-4000-8000-000000000004',
   title: { title: 'New todo title' },
   completed: true,
 };
 
 export const UNCOMPLETE_TODO_ALREADY_UNCOMPLETED_CASE = {
-  userId: { id: '123' },
-  id: 'todo5',
+  userId: { id: '10000000-0000-4000-8000-000000000003' },
+  id: '20000000-0000-4000-8000-000000000005',
   title: { title: 'New todo title' },
   completed: false,
 };

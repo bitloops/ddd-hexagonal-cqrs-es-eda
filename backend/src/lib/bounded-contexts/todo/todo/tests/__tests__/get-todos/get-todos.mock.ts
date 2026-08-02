@@ -1,14 +1,14 @@
 export const GET_TODOS_SUCCESS_CASE = {
-  userId: '123',
-  titleId: '1',
+  userId: '10000000-0000-4000-8000-000000000003',
+  titleId: '10000000-0000-4000-8000-000000000001',
   title: 'todo title',
   completed: true,
 };
 
 export const GET_TODOS_EMPTY_ARRAY_CASE = {
-  userId: '1234',
+  userId: '10000000-0000-4000-8000-000000000004',
 };
 
 export const GET_TODOS_REPO_ERROR_CASE = {
-  userId: '12345',
+  userId: '10000000-0000-4000-8000-000000000005',
 };

@@ -1,7 +1,6 @@
 import { UncompleteTodoHandler } from '@src/lib/bounded-contexts/todo/todo/application/command-handlers/uncomplete-todo.handler';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
 import { ApplicationErrors } from '@src/lib/bounded-contexts/todo/todo/application/errors';
-import { TodoPropsBuilder } from '../../builders/todo-props.builder';
 import { MockUncompleteTodoWriteRepo } from './uncomplete-todo-write-repo.mock';
 import {
   UNCOMPLETE_TODO_ALREADY_UNCOMPLETED_CASE,
@@ -10,7 +9,7 @@ import {
   UNCOMPLETE_TODO_REPO_ERROR_SAVE_CASE,
   UNCOMPLETE_TODO_SUCCESS_CASE,
 } from './uncomplete-todo.mock';
-import { Application } from 'ddd-tactical-core-boilerplate';
+import { Application, Domain } from 'ddd-tactical-core-boilerplate';
 import { TodoUncompletedDomainEvent } from '../../../domain/events/todo-uncompleted.event';
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { UncompleteTodoCommand } from '../../../commands/uncomplete-todo.command';
@@ -34,23 +33,21 @@ describe('Uncomplete todo feature test', () => {
     const result = await uncompleteTodoHandler.execute(uncompleteTodoCommand);
 
     //then
-    const todoProps = new TodoPropsBuilder()
-      .withTitle(todoTitle.title)
-      .withCompleted(false)
-      .withUserId(userId.id)
-      .withId(id)
-      .build();
-
-    expect(mockUncompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith({
-      value: id,
-    });
+    expect(mockUncompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
+      Domain.UUIDv4.fromString(id),
+    );
     expect(mockUncompleteTodoWriteRepo.mockUpdateMethod).toHaveBeenCalledWith(
       expect.any(TodoEntity),
     );
 
     const todoAggregate =
       mockUncompleteTodoWriteRepo.mockUpdateMethod.mock.calls[0][0];
-    expect(todoAggregate.props).toEqual(todoProps);
+    expect(todoAggregate.toPrimitives()).toEqual({
+      id,
+      userId,
+      title: todoTitle,
+      completed: false,
+    });
     expect(todoAggregate.domainEvents[0]).toBeInstanceOf(
       TodoUncompletedDomainEvent,
     );
@@ -73,9 +70,9 @@ describe('Uncomplete todo feature test', () => {
     const result = await uncompleteTodoHandler.execute(uncompleteTodoCommand);
 
     //then
-    expect(mockUncompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith({
-      value: id,
-    });
+    expect(mockUncompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
+      Domain.UUIDv4.fromString(id),
+    );
     expect(result.value).toBeInstanceOf(ApplicationErrors.TodoNotFoundError);
   });
   it('Todo uncompleted failed, todo already uncompleted', async () => {
@@ -94,9 +91,9 @@ describe('Uncomplete todo feature test', () => {
     const result = await uncompleteTodoHandler.execute(uncompleteTodoCommand);
 
     //then
-    expect(mockUncompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith({
-      value: id,
-    });
+    expect(mockUncompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
+      Domain.UUIDv4.fromString(id),
+    );
     expect(result.value).toBeInstanceOf(
       DomainErrors.TodoAlreadyUncompletedError,
     );
@@ -118,9 +115,9 @@ describe('Uncomplete todo feature test', () => {
     const result = await uncompleteTodoHandler.execute(uncompleteTodoCommand);
 
     //then
-    expect(mockCompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith({
-      value: id,
-    });
+    expect(mockCompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
+      Domain.UUIDv4.fromString(id),
+    );
     expect(result.value).toBeInstanceOf(Application.Repo.Errors.Unexpected);
   });
   it('Todo failed to be uncompleted, save repo error', async () => {
@@ -140,21 +137,20 @@ describe('Uncomplete todo feature test', () => {
     const result = await uncompleteTodoHandler.execute(uncompleteTodoCommand);
 
     //then
-    const todoProps = new TodoPropsBuilder()
-      .withTitle(todoTitle.title)
-      .withCompleted(false)
-      .withUserId(userId.id)
-      .withId(id)
-      .build();
-    expect(mockUncompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith({
-      value: id,
-    });
+    expect(mockUncompleteTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
+      Domain.UUIDv4.fromString(id),
+    );
     expect(mockUncompleteTodoWriteRepo.mockUpdateMethod).toHaveBeenCalledWith(
       expect.any(TodoEntity),
     );
     const todoAggregate =
       mockUncompleteTodoWriteRepo.mockUpdateMethod.mock.calls[0][0];
-    expect(todoAggregate.props).toEqual(todoProps);
+    expect(todoAggregate.toPrimitives()).toEqual({
+      id,
+      userId,
+      title: todoTitle,
+      completed: false,
+    });
     expect(todoAggregate.domainEvents[0]).toBeInstanceOf(
       TodoUncompletedDomainEvent,
     );

@@ -12,20 +12,23 @@ type TNotificationTemplateSnapshot = {
   type: string;
 };
 
-export class NotificationTemplateEntity extends Domain.Aggregate<NotificationTemplateProps> {
-  private constructor(props: NotificationTemplateProps) {
-    super(props, props.id);
+export class NotificationTemplateEntity extends Domain.Aggregate<
+  NotificationTemplateProps,
+  Domain.UUIDv4
+> {
+  private constructor(props: NotificationTemplateProps, id: Domain.UUIDv4) {
+    super(props, id);
   }
 
   public static create(
     props: NotificationTemplateProps,
   ): Either<NotificationTemplateEntity, never> {
-    const notificationTemplate = new NotificationTemplateEntity(props);
+    const id = props.id ?? Domain.UUIDv4.generate();
+    const notificationTemplate = new NotificationTemplateEntity(
+      { ...props, id },
+      id,
+    );
     return ok(notificationTemplate);
-  }
-
-  get id(): Domain.UUIDv4 {
-    return this._id;
   }
 
   get template() {
@@ -47,11 +50,12 @@ export class NotificationTemplateEntity extends Domain.Aggregate<NotificationTem
   public static fromPrimitives(
     data: TNotificationTemplateSnapshot,
   ): Either<NotificationTemplateEntity, never> {
+    const id = Domain.UUIDv4.fromString(data.id);
     const props: NotificationTemplateProps = {
-      id: new Domain.UUIDv4(data.id) as Domain.UUIDv4,
+      id,
       template: data.template, // TemplateVO.create(snapshot.template),
       type: data.type, //NotificationTypeVO.create(snapshot.type),
     };
-    return NotificationTemplateEntity.create(props);
+    return ok(new NotificationTemplateEntity(props, id));
   }
 }

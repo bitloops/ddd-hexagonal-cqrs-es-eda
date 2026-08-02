@@ -1,7 +1,6 @@
 import { Application, Domain } from 'ddd-tactical-core-boilerplate';
 import { IncrementTodosCommand } from '@src/lib/bounded-contexts/marketing/marketing/commands/Increment-todos.command';
 import { IncrementTodosCommandHandler } from '@src/lib/bounded-contexts/marketing/marketing/application/command-handlers/increment-todos.command-handler';
-import { UserPropsBuilder } from '../../builders/user-props.builder';
 import { MockIncrementCompletedTodosWriteRepo } from './increment-todos-write-repo.mock';
 import {
   INCREMENT_TODOS_INVALID_COUNTER_CASE,
@@ -34,12 +33,6 @@ describe('Increment completed todos feature test', () => {
     const result = await incrementTodosHandler.execute(incrementTodosCommand);
 
     //then
-    const userProps = new UserPropsBuilder()
-      .withId(id)
-      .withCompletedTodos(completedTodos + 1)
-      .withEmail(email)
-      .build();
-
     expect(mockIncrementTodosWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
       new Domain.UUIDv4(id),
     );
@@ -49,7 +42,11 @@ describe('Increment completed todos feature test', () => {
 
     const userAggregate =
       mockIncrementTodosWriteRepo.mockUpdateMethod.mock.calls[0][0];
-    expect(userAggregate.props).toEqual(userProps);
+    expect(userAggregate.toPrimitives()).toEqual({
+      id,
+      completedTodos: completedTodos + 1,
+      email,
+    });
     expect(userAggregate.domainEvents[0]).toBeInstanceOf(
       TodoCompletionsIncrementedDomainEvent,
     );
@@ -140,22 +137,20 @@ describe('Increment completed todos feature test', () => {
     const result = await incrementTodosHandler.execute(incrementTodosCommand);
 
     //then
-    const userProps = new UserPropsBuilder()
-      .withId(id)
-      .withCompletedTodos(completedTodos + 1)
-      .withEmail(email)
-      .build();
-
     expect(mockIncrementTodosWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
       new Domain.UUIDv4(id),
     );
     expect(mockIncrementTodosWriteRepo.mockUpdateMethod).toHaveBeenCalledWith(
       expect.any(UserEntity),
     );
-    const todoAggregate =
+    const userAggregate =
       mockIncrementTodosWriteRepo.mockUpdateMethod.mock.calls[0][0];
-    expect(todoAggregate.props).toEqual(userProps);
-    expect(todoAggregate.domainEvents[0]).toBeInstanceOf(
+    expect(userAggregate.toPrimitives()).toEqual({
+      id,
+      completedTodos: completedTodos + 1,
+      email,
+    });
+    expect(userAggregate.domainEvents[0]).toBeInstanceOf(
       TodoCompletionsIncrementedDomainEvent,
     );
     expect(result.value).toBeInstanceOf(Application.Repo.Errors.Unexpected);

@@ -5,7 +5,6 @@ import { ModifyTodoTitleCommand } from '@src/lib/bounded-contexts/todo/todo/comm
 import { DomainErrors } from '@src/lib/bounded-contexts/todo/todo/domain/errors';
 import { TodoModifiedTitleDomainEvent } from '@src/lib/bounded-contexts/todo/todo/domain/events/todo-modified-title.event';
 import { TodoEntity } from '@src/lib/bounded-contexts/todo/todo/domain/todo.entity';
-import { TodoPropsBuilder } from '../../builders/todo-props.builder';
 import { mockAsyncLocalStorageGet } from '../../mocks/mockAsynLocalStorageGet.mock';
 import {
   MODIFY_INVALID_TITLE_CASE,
@@ -36,13 +35,6 @@ describe('Modify title todo feature test', () => {
     const result = await modifyTodoTitleHandler.execute(modifyTodoTitleCommand);
 
     //then
-    const todoProps = new TodoPropsBuilder()
-      .withTitle(titleAfterUpdate.title)
-      .withCompleted(completed)
-      .withUserId(userId.id)
-      .withId(titleId)
-      .build();
-
     expect(mockTodoWriteRepo.mockGetByIdMethod).toHaveBeenCalledWith(
       new Domain.UUIDv4(titleId),
     );
@@ -50,7 +42,12 @@ describe('Modify title todo feature test', () => {
       expect.any(TodoEntity),
     );
     const todoAggregate = mockTodoWriteRepo.mockUpdateMethod.mock.calls[0][0];
-    expect(todoAggregate.props).toEqual(todoProps);
+    expect(todoAggregate.toPrimitives()).toEqual({
+      id: titleId,
+      userId,
+      title: titleAfterUpdate,
+      completed,
+    });
     expect(todoAggregate.domainEvents[0]).toBeInstanceOf(
       TodoModifiedTitleDomainEvent,
     );

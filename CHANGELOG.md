@@ -6,6 +6,12 @@ project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded `ddd-tactical-core-boilerplate` to 2.0.0 and adopted its explicit
+  aggregate identity, immutable value-object, and domain-event lifecycle
+  contracts.
+
 ## [1.0.2] - 2026-08-02
 
 ### Changed
