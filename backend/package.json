@@ -27,7 +27,7 @@
     "node": ">=24 <25"
   },
   "dependencies": {
-    "ddd-tactical-core-boilerplate": "^1.0.0",
+    "ddd-tactical-core-boilerplate": "^2.0.0",
     "@fastify/autoload": "^6.3.1",
     "@fastify/cors": "^11.0.1",
     "@fastify/helmet": "^13.0.1",

@@ -55,8 +55,8 @@ importers:
         specifier: ^0.14.0
         version: 0.14.4
       ddd-tactical-core-boilerplate:
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       fastify:
         specifier: ^5.4.0
         version: 5.11.0
@@ -2619,8 +2619,8 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  ddd-tactical-core-boilerplate@1.0.0:
-    resolution: {integrity: sha512-yi8GT9/V4SJ7ZPqlXvJxcxqjZ/w5jPq9eUcjBKp5VUGlyBMzY5qAvQND7vQrFxUGAcb7zVG3PK19jO80e5CnfQ==}
+  ddd-tactical-core-boilerplate@2.0.0:
+    resolution: {integrity: sha512-deuYfLlY+1FcTAGl+T1CBSZWXSyaTZIXl/WVtM9G9g3dD4NW5xt3nDT25xPxQMaXjWgnUZchYRvEp6JzWfBz9g==}
     engines: {node: '>=22'}
 
   debug@4.4.3:
@@ -7946,7 +7946,7 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  ddd-tactical-core-boilerplate@1.0.0: {}
+  ddd-tactical-core-boilerplate@2.0.0: {}
 
   debug@4.4.3(supports-color@10.2.2):
     dependencies:

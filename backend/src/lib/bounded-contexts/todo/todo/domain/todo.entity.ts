@@ -47,18 +47,19 @@ type TTodoEntityPrimitives = {
   completed: boolean;
 };
 
-export class TodoEntity extends Domain.Aggregate<TodoProps> {
+export class TodoEntity extends Domain.Aggregate<TodoProps, Domain.UUIDv4> {
   private eventStreamVersion = 0;
   private deleted = false;
 
-  private constructor(props: TodoProps) {
-    super(props, props.id);
+  private constructor(props: TodoProps, id: Domain.UUIDv4) {
+    super(props, id);
   }
 
   public static create(props: TodoProps): Either<TodoEntity, never> {
-    const todo = new TodoEntity(props);
-
     const isNew = !props.id;
+    const id = props.id ?? Domain.UUIDv4.generate();
+    const todo = new TodoEntity({ ...props, id }, id);
+
     if (isNew) {
       const todoAddedDomainEvent = new TodoAddedDomainEvent({
         title: todo.title.title,
@@ -74,10 +75,6 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
 
   get completed(): boolean {
     return this.props.completed;
-  }
-
-  get id(): Domain.UUIDv4 {
-    return this._id;
   }
 
   get title(): TitleVO {
@@ -159,16 +156,17 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
   }
 
   public static fromPrimitives(data: TTodoEntityPrimitives): TodoEntity {
+    const id = Domain.UUIDv4.fromString(data.id);
     const TodoEntityProps: TodoProps = {
-      id: new Domain.UUIDv4(data.id),
-      userId: UserIdVO.create({ id: new Domain.UUIDv4(data.userId.id) })
+      id,
+      userId: UserIdVO.create({ id: Domain.UUIDv4.fromString(data.userId.id) })
         .value as UserIdVO,
       title: TitleVO.create({
         title: data.title.title,
       }).value as TitleVO,
       completed: data.completed,
     };
-    return new TodoEntity(TodoEntityProps);
+    return new TodoEntity(TodoEntityProps, id);
   }
 
   public static fromHistory(history: readonly TodoHistoryEvent[]): TodoEntity {
@@ -223,18 +221,18 @@ export class TodoEntity extends Domain.Aggregate<TodoProps> {
       throw new Error('Todo history does not contain a creation event');
     }
 
-    todo.clearEvents();
+    todo.clearDomainEvents();
     return todo;
   }
 
   public commit(version: number): void {
     this.eventStreamVersion = version;
-    this.clearEvents();
+    this.clearDomainEvents();
   }
 
   public toPrimitives(): TTodoEntityPrimitives {
     return {
-      id: this._id.toString(),
+      id: this.id.toString(),
       userId: {
         id: this.props.userId.id.toString(),
       },

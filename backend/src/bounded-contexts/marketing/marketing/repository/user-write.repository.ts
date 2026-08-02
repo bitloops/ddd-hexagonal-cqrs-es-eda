@@ -39,8 +39,8 @@ export class UserWriteRepository implements UserWriteRepoPort {
       [snapshot.id, snapshot.completedTodos, snapshot.email],
     );
     if (result.rowCount !== 1) throw new Error(`Marketing user ${snapshot.id} was not found`);
-    await this.domainEventBus.publish(user.domainEvents);
-    user.clearEvents();
+    await this.domainEventBus.publish([...user.domainEvents]);
+    user.clearDomainEvents();
     return ok();
   }
 
@@ -49,8 +49,8 @@ export class UserWriteRepository implements UserWriteRepoPort {
     user: UserEntity,
   ): Promise<Either<void, Application.Repo.Errors.Unexpected>> {
     await this.pool.query('DELETE FROM marketing_users WHERE id = $1', [user.id.toString()]);
-    await this.domainEventBus.publish(user.domainEvents);
-    user.clearEvents();
+    await this.domainEventBus.publish([...user.domainEvents]);
+    user.clearDomainEvents();
     return ok();
   }
 
@@ -83,8 +83,8 @@ export class UserWriteRepository implements UserWriteRepoPort {
        SET email = EXCLUDED.email, updated_at = NOW()`,
       [snapshot.id, snapshot.completedTodos, snapshot.email],
     );
-    await this.domainEventBus.publish(user.domainEvents);
-    user.clearEvents();
+    await this.domainEventBus.publish([...user.domainEvents]);
+    user.clearDomainEvents();
     return ok();
   }
 }
