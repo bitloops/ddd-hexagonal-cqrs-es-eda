@@ -41,7 +41,7 @@
     "async-mutex": "^0.5.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
-    "fastify": "^5.4.0",
+    "fastify": "^5.12.1",
     "jsonwebtoken": "^9.0.0",
     "jwks-rsa": "4.0.1",
     "nats": "^2.13.1",
